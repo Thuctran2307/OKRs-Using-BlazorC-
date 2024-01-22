@@ -33,6 +33,25 @@ namespace OKRs.Model
              return user;
         }
 
+        // check user by username and password
+
+        public static async Task<User> GetUserByUsernameAndPassword(string username, string password)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<User>(_collectionName);
+            var user = await collection.Find(x => x.userName == username && x.password == password).FirstOrDefaultAsync();
+            return user;
+        }
+
+        // GetUserByUsername
+
+        public static async Task<User> GetUserByUsername(string username)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<User>(_collectionName);
+            var user = await collection.Find(x => x.userName == username).FirstOrDefaultAsync();
+            return user;
+        }
 
 
     }

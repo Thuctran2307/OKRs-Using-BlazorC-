@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace OKRs.Model
@@ -13,5 +14,9 @@ namespace OKRs.Model
         public string type { get; set; }
 
         public string idCycle { get; set; }
+
+        public User(){
+            this.userId = ObjectId.GenerateNewId().ToString();
+        }
     }
 }

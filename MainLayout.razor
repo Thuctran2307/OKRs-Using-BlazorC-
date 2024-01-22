@@ -1,5 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
 @if (isLogin)
 {
     <main id="main" class="columns is-gapless is-multiline">
@@ -159,30 +160,33 @@
 }
 else
 {
-    @Body
+    <CascadingValue Value="this">
+        @Body
+    </CascadingValue>
 }
-
-
 @code {
 
-    public bool isLogin = true;
+    public bool isLogin = false;
+    public User user = new User();
 
-    private async Task isCookieAvailible()
+    // onAfterRenderAsync
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var idUser = await JSRuntime.InvokeAsync<string>("a.ReadCookie");
-        
-        if (idUser != null)
+
+        if (firstRender)
         {
-            if(S_User.CheckUserIsAvailable(idUser)){
-                isLogin = true;
+            var idUser = await JSRuntime.InvokeAsync<string>("a.ReadCookie");
+
+            if (idUser != null)
+            {
+                var rs = await DbUser.GetUserById(idUser);
+                if (rs != null)
+                {
+                    user = rs;
+                    isLogin = true;
+                    NavigationManager.NavigateTo("/detail");
+                }
             }
         }
     }
-
-    protected override async Task OnInitializedAsync()
-    {
-        await Task.CompletedTask;
-    }
-
-
 }
