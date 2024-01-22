@@ -1,0 +1,12 @@
+Xác định chức năng và xây dựng database ( 17 - 21)
+Xây dựng giao diện( 22 - 26)
+Xây dựng logic cho module ( 26 - 31)
+Kiểm tra test bug ( 3 ngày còn lại)
+
+
+Note: Không làm Timeline
+      Không làm công bố mục tiêu
+      Không làm "Hành Động"
+      User có 3 type: user, admin và quản lý.
+      Tạo thêm 1 session để admin tuỳ chỉnh cấu hình
+      

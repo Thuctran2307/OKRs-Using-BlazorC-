@@ -1,0 +1,59 @@
+<li class="column is-one-fifth-tablet is-full-mobile"><label class="label pt-2">Kết quả then
+        chốt:</label></li>
+<li class="column is-four-fifths-tablet is-full-mobile">
+    <div class="field has-addons">
+        <div class="control is-expanded"><input type="text" class="input is_bg" placeholder="Bắt buộc nhập..." @bind="kr._keyResult" ></div>
+        <!--!-->
+        <div class="control" @onclick="DeleteKR"><a class="button is-danger" title="Xoá kết quả then chốt"><!--!--><span class="icon"><i
+                        class="material-icons-outlined is-size-5">close</i></span></a>
+        </div>
+    </div>
+</li><!--!-->
+<!--!-->
+<li class="column is-one-fifth-tablet is-one-third-mobile"><label class="label pt-2">Mục
+        tiêu:</label></li>
+<li class="column is-two-fifths-tablet is-two-thirds-mobile">
+    <div class="field is-grouped">
+        <div class="control is-expanded"><!--!--><input class="input is_bg" type="text"
+                placeholder="Nhập số liệu mục tiêu" @bind="kr.target" ></div><!--!-->
+        <div class="control" style="width: 100px;"><input type="text" class="input is_bg" placeholder="Đơn vị tính" @bind="kr.unit">
+        </div>
+    </div>
+</li><!--!-->
+<li class="column is-two-fifths-tablet is-full-mobile">
+    <div class="field is-grouped"><!--!-->
+        <div class="control"><label class="label">Kết quả:</label></div>
+        <div class="control is-expanded"><input type="text" class="input is_bg" placeholder="Nhập link kết quả..." @bind="kr.linkResult">
+        </div>
+    </div>
+</li><!--!-->
+<!--!-->
+<li class="column is-one-fifth-tablet is-half-mobile">
+    <div class="label pt-2">Liên kết chéo:</div>
+</li>
+<li class="column is-four-fifths-tablet is-full-mobile">
+    <ul class="columns is-multiline">
+        <li class="column is-half"><!--!-->
+            <div class="control has-icons-right has_suggest"><input class="input is_bg show_is_active" type="text" @bind="kr.idUserCross"
+                    placeholder="Chọn người liên kết chéo..." autocomplete="off"><!--!-->
+                <ul class="suggest"></ul><!--!-->
+                <!--!--><span class="icon is-right"><i class="material-icons-outlined">search</i></span>
+            </div>
+        </li>
+    </ul>
+</li><!--!-->
+<li class="column is-full">
+    <hr class="m-0">
+</li><!--!-->
+
+@code{
+
+    [Parameter] public KR kr { get; set; }
+    [Parameter] public EventCallback<KR> DeleteKRInList { get; set; }
+
+    private async void DeleteKR()
+    {
+        await DeleteKRInList.InvokeAsync(kr);
+    }
+
+}

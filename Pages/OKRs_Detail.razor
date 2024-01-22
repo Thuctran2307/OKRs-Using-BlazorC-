@@ -1,0 +1,390 @@
+@page "/detail"
+@inject IJSRuntime JSRuntime
+
+
+<section class="main_content">
+    <div class="card flex_column">
+        <ul class="columns is-vcentered is-variable is-2 is-mobile mb-2">
+            <li class="column">
+                <h1 class="title is-5 is-size-6 has-text-info">
+                    OKRs - CÁ NHÂN
+                </h1>
+            </li>
+            <li class="column is-narrow"><a class="button" @onclick="() => { isSlider = true; okrs = new OKRs(); }">
+                    <span class="icon"><i class="material-icons-outlined is-size-6">add</i></span>
+                    <span>Thêm OKRs</span></a></li>
+        </ul>
+        <div class="inner_section mb-5">
+            <table class="table is-fullwidth is-noborder is-responsive">
+                <thead>
+                    <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;">
+                        <th class="pt-0">Mục tiêu</th>
+                        <th class="pt-0" width="160px">Kết Quả Then Chốt</th>
+                        <th class="pt-0" width="200px" align="center">Tiến độ</th>
+                        <th class="pt-0" width="100px" align="center">Thay đổi</th>
+                        <th class="pt-0" width="100px" align="center">Ngày tạo</th>
+                    </tr>
+                </thead>
+                <tbody>
+
+                    @if (list_OKRs.Count > 0)
+                    {
+                        foreach (var okr in list_OKRs)
+                        {
+                            <tr>
+                                <td>
+                                    <div class="is-flex"><a class="has-text-weight-semibold" title="Chỉnh sửa OKRs"
+                                            @onclick="() => EditOKR(okr.idOKRs)"> @okr._object</a></div>
+                                </td>
+
+
+                                <td><label class="td-label">Kết quả</label>
+                                    <div class="td-value" @onclick="() => ShowKR(okr.idOKRs)">
+                                        <a class="icon-text has-text-weight-semibold has-text-info">
+                                            <span>@GetNumberKrOfOKRs(okr.idOKRs) kết quả</span>
+                                            <span class="icon"><i
+                                                    class="material-icons-outlined is-size-5">arrow_right</i></span>
+                                        </a>
+                                    </div>
+                                </td>
+
+
+                                <td><label class="td-label">Tiến độ</label>
+                                    <div class="td-value">
+                                        <div class="progress_has_value"><progress class="progress is-small is-dark" value="0"
+                                                max="100"></progress>
+                                            <span>0%</span>
+                                        </div>
+                                    </div>
+                                </td>
+
+
+                                <td align="center"><label class="td-label">Thay đổi</label>
+                                    <div class="td-value has-text-weight-semibold">0
+                                    </div>
+                                </td>
+
+                                <td align="center"><label class="td-label">Ngày tạo</label>
+                                    <div class="td-value">@okr.dateCreate</div>
+                                </td>
+                            </tr>
+
+                            @if (isShowKR.Count > 0)
+                            {
+                                @if (isShowKR[okr.idOKRs])
+                                {
+                                    var list = @GetKROfOKR(okr.idOKRs);
+                                    foreach (KR kr in list)
+                                    {
+                                        <tr>
+                                            <td class="pl-4">@kr._keyResult</td>
+                                            <td class="pl-2"></td>
+                                            <td><label class="td-label">Đạt được</label>
+                                                <div class="td-value"><span class="has-text-success"
+                                                        title="@kr.processCurrent / @kr.target"></span>
+                                                    <span class="is-pulled-right">@kr.unit</span>
+                                                </div>
+                                            </td>
+                                            <td align="center"><label class="td-label">Thay đổi</label>
+                                                <div class="td-value">0
+                                                </div>
+                                            </td>
+                                            <td align="center"><label class="td-label">Tự tin</label>
+                                                <div class="td-value has-text-weight-semibold"><span> @kr.confident </span></div>
+                                            </td>
+                                        </tr>
+                                    }
+
+                                }
+                            }
+
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <ul class="columns is-vcentered is-variable is-2 is-mobile mb-2">
+            <li class="column">
+                <h1 class="title is-5 is-size-6 has-text-info">
+                    TIẾN ĐỘ OKRs
+                </h1>
+            </li>
+            <li class="column is-narrow">
+                <div id="dropdown_faac2a59" class="dropdown is-right  ">
+                    <div class="dropdown-trigger"><a class="icon-text"><span class="has-text-link text_1_line"
+                                style="max-width: 200px;">Bộc phá kiến thức C#</span>
+                            <span class="icon"><i
+                                    class="material-icons-outlined is-size-6">arrow_drop_down</i></span></a></div>
+                </div>
+            </li>
+        </ul>
+        <div style="min-height: 210px;flex:1" class="inner_section pt-6">
+            <canvas id="chartLine" height="490"
+                style="display: block; box-sizing: border-box; height: 490px; width: 951px;" width="951">
+            </canvas>
+        </div>
+    </div>
+</section>
+<div class="slider is-large @(isSlider ? "is-active" : "")" style="">
+    <div class="slider-header">
+        <div class="columns is-variable is-2 is-mobile is-vcentered">
+            <div class="column">
+                <div class="has-text-weight-bold is-size-5">TẠO OKRs MỚI</div>
+            </div>
+            <div class="column is-narrow" @onclick="() => isSlider = false"><button class="button"><span
+                        class="icon"><span class="material-icons-outlined">close</span></span><span>Hủy
+                        tạo</span></button></div>
+        </div>
+    </div>
+    <div class="slider-body">
+        <div class="scrolly is-mobile is-flex is-flex-direction-column">
+            <ul class="columns is-multiline is-vcentered is-mobile is-variable is-2">
+                <li class="column is-one-fifth-tablet is-full-mobile">
+                    <label class="label has-text-weight-bold">Mục tiêu của bạn:</label>
+                </li>
+                <li class="column is-four-fifths-tablet is-full-mobile"><input type="text" @bind="okrs._object"
+                        class="input has-text-weight-semibold is_bg" placeholder="Bắt buộc nhập..."></li>
+
+                <li class="column is-one-fifth-tablet is-one-third-mobile"><label
+                        class="label has-text-weight-bold">OKRs cấp trên</label></li>
+                <li class="column is-two-fifths-tablet is-two-thirds-mobile">
+                    <div class="select is-fullwidth is_bg"><select @bind="okrs.idOKR_Superior">
+                            <option>- Chọn OKRs cấp trên -</option>
+                            <optgroup label="Nguyễn Hữu Học">
+                                <option value="241G7FBF11">Xây dựng thủy thủ đoàn</option>
+                                <option value="241G1615CE">Thách thức mới - Cơ hội mới</option>
+                                <option value="241G8A9912">Lead giỏi thì team mới giỏi</option>
+                            </optgroup>
+                            <optgroup label="Hoàng Thị Phương Thảo"></optgroup>
+                            <optgroup label="Đoàn Thanh"></optgroup>
+                        </select></div>
+                </li>
+                <li class="column is-one-fifth-tablet is-full-mobile">
+                    <div class="field is-grouped">
+                        <div class="control"><label class="label has-text-weight-bold">Loại:</label></div>
+                        <div class="control is-expanded">
+                            <div class="select is-fullwidth is_bg"><select @bind="okrs.type">
+                                    <option value="2">OKRs cam kết</option>
+                                    <option value="1">OKRs mở rộng</option>
+                                </select></div>
+                        </div>
+                    </div>
+                </li>
+
+                <li class="column is-full">
+                    <hr class="m-0">
+                </li>
+            </ul>
+            <ul class="columns is-multiline is-mobile is-variable is-2">
+
+                @foreach (var kr in list_KR_Sample)
+                {
+                    <_KR kr="kr" DeleteKRInList="DeleteKRInList"></_KR>
+                }
+
+            </ul>
+        </div>
+
+    </div>
+    <div class="slider-footer">
+        <div class="field is-grouped is-grouped-right is-grouped-multiline">
+            <div class="control" @onclick="AddKrToList"><a class="button"><span class="icon"><i
+                            class="material-icons-outlined is-size-6">add</i></span>
+                    <span>Thêm</span>
+                    <span class="is-hidden-mobile ml-1">kết quả</span></a></div>
+            <div class="control" @onclick="AddOKRs"><a class="button is-link"><span class="icon"><i
+                            class="material-icons-outlined is-size-6">done</i></span>
+                    <span>Tạo</span>
+                    <span class="is-hidden-mobile ml-1">OKRs</span></a></div>
+            <div class="control">
+                <a class="button is-danger" @onclick="() => DeleteOKR(okrs.idOKRs)">
+                    <span class="icon"><i class="material-icons-outlined is-size-6">delete</i></span>
+                    <span>Xoá</span>
+                    <span class="is-hidden-mobile ml-1">OKRs</span>
+                </a>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    public OKRs okrs = new OKRs();
+    private bool isSlider = false;
+
+    private List<KR> list_KR_Sample = new List<KR>();
+    private List<OKRs> list_OKRs = new List<OKRs>();
+
+    private List<KR> list_KR = new List<KR>();
+
+    public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
+
+
+    protected override void OnInitialized()
+    {
+        init();
+    }
+
+    private async void init()
+    {
+        list_OKRs = await DbOKRs.GetAllOKRs();
+        list_KR = await DbKR.GetAllKRs();
+
+        list_KR_Sample.Clear();
+        okrs = new OKRs();
+        list_KR_Sample.Add(new KR());
+
+        isShowKR.Clear();
+        foreach (var okr in list_OKRs)
+        {
+            isShowKR.Add(okr.idOKRs, false);
+        }
+        isSlider = false;
+        await JSRuntime.InvokeVoidAsync("a.Draw");
+        StateHasChanged();
+    }
+
+    private void AddKrToList()
+    {
+        list_KR_Sample.Add(new KR());
+    }
+
+    private void DeleteKRInList(KR kr)
+    {
+        list_KR_Sample.Remove(kr);
+    }
+
+    private bool FindOkrInList(string idOKR)
+    {
+        foreach (var okr in list_OKRs)
+        {
+            if (okr.idOKRs == idOKR)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private async void AddOKRs()
+    {
+        if (!FindOkrInList(okrs.idOKRs))
+        {
+            await DbOKRs.AddOKRs(okrs);
+
+            foreach (KR kr in list_KR_Sample)
+            {
+                kr.idOKRs = okrs.idOKRs;
+                await DbKR.AddKRs(kr);
+            }
+
+            await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được tạo thành công");
+        }
+        else
+        {
+            await DbOKRs.UpdateOKRs(okrs);
+            await DbKR.DeleteAllKRsByIdOkr(okrs.idOKRs);
+
+
+            foreach (KR kr in list_KR_Sample)
+            {
+                kr.idOKRs = okrs.idOKRs;
+                await DbKR.AddKRs(kr);
+            }
+            await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được cập nhập thành công");
+        }
+        init();
+
+    }
+
+    private int GetNumberKrOfOKRs(string idOKR)
+    {
+        int count = 0;
+        foreach (KR kr in list_KR)
+        {
+            if (kr.idOKRs == idOKR)
+            {
+                count++;
+            }
+        }
+        return count;
+    }
+
+    private List<KR> GetKROfOKR(string idOKR)
+    {
+        List<KR> list = new List<KR>();
+        foreach (KR kr in list_KR)
+        {
+            if (kr.idOKRs == idOKR)
+            {
+                list.Add(kr);
+            }
+        }
+        return list;
+    }
+
+    private void ShowKR(string idOKR)
+    {
+        isShowKR[idOKR] = !isShowKR[idOKR];
+    }
+
+
+    private async void EditOKR(string idOKR)
+    {
+        list_KR_Sample.Clear();
+
+        var id = list_OKRs.Find(x => x.idOKRs == idOKR)?.idOKRs;
+        if (id != null)
+        {
+            okrs.idOKRs = id;
+        }
+        else
+        {
+            return;
+        }
+
+        okrs = await DbOKRs.GetOKRsById(idOKR);
+
+        foreach (KR kr in list_KR)
+        {
+            if (kr.idOKRs == id)
+            {
+                list_KR_Sample.Add(kr);
+            }
+        }
+
+        isSlider = true;
+
+        StateHasChanged();
+    }
+
+    private async void DeleteOKR(string idOKR)
+    {
+        if (okrs != null)
+        {
+            await DbOKRs.DeleteOKRs(idOKR);
+            var listKR = GetKROfOKR(idOKR);
+
+            foreach (var kr in listKR)
+            {
+                await DbKR.DeleteKRs(kr.idKR);
+            }
+            await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được xoá thành công");
+            isSlider = false;
+            init();
+            StateHasChanged();
+        }
+    }
+
+    private async void AddProcess()
+    {
+        Process a = new Process();
+        a.idOKRs = okrs.idOKRs;
+        a.process = 0.1;
+        a.date = DateTime.Today.Ticks;
+        await DbProcess.AddProcess(a);
+    }
+
+
+}

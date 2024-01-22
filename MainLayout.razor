@@ -1,0 +1,188 @@
+﻿@inherits LayoutComponentBase
+@inject IJSRuntime JSRuntime
+@if (isLogin)
+{
+    <main id="main" class="columns is-gapless is-multiline">
+        <section class="column is-full"><!--!-->
+            <section id="header" class="header_main">
+                <ul class="columns is-mobile is-vcentered is-variable is-2">
+                    <li class="column is-narrow header_product"><!--!-->
+                        <div id="dropdown_49229542" class="dropdown   ">
+                            <div class="dropdown-trigger"><!--!--><a class="icon"><span class="material-icons is-size-5">
+                                        dashboard
+                                    </span></a></div>
+                        </div>
+                    </li><!--!-->
+                    <!--!-->
+                    <li class="column is-hidden-mobile is-narrow"><a href="/homepage"><img class="image pr-2"
+                                src="/images/logo.png" style="height:24px"></a></li>
+                    <li class="column is-narrow is-hidden-mobile"><a class="icon-text" href="okr/checkin"><span
+                                class="icon image is-24x24"><img src="/images/modules/okrs.png"
+                                    alt="module-image"></span><!--!-->
+                            <span class="has-text-weight-semibold">OKRs</span></a></li>
+                    <li class="column is-hidden-mobile">
+                        <div style="max-width:400px"><!--!-->
+                            <div class="control search_bar is_collapse  has-icons-left has-icons-right has_suggest"
+                                title="Nhấn Ctrl + &quot;/&quot; để tìm kiếm"><input id="search_241I4"
+                                    class="input is-rounded is-small" type="text" placeholder="Tên ứng dụng..."
+                                    autocomplete="off"><!--!-->
+                                <!--!--><span class="icon is-left"><i
+                                        class="material-icons-outlined is-size-5">search</i></span>
+                                <a class="icon is-right has-text-danger"><!--!--><i class="material-icons-outlined">
+                                        close
+                                    </i></a>
+                            </div>
+                        </div>
+                    </li><!--!-->
+                    <li class="column is-hidden-tablet"></li>
+
+
+                    <li class="column is-hidden-mobile is-narrow"><!--!--><!--!-->
+                        <div id="dropdown_8a5c8ce8" class="dropdown   ">
+                            <div class="dropdown-trigger">
+                                <div class="avatar_list"><a class="image is-rounded is-24x24 mr-1"
+                                        title="Đặng Ngọc Hậu"><img
+                                            src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/23AIC2003E_z4563666505738_b54118fda657d4a8609284b57ca2eba1.jpg"
+                                            alt="IMG"><!--!-->
+                                        <div class="online_dot"></div>
+                                    </a><a class="image is-rounded is-24x24 mr-1" title="Trần Duy Thục"><img
+                                            src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638397902369608569_bb896db4d8fd04a35dec.jpg"
+                                            alt="IMG"><!--!-->
+                                        <div class="online_dot"></div>
+                                    </a><a class="image is-rounded is-24x24 mr-1" title="Nguyễn Phước Bình"><img
+                                            src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638398967053020810_z2342263754898_69371564996097940f3dc5da76d44c63.jpg"
+                                            alt="IMG"><!--!-->
+                                        <div class="online_dot"></div>
+                                    </a></div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="column is-hidden-mobile is-narrow"><!--!-->
+                        <div id="dropdown_8ab3b6a8" class="dropdown   ">
+                            <div class="dropdown-trigger"><!--!--><button class="button is-link    is-inverted"><span>QUÝ I
+                                        - 2024</span><span class="icon"><span
+                                            class="material-icons-outlined">arrow_drop_down</span></span></button></div>
+                        </div>
+                    </li>
+                    <li class="column is-narrow"><!--!-->
+                        <div id="dropdown_bdd52d60" class="dropdown   ">
+                            <div class="dropdown-trigger"><a class="icon-text" title="Đổi tổ chức"><span
+                                        class="icon image is-24x24 is-rounded"><img
+                                            src="https://storage.googleapis.com/fastdo-storage.appspot.com/237O695B8A/237O78146A.png"
+                                            alt="Logo"></span><!--!-->
+                                    <span class="is-hidden-mobile text_1_line" style="max-width:200px">Công ty TNHH Quản trị
+                                        số Fastdo</span><!--!-->
+                                    <!--!--><span class="icon"><span class="material-icons-outlined">
+                                            arrow_drop_down
+                                        </span></span></a></div>
+                        </div>
+                    </li><!--!-->
+                    <li class="column is-narrow"><!--!-->
+                        <div id="dropdown_1494209a" class="dropdown   ">
+                            <div class="dropdown-trigger"><!--!--><button class="button is-link    is-inverted"><span
+                                        class="icon"><span
+                                            class="material-icons-outlined">help_outline</span></span></button></div>
+                        </div>
+                    </li><!--!-->
+                    <li class="column is-narrow" style="z-index:9"><!--!--><!--!--><!--!-->
+                        <div id="dropdown_c40e2c0b" class="dropdown is-noti  ">
+                            <div class="dropdown-trigger"><a class="button is-white"><!--!--><span class="icon"><i
+                                            class="material-icons-outlined is-size-6">
+                                            notifications
+                                        </i></span></a></div>
+                        </div>
+                    </li><!--!-->
+                    <li class="column is-narrow"><!--!-->
+                        <div id="dropdown_c92542fe" class="dropdown   ">
+                            <div class="dropdown-trigger"><a class="icon image is-rounded is-24x24"><img
+                                        src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638397902369608569_bb896db4d8fd04a35dec.jpg"
+                                        alt=""></a></div>
+                        </div>
+                    </li>
+                </ul>
+            </section>
+        </section><!--!-->
+        <section class="column is-full">
+            <div class="columns is-variable is-0 is-multiline" id="okr">
+                <div class="sidebar is_pin"><!--!-->
+                    <section id="sidebar" class="is_less is_pin"><a class="button is-white toggle"><span class="icon"><span
+                                    class="material-icons-outlined">menu</span></span></a><!--!-->
+                        <a class="button is-white module-pin"><span class="icon is-hidden-mobile"
+                                style="margin-left:auto"><span class="is-size-6 material-icons-outlined"><!--!-->
+                                    push_pin
+                                </span></span></a><a class="icon-text module-name"><span class="icon"><span
+                                    class="material-icons-outlined">fact_check</span></span><span>Check in</span></a>
+                        <nav class="scrolly mt-4">
+                            <ul>
+                                <li class="is-active"><a class="button is-white"><span class="icon"><i
+                                                class="material-icons-outlined">settings</i></span><!--!-->
+                                        <span>Thiết lập</span><!--!-->
+                                        <!--!--><span class="icon"><i
+                                                class="material-icons-outlined is-size-6">arrow_right</i></span></a><!--!-->
+                                    <ul>
+
+                                        <li class=""><a class="button is-white" href="suggest"><span>Góp ý mục
+                                                    tiêu</span></a></li>
+
+                                        <li class=""><a class="button is-white" href="detail"><span>Tạo
+                                                    OKRs</span></a></li>
+                                    </ul>
+                                </li>
+                                <li class=""><a class="button is-white" href="overview"><span class="icon"><i
+                                                class="material-icons-outlined is-size-6">account_tree</i></span><!--!-->
+                                        <span>Tổng quan</span></a></li>
+                                <li class="is-active"><a class="button is-white" href="checkin"><span class="icon"><i
+                                                class="material-icons-outlined is-size-6">fact_check</i></span><!--!-->
+                                        <span>Check in</span></a></li>
+                                <li class=""><a class="button is-white" href="review"><span class="icon"><i
+                                                class="material-icons-outlined is-size-6">reviews</i></span><!--!-->
+                                        <span>Đánh giá</span></a></li>
+                                <li class=""><a class="button is-white" href="cycle"><span class="icon"><i
+                                                class="material-icons-outlined is-size-6">task</i></span><!--!-->
+                                        <span>Thiết lập quý</span></a></li>
+                            </ul>
+                        </nav><!--!-->
+                        <a class="button is-white btn_logout" title="Đăng xuất"><!--!--><span class="icon"><i
+                                    class="material-icons-round is-size-6">logout</i></span>
+                            <!--!--><span>Đăng xuất</span></a>
+                    </section>
+                    <section class="sidebar_overlay"></section>
+                </div><!--!-->
+                <section id="content" class="column has_sidebar "><!--!--><!--!--><!--!--><!--!-->
+
+                    @Body
+
+                </section>
+            </div>
+        </section>
+    </main>
+}
+else
+{
+    @Body
+}
+
+
+@code {
+
+    public bool isLogin = true;
+
+    private async Task isCookieAvailible()
+    {
+        var idUser = await JSRuntime.InvokeAsync<string>("a.ReadCookie");
+        
+        if (idUser != null)
+        {
+            if(S_User.CheckUserIsAvailable(idUser)){
+                isLogin = true;
+            }
+        }
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await Task.CompletedTask;
+    }
+
+
+}

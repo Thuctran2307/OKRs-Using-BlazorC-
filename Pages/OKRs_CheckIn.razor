@@ -1,0 +1,86 @@
+@page "/checkin"
+
+<section class="main_content">
+    <div class="card flex_column is_fullheight">
+        <ul class="columns is-vcentered is-variable is-2 mb-2"><!--!-->
+            <li class="column">
+                <h1 class="title is-5 has-text-info">
+                    CHECK-IN OKRs
+                </h1>
+            </li>
+            <li class="column is-narrow"><!--!--><!--!-->
+                <div id="dropdown_9b7dcac9" class="dropdown is-left  ">
+                    <div class="dropdown-trigger"><a class="icon-text"><span class="has-text-link is-block"
+                                style="max-width: 200px;">Tất cả phòng ban</span><!--!-->
+                            <!--!--><span class="icon"><i
+                                    class="material-icons-outlined is-size-5">arrow_drop_down</i></span></a></div>
+                </div>
+            </li><!--!-->
+            <li class="column is-one-quarter"><!--!-->
+                <div class="control is-expanded has-icons-left has-icons-right has_suggest"><input
+                        class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..."
+                        autocomplete="off"><!--!-->
+                    <!--!--><span class="icon is-left"><i class="material-icons-outlined is-size-6">search</i></span>
+                    <a class="icon is-right has-text-danger"><!--!--><i
+                            class="material-icons-outlined">close</i></a><!--!-->
+                    <ul class="suggest"></ul>
+                </div>
+            </li><!--!-->
+            <li class="column is-narrow"><a href="/okr/history/2411E7F225"><!--!-->Lịch sử chỉnh sửa</a></li>
+        </ul><!--!-->
+
+        <div class="inner_section scrolly" style="flex:1">
+            <table class="table is-fullwidth is-noborder is-responsive sticky only_desktop" style="width:100%">
+                <!--!-->
+                <thead>
+                    <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;">
+                        <th class="">Mục tiêu</th>
+                        <th class="" width="160px">Kết Quả Then Chốt</th>
+                        <th class="" width="200px" align="center">Tiến độ</th>
+                        <th class="" width="90px" align="center">Thay đổi</th>
+                        <th class="" width="90px" align="center">Tự tin</th>
+                        <th class="" width="105px" align="center" title="Check-in gần nhất">Check-in</th>
+                        <th class="" width="120px" align="center">Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <div class="is-flex"><a class="has-text-weight-semibold"
+                                    href="/okr/checkin/241G3C1663/info">Bộc phá kiến thức C#</a></div>
+                        </td><!--!-->
+                        <td><!--!--><label class="td-label">Kết quả</label>
+                            <div class="td-value"><a
+                                    class="icon-text has-text-weight-semibold has-text-info"><span>3<!--!--> kết
+                                        quả</span><!--!-->
+                                    <span class="icon"><i
+                                            class="material-icons-outlined is-size-5">arrow_right</i></span></a>
+                            </div>
+                        </td><!--!-->
+                        <td><!--!--><label class="td-label">Tiến độ</label>
+                            <div class="td-value">
+                                <div class="progress_has_value"><progress class="progress is-small is-dark" value="0"
+                                        max="100"></progress><!--!-->
+                                    <span>0%</span>
+                                </div>
+                            </div>
+                        </td><!--!-->
+                        <td align="center"><!--!--><label class="td-label">Thay đổi</label>
+                            <div class="td-value has-text-weight-semibold">0<!--!-->%
+                            </div>
+                        </td><!--!-->
+                        <td align="center"><!--!--><label class="td-label">Tự tin</label>
+                            <div class="td-value has-text-weight-semibold"><span></span></div>
+                        </td><!--!-->
+                        <td align="center"><!--!--><label class="td-label">Check-in</label>
+                            <div class="td-value"></div>
+                        </td><!--!-->
+                        <td align="center"><!--!--><label class="td-label">Trạng thái</label>
+                            <div class="td-value has-text-weight-semibold"></div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>

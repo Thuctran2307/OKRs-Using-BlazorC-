@@ -1,0 +1,57 @@
+is_global = true
+build_property.TargetFramework = net7.0
+build_property.TargetPlatformMinVersion = 
+build_property.UsingMicrosoftNETSdkWeb = true
+build_property.ProjectTypeGuids = 
+build_property.InvariantGlobalization = 
+build_property.PlatformNeutralAssembly = 
+build_property.EnforceExtendedAnalyzerRules = 
+build_property._SupportedPlatformList = Linux,macOS,Windows
+build_property.RootNamespace = OKRs
+build_property.RootNamespace = OKRs
+build_property.ProjectDir = D:\Code\c#\OKRs\
+build_property.RazorLangVersion = 7.0
+build_property.SupportLocalizedComponentNames = 
+build_property.GenerateRazorMetadataSourceChecksumAttributes = 
+build_property.MSBuildProjectDirectory = D:\Code\c#\OKRs
+build_property._RazorSourceGeneratorDebug = 
+
+[D:/Code/c\#/OKRs/App.razor]
+build_metadata.AdditionalFiles.TargetPath = QXBwLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/MainLayout.razor]
+build_metadata.AdditionalFiles.TargetPath = TWFpbkxheW91dC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/Pages/Cycle.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ3ljbGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/Pages/LoginPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5QYWdlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/Pages/OKRs_CheckIn.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT0tSc19DaGVja0luLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/Pages/OKRs_Detail.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT0tSc19EZXRhaWwucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/Pages/OKRs_Suggest.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT0tSc19TdWdnZXN0LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/Pages/_KR.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0tSLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/_Imports.razor]
+build_metadata.AdditionalFiles.TargetPath = X0ltcG9ydHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/Pages/_Host.cshtml]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcX0hvc3QuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
