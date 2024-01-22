@@ -48,7 +48,7 @@
 
 @code{
 
-    [Parameter] public KR kr { get; set; }
+    [Parameter] public KR kr { get; set; } = new KR();
     [Parameter] public EventCallback<KR> DeleteKRInList { get; set; }
 
     private async void DeleteKR()
