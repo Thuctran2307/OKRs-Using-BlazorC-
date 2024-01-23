@@ -212,8 +212,11 @@
 </div>
 
 @code {
+    [CascadingParameter] MainLayout mainLayout { get; set; }
     public OKRs okrs = new OKRs();
     private bool isSlider = false;
+
+    private string idCycle = "";
 
     private List<KR> list_KR_Sample = new List<KR>();
     private List<OKRs> list_OKRs = new List<OKRs>();
@@ -222,15 +225,32 @@
 
     public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
 
+    // onParametersSet
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine("OnParametersSetAsync");
+        idCycle = mainLayout.selectedCycle.idCycle;
+        list_OKRs = await DbOKRs.GetAllOKRsByIdCycle(idCycle);
+        
+        isShowKR.Clear();
+        foreach (var okr in list_OKRs)
+        {
+            isShowKR.Add(okr.idOKRs, false);
+        }
 
-    protected override void OnInitialized()
+        StateHasChanged();
+    }
+    // onInitialize
+
+    protected override async Task OnInitializedAsync()
     {
         init();
+        StateHasChanged();
     }
 
     private async void init()
     {
-        list_OKRs = await DbOKRs.GetAllOKRs();
+        list_OKRs = await DbOKRs.GetAllOKRsByIdCycle(idCycle);
         list_KR = await DbKR.GetAllKRs();
 
         list_KR_Sample.Clear();
@@ -243,8 +263,6 @@
             isShowKR.Add(okr.idOKRs, false);
         }
         isSlider = false;
-        await JSRuntime.InvokeVoidAsync("a.Draw");
-        StateHasChanged();
     }
 
     private void AddKrToList()
@@ -271,6 +289,7 @@
 
     private async void AddOKRs()
     {
+        okrs.idCycle = idCycle;
         if (!FindOkrInList(okrs.idOKRs))
         {
             await DbOKRs.AddOKRs(okrs);
@@ -297,7 +316,7 @@
             await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được cập nhập thành công");
         }
         init();
-
+        StateHasChanged();
     }
 
     private int GetNumberKrOfOKRs(string idOKR)

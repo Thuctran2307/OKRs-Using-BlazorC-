@@ -184,7 +184,7 @@
             if (is_User_exist != null)
             {
                 mainLayout.user = is_User_exist;
-                await JSRuntime.InvokeAsync<string>("a.WriteCookie", "_user", user.userId, 1);
+                await JSRuntime.InvokeAsync<string>("a.WriteCookie", "_user", is_User_exist.userId, 1);
                 mainLayout.isLogin = true;
                 NavigationManager.NavigateTo("/detail");
             }

@@ -53,6 +53,16 @@ namespace OKRs.Model
             return user;
         }
 
+        // GetAllUser
+
+        public static async Task<List<User>> GetAllUser()
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<User>(_collectionName);
+            var user = await collection.Find(x => true).ToListAsync();
+            return user;
+        }
+
 
     }
 }

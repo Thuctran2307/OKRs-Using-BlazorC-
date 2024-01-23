@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace OKRs.Model
@@ -18,5 +19,9 @@ namespace OKRs.Model
         public string reason { get; set; }
 
         public long dateSend { get; set; }
+
+        public Suggest(){
+            this.idSuggest = ObjectId.GenerateNewId().ToString();
+        }
     }
 }

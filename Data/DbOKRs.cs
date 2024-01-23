@@ -40,6 +40,16 @@ namespace OKRs.Model
             return okrs;
         }
 
+        // get all OKRs by idCycle
+        public static async Task<List<OKRs>> GetAllOKRsByIdCycle(string idCycle)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<OKRs>(_collectionName);
+            var okrs = await collection.Find(x => x.idCycle == idCycle).ToListAsync();
+            return okrs;
+        }
+
+
         // Update okr
 
         public static async Task<OKRs> UpdateOKRs(OKRs okrs)

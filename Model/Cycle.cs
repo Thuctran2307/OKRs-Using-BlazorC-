@@ -1,3 +1,4 @@
+using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
 namespace OKRs.Model
@@ -13,5 +14,9 @@ namespace OKRs.Model
         public long dateEnd { get; set; }
 
         public bool status { get; set; }
+
+        public Cycle(){
+            idCycle = ObjectId.GenerateNewId().ToString();
+        }
     }
 }
