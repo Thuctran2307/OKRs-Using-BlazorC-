@@ -1,75 +1,157 @@
 @page "/suggest"
 
-<section id="content" class="column has_sidebar "><!--!--><!--!--><!--!--><!--!-->
 
-    <section class="main_content ">
-        <div class="card flex_column is_fullheight">
-            <ul class="columns is-vcentered is-variable is-2 is-mobile is-multiline mb-2"><!--!-->
-                <li class="column is-full-mobile">
-                    <h1 class="title is-5 is-size-6-mobile has-text-info">
-                        OKRs - GÓP Ý MỤC TIÊU
-                    </h1>
-                </li>
-                <li class="column is-one-fifth is-full-mobile">
-                    <div class="select is-fullwidth"><select>
-                            <option value=""><!--!-->Chọn lý do</option>
-                            <option value="241AEF604C">Chuyển đổi số và áp dụng công nghệ nhiều hơn</option>
-                            <option value="241A7B1A7D">Gia tăng giá trị sản phẩm</option>
-                            <option value="241A662F7B">Gia tăng khách hàng (số lượng, trải nghiệm, giá trị đơn hàng...)
-                            </option>
-                            <option value="241AEAF915">Hệ thống quản trị tốt hơn</option>
-                            <option value="241A1B75FD">Hệ thống vận hành (quy trình, quy định, biểu mẫu..) tốt hơn
-                            </option>
-                            <option value="241A298580">Nhân sự tốt hơn</option>
-                            <option value="241ADDE7B6">Phát triển văn hóa doanh nghiệp tốt hơn</option>
-                        </select></div>
-                </li><!--!-->
-                <li class="column is-one-fifth is-full-mobile">
-                    <div class="select is-fullwidth"><select class="is-family-code">
-                            <option value=""><!--!-->GÓP Ý CỦA TÔI</option>
-                            <option value="241A2D9F3B">FASTDO ĐÀ NẴNG (3)</option>
-                            <option value="241AF38879">└─ PHÒNG KT - TC (1)</option>
-                            <option value="241A0E45FC">└─ PHÒNG MARKETING </option>
-                            <option value="241AAACC71">└─ PHÒNG NHÂN SỰ </option>
-                            <option value="241A651B1A">└─ PHÒNG SALES - CS </option>
-                            <option value="241AA0BDEA">└─ PHÒNG SẢN XUẤT </option>
-                        </select></div>
-                </li><!--!-->
-                <li class="column is-narrow"><a class="button is-link"><!--!--><span class="icon"><i
-                                class="material-icons-outlined is-size-6">add</i></span>
-                        <!--!--><span>Thêm mới</span></a></li>
-            </ul><!--!-->
-            <div class="inner_section scrolly" style="flex:1">
-                <table class="table is-striped is-noborder is-fullwidth is-responsive"><!--!-->
-                    <thead>
-                        <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;">
-                            <th class="pt-0">Nội dung góp ý</th>
-                            <th class="pt-0" width="15%">Gửi đến</th>
-                            <th class="pt-0" width="20%">Lý do bạn muốn góp ý</th>
-                            <th class="pt-0" width="160px">Ngày gửi</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
+<section class="main_content ">
+    <div class="card flex_column is_fullheight">
+        <ul class="columns is-vcentered is-variable is-2 is-mobile is-multiline mb-2">
+            <li class="column is-full-mobile">
+                <h1 class="title is-5 is-size-6-mobile has-text-info">
+                    OKRs - GÓP Ý MỤC TIÊU
+                </h1>
+            </li>
+            <li class="column is-one-fifth is-full-mobile">
+                <div class="select is-fullwidth"><select @onchange="ChangeReason">
+                        <option value="">Chọn lý do</option>
+                        <option value="241AEF604C">Chuyển đổi số và áp dụng công nghệ nhiều hơn</option>
+                        <option value="241A7B1A7D">Gia tăng giá trị sản phẩm</option>
+                        <option value="241A662F7B">Gia tăng khách hàng (số lượng, trải nghiệm, giá trị đơn hàng...)
+                        </option>
+                        <option value="241AEAF915">Hệ thống quản trị tốt hơn</option>
+                        <option value="241A1B75FD">Hệ thống vận hành (quy trình, quy định, biểu mẫu..) tốt hơn
+                        </option>
+                        <option value="241A298580">Nhân sự tốt hơn</option>
+                        <option value="241ADDE7B6">Phát triển văn hóa doanh nghiệp tốt hơn</option>
+                    </select></div>
+            </li>
+            <li class="column is-one-fifth is-full-mobile">
+                <div class="select is-fullwidth"><select class="is-family-code" @onchange="ChangePhongBan">
+                        <option value="">GÓP Ý CỦA TÔI</option>
+                        <option value="241A2D9F3B">FASTDO ĐÀ NẴNG (3)</option>
+                        <option value="241AF38879">└─ PHÒNG KT - TC (1)</option>
+                        <option value="241A0E45FC">└─ PHÒNG MARKETING </option>
+                        <option value="241AAACC71">└─ PHÒNG NHÂN SỰ </option>
+                        <option value="241A651B1A">└─ PHÒNG SALES - CS </option>
+                        <option value="241AA0BDEA">└─ PHÒNG SẢN XUẤT </option>
+                    </select></div>
+            </li>
+            <li class="column is-narrow">
+                <a class="button is-link" @onclick="() => isSlider = !isSlider">
+                    <span class="icon">
+                        <i class="material-icons-outlined is-size-6">add</i>
+                    </span>
+                    <span>Thêm mới</span>
+                </a>
+            </li>
+        </ul>
+        <div class="inner_section scrolly" style="flex:1">
+            <table class="table is-striped is-noborder is-fullwidth is-responsive">
+                <thead>
+                    <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;">
+                        <th class="pt-0">Nội dung góp ý</th>
+                        <th class="pt-0" width="15%">Gửi đến</th>
+                        <th class="pt-0" width="20%">Lý do bạn muốn góp ý</th>
+                        <th class="pt-0" width="160px">Ngày gửi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @foreach (var suggest in list)
+                        {
                             <td>
-                                <div class="is-word-break"><!--!-->1213</div>
-                            </td><!--!-->
-                            <td><!--!--><label class="td-label">Gửi đến</label>
-                                <div class="td-value">FASTDO ĐÀ NẴNG</div>
-                            </td><!--!-->
-                            <td><!--!--><label class="td-label">Lý do</label>
-                                <div class="td-value">Hệ thống quản trị tốt hơn</div>
-                            </td><!--!-->
-                            <td><!--!--><label class="td-label">Ngày gửi</label>
-                                <div class="td-value">10:42 - 16/01/2024</div>
+                                <div class="is-word-break">@suggest.content</div>
                             </td>
-                        </tr>
-                    </tbody>
-                </table>
+                            <td><label class="td-label">Gửi đến</label>
+                                <div class="td-value">@suggest.idUserSend</div>
+                            </td>
+                            <td><label class="td-label">Lý do</label>
+                                <div class="td-value">@suggest.reason</div>
+                            </td>
+                            <td><label class="td-label">Ngày gửi</label>
+                                <div class="td-value">@suggest.dateSend</div>
+                            </td>
+                        }
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+
+
+<div class="slider is-large @(isSlider ? "is-active" : "")" style="">
+    <div class="slider-header">
+        <div class="columns is-variable is-2 is-mobile is-vcentered">
+            <div class="column">
+                <div class="has-text-weight-bold is-size-5">
+                    Tạo góp ý mục tiêu
+                </div>
+            </div>
+            <div class="column is-narrow"><button class="button" @onclick="() => isSlider = !isSlider"><span
+                        class="icon"><span class="material-icons-outlined">close</span></span><span>Hủy
+                        tạo</span></button></div>
+        </div>
+    </div>
+    <div class="slider-body">
+        <div class="scrolly is-mobile is-flex is-flex-direction-column">
+            <div class="field">
+                <div class="columns is-variable is-multiline is-2">
+                    <div class="column is-full">
+                        <div class="field"><label class="label">Gửi đến *</label>
+                            <div class="control">
+                                <div class="select is-fullwidth is_bg"><select class="is-family-code"
+                                        @onchange="ChangePhongBan">
+                                        <option value="">Chọn phòng ban</option>
+                                        <option value="241A2D9F3B">FASTDO ĐÀ NẴNG</option>
+                                        <option value="241AF38879">└─ PHÒNG KT - TC</option>
+                                        <option value="241A0E45FC">└─ PHÒNG MARKETING</option>
+                                        <option value="241AAACC71">└─ PHÒNG NHÂN SỰ</option>
+                                        <option value="241A651B1A">└─ PHÒNG SALES - CS</option>
+                                        <option value="241AA0BDEA">└─ PHÒNG SẢN XUẤT</option>
+                                    </select></div>
+                            </div>
+                        </div>
+                        <div class="field"><label class="label">Lý do bạn muốn góp ý *</label>
+                            <div class="control">
+                                <div class="select is-fullwidth is_bg"><select @onchange="ChangeReason">
+                                        <option value="">Chọn lý do</option>
+                                        <option value="241AEF604C">Chuyển đổi số và áp dụng công nghệ nhiều hơn</option>
+                                        <option value="241A7B1A7D">Gia tăng giá trị sản phẩm</option>
+                                        <option value="241A662F7B">Gia tăng khách hàng (số lượng, trải nghiệm, giá trị
+                                            đơn hàng...)</option>
+                                        <option value="241AEAF915">Hệ thống quản trị tốt hơn</option>
+                                        <option value="241A1B75FD">Hệ thống vận hành (quy trình, quy định, biểu mẫu..)
+                                            tốt hơn</option>
+                                        <option value="241A298580">Nhân sự tốt hơn</option>
+                                        <option value="241ADDE7B6">Phát triển văn hóa doanh nghiệp tốt hơn</option>
+                                    </select></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-full">
+                        <div class="field"><label class="label"><span>Nội dung mục góp ý *</span>
+                                <a class="icon is-pulled-right has-text-info"><i
+                                        class="material-icons-outlined">close</i></a></label>
+                            <div class="control"><textarea class="textarea is_bg"
+                                    placeholder="Bạn muốn công ty dành nguồn lực tập trung vào mục tiêu / điều gì trong quý tới... "></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </section>
-</section>
+    </div>
+    <div class="slider-footer">
+        <div class="field is-grouped is-grouped-right">
+            <div class="control"><button class="button is-link    is-inverted"><span class="icon"><span
+                            class="material-icons-outlined">add</span></span><span>Thêm</span></button></div>
+            <div class="control"><button class="button is-info"><span class="icon"><span
+                            class="material-icons-outlined">save</span></span><span>Lưu nháp</span></button></div>
+
+            <div class="control"><button class="button is-link" @onclick="SendSuggest"><span class="icon"><span
+                            class="material-icons-outlined">done</span></span><span>Gửi góp ý</span></button></div>
+        </div>
+    </div>
+</div>
 
 
 
@@ -83,8 +165,7 @@
 
     [CascadingParameter] MainLayout mainLayout { get; set; }
 
-    // OnInitallize
-    public async void OnInitallize()
+    protected override async Task OnInitializedAsync()
     {
         list = await DbSuggest.GetListSuggest();
     }
@@ -105,10 +186,11 @@
     {
         suggest.isSend = true;
         suggest.idUserSend = mainLayout.user.userId;
-
+        suggest.dateSend = DateTime.Today.Ticks;
         await DbSuggest.AddSuggest(suggest);
         suggest = new Suggest();
-
+        isSlider = false;
+        list = await DbSuggest.GetListSuggest();
     }
 
 }

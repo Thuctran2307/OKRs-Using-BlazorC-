@@ -184,7 +184,7 @@ else
 
     public List<Cycle> listCycle = new List<Cycle>();
     
-    public Cycle selectedCycle;
+    public Cycle selectedCycle = new Cycle();
 
     // onAfterRenderAsync
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -192,8 +192,11 @@ else
 
         if (firstRender)
         {
+
+            Console.WriteLine("onAfterRenderAsync 00000");
             var idUser = await JSRuntime.InvokeAsync<string>("a.ReadCookie");
             selectedCycle = await DbCycle.GetCycleLast();
+            listCycle = await DbCycle.GetListCycle();
             if (idUser != null)
             {
                 var rs = await DbUser.GetUserById(idUser);
@@ -207,7 +210,6 @@ else
                     else{
                         NavigationManager.NavigateTo(NavigationManager.Uri);
                     }
-                    
                 }
             }
         }
@@ -216,6 +218,6 @@ else
     protected override async Task OnInitializedAsync()
     {
         selectedCycle = await DbCycle.GetCycleLast();
-        listCycle = await DbCycle.GetListCycle();
+        Console.WriteLine("OnInitializedAsync 0000");
     }
 }

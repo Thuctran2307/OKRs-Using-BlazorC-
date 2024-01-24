@@ -225,32 +225,32 @@
 
     public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
 
-    // onParametersSet
-    protected override async Task OnParametersSetAsync()
-    {
-        Console.WriteLine("OnParametersSetAsync");
-        idCycle = mainLayout.selectedCycle.idCycle;
-        list_OKRs = await DbOKRs.GetAllOKRsByIdCycle(idCycle);
-        
-        isShowKR.Clear();
-        foreach (var okr in list_OKRs)
-        {
-            isShowKR.Add(okr.idOKRs, false);
-        }
-
-        StateHasChanged();
-    }
     // onInitialize
 
     protected override async Task OnInitializedAsync()
     {
+        Console.WriteLine("Initial");
         init();
-        StateHasChanged();
+    }
+
+    // onParameter
+
+    protected override async Task OnParametersSetAsync()
+    {
+        Console.WriteLine("Parameter");
+        init();
     }
 
     private async void init()
     {
+        idCycle = mainLayout.selectedCycle.idCycle;
+
         list_OKRs = await DbOKRs.GetAllOKRsByIdCycle(idCycle);
+
+        if (list_OKRs == null)
+        {
+            list_OKRs = new List<OKRs>();
+        }
         list_KR = await DbKR.GetAllKRs();
 
         list_KR_Sample.Clear();
@@ -263,6 +263,7 @@
             isShowKR.Add(okr.idOKRs, false);
         }
         isSlider = false;
+        StateHasChanged();
     }
 
     private void AddKrToList()
