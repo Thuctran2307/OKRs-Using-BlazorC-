@@ -75,7 +75,7 @@
                             {
                                 @if (isShowKR[okr.idOKRs])
                                 {
-                                    var list = @GetKROfOKR(okr.idOKRs);
+                                    var list = @HandleOKRs.GetKROfOKR(okr.idOKRs, list_KR);
                                     foreach (KR kr in list)
                                     {
                                         <tr>
@@ -83,7 +83,7 @@
                                             <td class="pl-2"></td>
                                             <td><label class="td-label">Đạt được</label>
                                                 <div class="td-value"><span class="has-text-success"
-                                                        title="@kr.processCurrent / @kr.target"></span>
+                                                        title="tiến độ"> @kr.processCurrent / @kr.target </span>
                                                     <span class="is-pulled-right">@kr.unit</span>
                                                 </div>
                                             </td>
@@ -207,13 +207,12 @@
                 </a>
             </div>
         </div>
-
     </div>
 </div>
-
 @code {
     [CascadingParameter] MainLayout mainLayout { get; set; }
     public OKRs okrs = new OKRs();
+    
     private bool isSlider = false;
 
     private string idCycle = "";
@@ -224,6 +223,14 @@
     private List<KR> list_KR = new List<KR>();
 
     public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
+
+    async void AddProgress(){
+        Process a = new Process();
+        a.idOKRs = "65b1cc7e8336141a68522a21";
+        a.process = 0.2;
+        a.date = DateTime.Today.Ticks;
+        await DbProcess.AddProcess(a);
+    }
 
     // onInitialize
 
@@ -237,7 +244,7 @@
 
     protected override async Task OnParametersSetAsync()
     {
-        Console.WriteLine("Parameter");
+        Console.WriteLine("Parameter" + "OKR_Detail");
         init();
     }
 
@@ -245,13 +252,15 @@
     {
         idCycle = mainLayout.selectedCycle.idCycle;
 
-        list_OKRs = await DbOKRs.GetAllOKRsByIdCycle(idCycle);
+        list_OKRs = await DbOKRs.GetAllOKRsByIdCycle(idCycle, mainLayout.user.userId);
+        mainLayout.listOKRs = list_OKRs;
 
         if (list_OKRs == null)
         {
             list_OKRs = new List<OKRs>();
         }
         list_KR = await DbKR.GetAllKRs();
+        mainLayout.listKR = list_KR;
 
         list_KR_Sample.Clear();
         okrs = new OKRs();
@@ -291,6 +300,7 @@
     private async void AddOKRs()
     {
         okrs.idCycle = idCycle;
+        okrs.idUser = mainLayout.user.userId;
         if (!FindOkrInList(okrs.idOKRs))
         {
             await DbOKRs.AddOKRs(okrs);
@@ -333,19 +343,6 @@
         return count;
     }
 
-    private List<KR> GetKROfOKR(string idOKR)
-    {
-        List<KR> list = new List<KR>();
-        foreach (KR kr in list_KR)
-        {
-            if (kr.idOKRs == idOKR)
-            {
-                list.Add(kr);
-            }
-        }
-        return list;
-    }
-
     private void ShowKR(string idOKR)
     {
         isShowKR[idOKR] = !isShowKR[idOKR];
@@ -386,9 +383,9 @@
         if (okrs != null)
         {
             await DbOKRs.DeleteOKRs(idOKR);
-            var listKR = GetKROfOKR(idOKR);
+            var listKR_ofOKrs = HandleOKRs.GetKROfOKR(idOKR, list_KR);
 
-            foreach (var kr in listKR)
+            foreach (var kr in listKR_ofOKrs)
             {
                 await DbKR.DeleteKRs(kr.idKR);
             }
@@ -398,15 +395,4 @@
             StateHasChanged();
         }
     }
-
-    private async void AddProcess()
-    {
-        Process a = new Process();
-        a.idOKRs = okrs.idOKRs;
-        a.process = 0.1;
-        a.date = DateTime.Today.Ticks;
-        await DbProcess.AddProcess(a);
-    }
-
-
 }

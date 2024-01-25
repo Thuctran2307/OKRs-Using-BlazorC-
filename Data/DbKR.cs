@@ -58,5 +58,15 @@ namespace OKRs.Model
             await collection.DeleteManyAsync(x => x.idOKRs == idOKRs);
         }
 
+        // UpdateKR
+
+        public static async Task<List<KR>> UpdateKR(KR kr)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<KR>(_collectionName);
+            await collection.ReplaceOneAsync(x => x.idKR == kr.idKR, kr);
+            return await collection.Find(x => true).ToListAsync();
+        }
+
     }
 }

@@ -18,15 +18,8 @@ namespace OKRs.Model
 
         public string idOKR_Superior { get; set; }
 
-        public int confident { get; set; }
-
-        public long dateCheckIn { get; set; }
-
-        public int status { get; set; }
-
         public long dateCreate { get; set; }
-
-        public bool isCheckIn { get; set; }
+        public int confident { get; set; }
 
 
         public OKRs()

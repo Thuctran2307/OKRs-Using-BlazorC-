@@ -32,12 +32,12 @@ window.a = {
         return "";
     },
 
-    Draw: function () {
+    Draw: function (data) {
         var data = {
-            labels: ["Tháng 1", "Tháng 2", "Tháng 3", "Tháng 4", "Tháng 5"],
+            labels: data[0],
             datasets: [{
                 label: "Doanh số bán hàng",
-                data: [50, 80, 60, 90, 75],
+                data: data[1],  
                 borderColor: 'rgba(75, 192, 192, 1)',
                 borderWidth: 2,
                 fill: false

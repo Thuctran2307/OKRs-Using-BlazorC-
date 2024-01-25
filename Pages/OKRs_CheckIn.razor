@@ -1,86 +1,679 @@
 @page "/checkin"
+@page "/checkin/{id}"
+@page "/checkin/{id}/{cmd}"
 
-<section class="main_content">
-    <div class="card flex_column is_fullheight">
-        <ul class="columns is-vcentered is-variable is-2 mb-2"><!--!-->
-            <li class="column">
-                <h1 class="title is-5 has-text-info">
-                    CHECK-IN OKRs
-                </h1>
-            </li>
-            <li class="column is-narrow"><!--!--><!--!-->
-                <div id="dropdown_9b7dcac9" class="dropdown is-left  ">
-                    <div class="dropdown-trigger"><a class="icon-text"><span class="has-text-link is-block"
-                                style="max-width: 200px;">Tất cả phòng ban</span><!--!-->
-                            <!--!--><span class="icon"><i
-                                    class="material-icons-outlined is-size-5">arrow_drop_down</i></span></a></div>
-                </div>
-            </li><!--!-->
-            <li class="column is-one-quarter"><!--!-->
-                <div class="control is-expanded has-icons-left has-icons-right has_suggest"><input
-                        class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..."
-                        autocomplete="off"><!--!-->
-                    <!--!--><span class="icon is-left"><i class="material-icons-outlined is-size-6">search</i></span>
-                    <a class="icon is-right has-text-danger"><!--!--><i
-                            class="material-icons-outlined">close</i></a><!--!-->
-                    <ul class="suggest"></ul>
-                </div>
-            </li><!--!-->
-            <li class="column is-narrow"><a href="/okr/history/2411E7F225"><!--!-->Lịch sử chỉnh sửa</a></li>
-        </ul><!--!-->
+@if(String.IsNullOrEmpty(id)){
 
-        <div class="inner_section scrolly" style="flex:1">
-            <table class="table is-fullwidth is-noborder is-responsive sticky only_desktop" style="width:100%">
-                <!--!-->
-                <thead>
-                    <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;">
-                        <th class="">Mục tiêu</th>
-                        <th class="" width="160px">Kết Quả Then Chốt</th>
-                        <th class="" width="200px" align="center">Tiến độ</th>
-                        <th class="" width="90px" align="center">Thay đổi</th>
-                        <th class="" width="90px" align="center">Tự tin</th>
-                        <th class="" width="105px" align="center" title="Check-in gần nhất">Check-in</th>
-                        <th class="" width="120px" align="center">Trạng thái</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>
-                            <div class="is-flex"><a class="has-text-weight-semibold"
-                                    href="/okr/checkin/241G3C1663/info">Bộc phá kiến thức C#</a></div>
-                        </td><!--!-->
-                        <td><!--!--><label class="td-label">Kết quả</label>
-                            <div class="td-value"><a
-                                    class="icon-text has-text-weight-semibold has-text-info"><span>3<!--!--> kết
-                                        quả</span><!--!-->
-                                    <span class="icon"><i
-                                            class="material-icons-outlined is-size-5">arrow_right</i></span></a>
+    <section class="main_content">
+        <div class="card flex_column is_fullheight">
+            <ul class="columns is-vcentered is-variable is-2 mb-2">
+                <li class="column">
+                    <h1 class="title is-5 has-text-info">
+                        CHECK-IN OKRs
+                    </h1>
+                </li>
+                <li class="column is-narrow">
+                    <div id="dropdown_03863fdb" class="dropdown is-left  ">
+                        <div class="dropdown-trigger"><a class="icon-text"><span class="has-text-link is-block"
+                                    style="max-width: 200px;">Tất cả phòng ban</span>
+                                <span class="icon"><i
+                                        class="material-icons-outlined is-size-5">arrow_drop_down</i></span></a></div>
+                    </div>
+                </li>
+                <li class="column is-one-quarter">
+                    <div class="control is-expanded has-icons-left has-icons-right has_suggest"><input
+                            class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..."
+                            autocomplete="off">
+                        <span class="icon is-left"><i class="material-icons-outlined is-size-6">search</i></span>
+                        <a class="icon is-right has-text-danger"><i class="material-icons-outlined">close</i></a>
+                        <ul class="suggest"></ul>
+                    </div>
+                </li>
+                <li class="column is-narrow"><a href="/okr/history/2411E7F225">Lịch sử chỉnh sửa</a></li>
+            </ul>
+
+            <div class="inner_section scrolly" style="flex:1">
+                <table class="table is-fullwidth is-noborder is-responsive sticky only_desktop" style="width:100%">
+                    <thead>
+                        <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;">
+                            <th class="">Mục tiêu</th>
+                            <th class="" width="160px">Kết Quả Then Chốt</th>
+                            <th class="" width="200px" align="center">Tiến độ</th>
+                            <th class="" width="90px" align="center">Thay đổi</th>
+                            <th class="" width="90px" align="center">Tự tin</th>
+                            <th class="" width="105px" align="center" title="Check-in gần nhất">Check-in</th>
+                            <th class="" width="120px" align="center">Trạng thái</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (listO.Count > 0)
+                        {
+                            foreach (var okrs in listO)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="is-flex"><a class="has-text-weight-semibold"
+                                                href="/checkin/@okrs.idOKRs">@okrs._object</a></div>
+                                    </td>
+                                    <td>
+                                        <label class="td-label">Kết quả</label>
+                                        <div class="td-value"><a class="icon-text has-text-weight-semibold has-text-info" @onclick="() => ShowKR(okrs.idOKRs)" >
+                                            <span>@HandleOKRs.GetNumberKrOfOKRs(okrs.idOKRs,mainLayout.listKR) kết quả</span>
+                                                <span class="icon"><i class="material-icons-outlined is-size-5">arrow_right</i></span></a>
+                                        </div>
+                                    </td>
+                                    <td><label class="td-label">Tiến độ</label>
+                                        <div class="td-value">
+                                            <div class="progress_has_value">
+                                                <progress class="progress is-small is-dark" value="" max="1"></progress>
+                                                <span> %</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="center"><label class="td-label">Thay đổi</label>
+                                        <div class="td-value has-text-weight-semibold">0%
+                                        </div>
+                                    </td>
+                                    <td align="center"><label class="td-label">Tự tin</label>
+                                        <div class="td-value has-text-weight-semibold"><span>@okrs.confident</span></div>
+                                    </td>
+                                    <td align="center"><label class="td-label">Check-in</label>
+                                        <div class="td-value"><span>24/01/2024</span></div>
+                                    </td>
+                                    <td align="center"><label class="td-label">Trạng thái</label>
+                                        <div class="td-value has-text-weight-semibold"><span class="has-text-success">Check-in
+                                                nháp</span></div>
+                                    </td>
+                                </tr>
+
+                                @if (isShowKR.Count > 0)
+                                {
+                                    @if (isShowKR[okrs.idOKRs])
+                                    {
+                                        var list = @HandleOKRs.GetKROfOKR(okrs.idOKRs, mainLayout.listKR);
+                                        foreach (KR kr in list)
+                                        {
+                                            <tr>
+                                                <td class="pl-4">@kr._keyResult</td>
+                                                <td class="pl-2"></td>
+                                                <td><label class="td-label">Đạt được</label>
+                                                    <div class="td-value"><span class="has-text-success"
+                                                            title="tiến độ"> @kr.processCurrent / @kr.target </span>
+                                                        <span class="is-pulled-right">@kr.unit</span>
+                                                    </div>
+                                                </td>
+                                                <td align="center"><label class="td-label">Thay đổi</label>
+                                                    <div class="td-value">0
+                                                    </div>
+                                                </td>
+                                                <td align="center"><label class="td-label">Tự tin</label>
+                                                    <div class="td-value has-text-weight-semibold"><span> @kr.confident </span></div>
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    }
+                                }
+
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+}
+else{
+    <section id="content" class="column has_sidebar ">
+            <div class="tabs">
+                <div class="tabs_name">
+                    <a class="icon-text px-0 has-text-link has-text-weight-normal is-size-6" href="/checkin">
+                        <span class="icon">
+                            <span class="material-icons-outlined">
+                                keyboard_backspace
+                            </span>
+                        </span>
+                        <span>
+                            Trở về
+                        </span>
+                    </a>
+                    <span class="icon-text">
+                        <span>
+                            Chi tiết OKRs
+                        </span>
+                    </span>
+                </div>
+                <ul>
+                    <li class="is-active">
+                        <a class="has-text-weight-normal" href="/okr/checkin/241J38B6EA/info">Check-in 1:1</a>
+                    </li>
+                    <li class="">
+                        <a class="has-text-weight-normal" href="/okr/checkin/241J38B6EA/feedback">Phản hồi</a>
+                    </li>
+                    <li class="">
+                        <a class="has-text-weight-normal" href="/okr/checkin/241J38B6EA/overview">Tổng quan</a>
+                    </li>
+                </ul>
+            </div>
+
+            @if(cmd == "add" && isEdit){
+                <section class="main_content">
+                <div class="card">
+                    <ul class="columns is-vcentered is-variable is-2 mb-5">
+                        <li class="column">
+                            <h1 class="title is-5 has-text-info">
+                                CHECK-IN 1:1
+                            </h1>
+                        </li>
+                    </ul>
+                    <table class="table is-fullwidth is-vcentered is-noborder is-responsive mb-0">
+                        <thead>
+                            <tr>
+                                <th>Mục tiêu</th>
+                                <th width="200px" align="center">Tiến độ</th>
+                                <th width="100px" align="center">Thay đổi</th>
+                                <th width="120px" align="center">Tự tin</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>
+                                    <span class="has-text-weight-semibold has-text-link">@OKR_Current._object</span>
+                                </td>
+                                <td>
+                                    <label class="td-label">Tiến độ</label>
+                                    <div class="td-value">
+                                        <div class="progress_has_value">
+                                        <progress class="progress is-small is-dark" value="@progressCurrent.process" max="1">
+                                        </progress>
+                                        <span>
+                                            @(progressCurrent.process * 100) %
+                                        </span>
+                                    </div>
+                                    </div>
+                                </td>
+                                <td align="center">
+                                    <label class="td-label">Thay đổi</label>
+                                    <div class="td-value has-text-weight-semibold">0%</div>
+                                </td>
+                                <td align="center">
+                                    <label class="td-label">Tự tin</label>
+                                    <div class="td-value">
+                                        <div class="select is-fullwidth">
+                                            <select @onchange="(e) => {OKR_Current.confident = Int32.Parse(e.Value.ToString());}" >
+                                                <option value="0">- Chọn -</option>
+                                                <option value="1">Rất tốt</option>
+                                                <option value="2">Ổn</option>
+                                                <option value="3">Không ổn</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @foreach(var kr in listKr){
+                                <tr>
+                                <td colspan="4">
+                                    <hr class="m-0">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kết quả then chốt</td>
+                                <td align="center">Đạt được</td>
+                                <td></td>
+                                <td align="center">Tự tin</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="has-text-weight-semibold has-text-link">@kr._keyResult</span>
+                                </td>
+                                <td colspan="2">
+                                    <label class="td-label">Đạt được</label>
+                                    <div class="td-value">
+                                        <div class="field has-addons">
+                                            <div class="control" style="width: 140px">
+                                                <input class="input has-text-right" type="text" placeholder="Đã đạt được" @bind=kr.processCurrent >
+                                            </div>
+                                            <div class="control is-expanded">
+                                                <div class="button is-static has-text-link">@kr.target</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="center">
+                                    <label class="td-label">Tự tin</label>
+                                    <div class="td-value">
+                                        <div class="select is-fullwidth">
+                                            <select @onchange="(e) => {kr.confident = Int32.Parse(e.Value.ToString());}" >
+                                                <option value="0">- Chọn -</option>
+                                                <option value="1">Rất tốt</option>
+                                                <option value="2">Ổn</option>
+                                                <option value="3">Không ổn</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="pl-6 pb-4">
+                                    <ul class="columns is-multiline is-variable is-2">
+                                        <li class="column is-full">
+                                            <div class="has-text-grey">Tiến độ, kết quả công việc?</div>
+                                            <div class="control pt-2">
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[0] ></textarea>
+                                            </div>
+                                        </li>
+                                        <li class="column is-full">
+                                            <div class="has-text-grey">Công việc nào đang &amp; sẽ chậm tiến độ?</div>
+                                            <div class="control pt-2">
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[1] ></textarea>
+                                            </div>
+                                        </li>
+                                        <li class="column is-full">
+                                            <div class="has-text-grey">Trở ngại, khó khăn là gì?</div>
+                                            <div class="control pt-2">
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[2] ></textarea>
+                                            </div>
+                                        </li>
+                                        <li class="column is-full">
+                                            <div class="has-text-grey">Cần làm gì để vượt qua trở ngại?</div>
+                                            <div class="control pt-2">
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[3] ></textarea>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                        }
+                        </tbody>
+                    </table>
+                    <div class="field is-grouped">
+                        <div class="control">File đính kèm</div>
+                        <div class="control">
+                            <div class="control file_upload" _bl_6c0fbd66-bb60-47a2-9708-36200cca24e3="">
+                                <a class="button is-outlined is-link " onclick="document.getElementById('file_241P175EB8').click()" title="Chọn file" style="border-radius: 6px; width: 24px; height: 24px; padding: 0px;">
+                                    <span class="icon">
+                                        <i class="material-icons-outlined is-size-6">upload</i>
+                                    </span>
+                                </a>
+                                <input id="file_241P175EB8" class="is-hidden" multiple="" accept="*" type="file" _bl_2e74e1b7-cb0a-44c8-a67f-46e931ec775d="">
+                                <span style="opacity:0;pointer-events:none;position:absolute">Chọn file</span>
                             </div>
-                        </td><!--!-->
-                        <td><!--!--><label class="td-label">Tiến độ</label>
-                            <div class="td-value">
-                                <div class="progress_has_value"><progress class="progress is-small is-dark" value="0"
-                                        max="100"></progress><!--!-->
-                                    <span>0%</span>
+                        </div>
+                    </div>
+                    <ul style="" class="columns is-multiline is-vcentered is-variable is-1 is-mobile "></ul>
+                    <div class="field is-grouped is-grouped-multiline mt-5">
+                        <div class="control" style="width: 650px;">
+                            <ul class="columns is-multiline is-vcentered is-mobile is-variable is-1">
+                                <li class="column is-narrow">
+                                    Chọn quản lý check-in
+                                </li>
+                                <li class="column is-one-quarter">
+                                    <div id="dropdown_6536c5e9" class="dropdown is-up  ">
+                                        <div class="dropdown-trigger">
+                                            <a class="icon-text">
+                                                <span class="has-text-link is-block" style="max-width: 200px;">Tất cả phòng ban</span>
+                                                <span class="icon">
+                                                    <i class="material-icons-outlined is-size-5">arrow_drop_down</i>
+                                                </span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                <li class="column is-narrow">
+                                    <div class="control is-expanded has-icons-left has-icons-right has_suggest">
+                                        <input class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..." autocomplete="off" @bind=checkInOKRs.idUserCheckIn >
+                                        <span class="icon is-left">
+                                            <i class="material-icons-outlined is-size-6">search</i>
+                                        </span>
+                                        <a class="is-hidden">
+                                            <i class="material-icons-outlined">close</i>
+                                        </a>
+                                        <ul class="suggest"></ul>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="control is-expanded has-text-right">
+                            <a class="button is-white has-text-danger" onclick="goBack()">
+                                <span>Hủy nhập</span>
+                            </a>
+                            <a class="button is-link" @onclick="CheckIn" >
+                                <span class="icon">
+                                    <i class="material-icons-outlined is-size-6">done</i>
+                                </span>
+                                <span>Hoàn tất</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            }
+            else{
+            <section class="main_content">
+            <div class="card">
+                <ul class="columns is-vcentered is-variable is-2 mb-5">
+                    <li class="column">
+                        <h1 class="title is-5 has-text-info">
+                            CHECK-IN 1:1
+                        </h1>
+                    </li>
+                    <li class="column is-narrow">
+                        <div class="field is-grouped">
+                            <div class="control has-text-weight-semibold">
+                                Chu kỳ Check-in:
+                            </div>
+                            <div class="control is-expanded">
+                                <div class="select is-fullwidth">
+                                    <select>
+                                        <option value="">
+                                            Chưa có Check-in
+                                        </option>
+                                    </select>
                                 </div>
                             </div>
-                        </td><!--!-->
-                        <td align="center"><!--!--><label class="td-label">Thay đổi</label>
-                            <div class="td-value has-text-weight-semibold">0<!--!-->%
-                            </div>
-                        </td><!--!-->
-                        <td align="center"><!--!--><label class="td-label">Tự tin</label>
-                            <div class="td-value has-text-weight-semibold"><span></span></div>
-                        </td><!--!-->
-                        <td align="center"><!--!--><label class="td-label">Check-in</label>
-                            <div class="td-value"></div>
-                        </td><!--!-->
-                        <td align="center"><!--!--><label class="td-label">Trạng thái</label>
-                            <div class="td-value has-text-weight-semibold"></div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
-</section>
+                        </div>
+                    </li>
+                    <li class="column is-narrow">
+                        <a class="button is-link" href="/checkin/@(OKR_Current.idOKRs)/add">
+                            <span class="icon">
+                                <i class="material-icons-outlined is-size-6">
+                                    add
+                                </i>
+                            </span>
+                            @if(checkInOKRs.statusCheckIn == -1){
+                                <span>
+                                    Tạo Check-in nháp
+                                </span>
+                            }
+                            else if(checkInOKRs.statusCheckIn == 0){
+                                <span>
+                                    Sửa Check-in nháp
+                                </span>
+                            }
+                        </a>
+                    </li>
+                </ul>
+                <table class="table is-fullwidth is-noborder is-responsive">
+                    <thead>
+                        <tr>
+                            <th>
+                                Mục tiêu
+                            </th>
+                            <th width="250px" align="center">
+                                Tiến độ
+                            </th>
+                            <th width="100px" align="center">
+                                Thay đổi
+                            </th>
+                            <th width="100px" align="center">
+                                Tự tin
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="is-flex">
+                                    <span class="has-text-weight-semibold has-text-link">
+                                        @OKR_Current._object
+                                    </span>
+                                </div>
+                            </td>
+                            <td>
+                                <label class="td-label">
+                                    Tiến độ
+                                </label>
+                                <div class="td-value">
+                                    <div class="progress_has_value">
+                                        <progress class="progress is-small is-dark" value="@progressCurrent.process" max="1">
+                                        </progress>
+                                        <span>
+                                            @(progressCurrent.process * 100) %
+                                        </span>
+                                    </div>
+                                </div>
+                            </td>
+                            <td align="center">
+                                <label class="td-label">
+                                    Thay đổi
+                                </label>
+                                <div class="td-value has-text-weight-semibold">
+                                    0%
+                                </div>
+                            </td>
+                            <td align="center">
+                                <label class="td-label">
+                                    Tự tin
+                                </label>
+                                <div class="td-value has-text-weight-semibold">
+                                    <span>
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="tr-hide">
+                            <td colspan="4">
+                                <hr class="m-0">
+                            </td>
+                        </tr>
+                        <tr class="tr-hide">
+                            <td>
+                                Kết quả then chốt
+                            </td>
+                            <td align="center">
+                                Đạt được
+                            </td>
+                            <td align="center">
+                                Thay đổi
+                            </td>
+                            <td align="center">
+                                Tự tin
+                            </td>
+                        </tr>
+                        @if(checkInOKRs.statusCheckIn == 0){
+
+                            @foreach(var kr in listKr){
+                                <tr>
+                                <td colspan="4">
+                                    <hr class="m-0">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Kết quả then chốt</td>
+                                <td align="center">Đạt được</td>
+                                <td></td>
+                                <td align="center">Tự tin</td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <span class="has-text-weight-semibold has-text-link">@kr._keyResult</span>
+                                </td>
+                                <td colspan="2">
+                                    <label class="td-label">Đạt được</label>
+                                    <div class="td-value">
+                                        <div class="field has-addons">
+                                            <div class="control" style="width: 140px">
+                                                <input class="input has-text-right" type="text" placeholder="Đã đạt được" @bind=kr.processCurrent >
+                                            </div>
+                                            <div class="control is-expanded">
+                                                <div class="button is-static has-text-link">@kr.target</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td align="center">
+                                    <label class="td-label">Tự tin</label>
+                                    <div class="td-value">
+                                        <div class="select is-fullwidth">
+                                            <select @onchange="(e) => {kr.confident = Int32.Parse(e.Value.ToString());}" >
+                                                <option value="0">- Chọn -</option>
+                                                <option value="1">Rất tốt</option>
+                                                <option value="2">Ổn</option>
+                                                <option value="3">Không ổn</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4" class="pl-6 pb-4">
+                                    <ul class="columns is-multiline is-variable is-2">
+                                        <li class="column is-full">
+                                            <div class="has-text-grey">Tiến độ, kết quả công việc?</div>
+                                            <div class="control pt-2">
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[0] ></textarea>
+                                            </div>
+                                        </li>
+                                        <li class="column is-full">
+                                            <div class="has-text-grey">Công việc nào đang &amp; sẽ chậm tiến độ?</div>
+                                            <div class="control pt-2">
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[1] ></textarea>
+                                            </div>
+                                        </li>
+                                        <li class="column is-full">
+                                            <div class="has-text-grey">Trở ngại, khó khăn là gì?</div>
+                                            <div class="control pt-2">
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[2] ></textarea>
+                                            </div>
+                                        </li>
+                                        <li class="column is-full">
+                                            <div class="has-text-grey">Cần làm gì để vượt qua trở ngại?</div>
+                                            <div class="control pt-2">
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[3] ></textarea>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </td>
+                            </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+            </section>
+            }
+        </section>
+}
+
+@code {
+    [CascadingParameter] MainLayout mainLayout { get; set; } = new ();
+    [Parameter] public string id { get; set; } = "";
+    [Parameter] public string cmd { get; set; } = "";
+
+    List<Process> listProcess { get; set; } = new List<Process>();
+
+    private List<OKRs> listO = new List<OKRs>();
+    public List<KR> listKr { get; set; } = new List<KR>();
+    public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
+    
+    CheckInOKRs checkInOKRs = new CheckInOKRs();
+    
+    private OKRs OKR_Current = new OKRs();
+
+    bool isEdit = false;
+
+    private Process progressCurrent = new Process();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("OnInitialized - CheckIn");
+        listO = mainLayout.listOKRs;
+        listProcess = await DbProcess.GetAllProcess();
+
+        isShowKR.Clear();
+        foreach (var okr in listO)
+        {
+            isShowKR.Add(okr.idOKRs, false);
+        }
+    }
+
+    //OnParameterSet
+    protected override async Task OnParametersSetAsync()
+    {
+        isEdit = true;
+        Console.WriteLine("OnParametersSet - CheckIn");
+        listO = mainLayout.listOKRs;
+        listProcess = await DbProcess.GetAllProcess();
+        isShowKR.Clear();
+        foreach (var okr in listO)
+        {
+            isShowKR.Add(okr.idOKRs, false);
+        }
+
+        if (!String.IsNullOrEmpty(id))
+        {
+            OKR_Current = await DbOKRs.GetOKRsById(id);
+            checkInOKRs = await DbCheckIn.GetCheckIn(id);
+            if(checkInOKRs == null){
+                checkInOKRs = new CheckInOKRs();
+            }
+            progressCurrent = await DbProcess.GetProcessLasted(OKR_Current.idOKRs);
+            if(progressCurrent == null || progressCurrent.type == 1){
+                progressCurrent = new Process();
+            }
+
+            listKr.Clear();
+            foreach(var a in mainLayout.listKR){
+                if(a.idOKRs == OKR_Current.idOKRs){
+                    listKr.Add(a);
+                    if(a.answers != null){
+                            if(a.answers.Count == 0){
+                            a.answers = new List<string>();
+                            a.answers.Add("");
+                            a.answers.Add("");
+                            a.answers.Add("");
+                            a.answers.Add("");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void ShowKR(string idOKR)
+    {
+        isShowKR[idOKR] = !isShowKR[idOKR];
+    }
+
+    private async void CheckIn()
+    {
+        TaoCheckInNhap();
+        isEdit = false;
+    }
+
+
+    public async void TaoCheckInNhap(){
+
+        checkInOKRs.idOKRs = OKR_Current.idOKRs;
+        
+        checkInOKRs.dateCheckIn = DateTime.Today.Ticks;
+
+        await DbOKRs.UpdateOKRs(OKR_Current);
+        foreach (var kr in listKr)
+        {
+            await DbKR.UpdateKR(kr);
+        }
+
+        if(checkInOKRs.statusCheckIn == -1){
+            checkInOKRs.statusCheckIn += 1;
+            await DbCheckIn.AddCheckIn(checkInOKRs);
+        }
+        else if(checkInOKRs.statusCheckIn == 0){
+            await DbCheckIn.UpdateCheckIn(checkInOKRs);
+        }
+        
+
+    }
+
+    private double CalcAverage(){
+        double sum = 0;
+        foreach(var kr in listKr){
+            sum += kr.processCurrent/kr.target;
+        }
+        return sum/listKr.Count;
+    }
+
+
+
+}

@@ -12,6 +12,8 @@ namespace OKRs.Model
         public long date { get; set; }
         public double process { get; set; }
 
+        public int type { get; set; }
+
 
         public Process(){
             idProcess = ObjectId.GenerateNewId().ToString();
