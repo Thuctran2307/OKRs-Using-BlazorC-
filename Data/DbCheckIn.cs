@@ -25,6 +25,9 @@ namespace OKRs.Data
             var _db = Mongo.GetDatabase();
             var collection = _db.GetCollection<CheckInOKRs>(_collectionName);
             var checkIn = await collection.FindAsync(x => x.idOKRs == idOKRs);
+            if(checkIn == null){
+                return new CheckInOKRs(idOKRs);
+            }
             return checkIn.FirstOrDefault();
         }
 

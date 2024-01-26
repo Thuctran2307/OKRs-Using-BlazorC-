@@ -32,5 +32,27 @@ namespace OKRs.Service
             }
             return list;
         }
+
+
+        public static string ConvertToConfident(int i){
+            /*<select  @bind="OKR_Current.confident" >
+                                                <option value="0">- Chọn -</option>
+                                                <option value="1">Rất tốt</option>
+                                                <option value="2">Ổn</option>
+                                                <option value="3">Không ổn</option>
+                                            </select>
+            */
+            switch (i)
+            {
+                case 1:
+                    return "Rất tốt";
+                case 2:
+                    return "Ổn";
+                case 3:
+                    return "Không ổn";
+                default:
+                    return "Chưa đánh giá";
+            }
+        }
     }
 }

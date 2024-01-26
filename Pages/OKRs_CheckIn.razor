@@ -21,12 +21,18 @@
                     </div>
                 </li>
                 <li class="column is-one-quarter">
-                    <div class="control is-expanded has-icons-left has-icons-right has_suggest"><input
-                            class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..."
-                            autocomplete="off">
-                        <span class="icon is-left"><i class="material-icons-outlined is-size-6">search</i></span>
-                        <a class="icon is-right has-text-danger"><i class="material-icons-outlined">close</i></a>
-                        <ul class="suggest"></ul>
+                    <div class="control is-expanded has-icons-left has-icons-right has_suggest">
+                        <input class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..." autocomplete="off" @bind="userToViewOKRs.userName" >
+                            <span class="icon is-left"><i class="material-icons-outlined is-size-6">search</i></span>
+                            <a class="icon is-right has-text-danger"><i class="material-icons-outlined">close</i></a>
+                       <ul class="suggest">
+                        @foreach(var u in listUser){
+                            <li class="rsitem" @onclick="() => GetOKRsByUser(u)" >
+                                    <div class="user_item"><img class="image is-24x24 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638398966517082138_338186201_910224320311474_9209000584054955892_n.jpg" alt="IMG"><!--!-->
+                                    <span>@u.userName</span></div>
+                            </li>
+                        }
+                        </ul>
                     </div>
                 </li>
                 <li class="column is-narrow"><a href="/okr/history/2411E7F225">Lịch sử chỉnh sửa</a></li>
@@ -65,8 +71,8 @@
                                     <td><label class="td-label">Tiến độ</label>
                                         <div class="td-value">
                                             <div class="progress_has_value">
-                                                <progress class="progress is-small is-dark" value="" max="1"></progress>
-                                                <span> %</span>
+                                                <progress class="progress is-small is-dark" value="@GetProcessOfOKRs(okrs.idOKRs)" max="1"></progress>
+                                                <span>@(GetProcessOfOKRs(okrs.idOKRs) * 100) %</span>
                                             </div>
                                         </div>
                                     </td>
@@ -75,14 +81,19 @@
                                         </div>
                                     </td>
                                     <td align="center"><label class="td-label">Tự tin</label>
-                                        <div class="td-value has-text-weight-semibold"><span>@okrs.confident</span></div>
+                                        <div class="td-value has-text-weight-semibold"><span>@HandleOKRs.ConvertToConfident(@okrs.confident)</span></div>
                                     </td>
                                     <td align="center"><label class="td-label">Check-in</label>
-                                        <div class="td-value"><span>24/01/2024</span></div>
+                                        
+                                        <div class="td-value"><span>@GetCheckInOKRs(okrs.idOKRs).dateCheckIn</span></div>
+                              
                                     </td>
                                     <td align="center"><label class="td-label">Trạng thái</label>
-                                        <div class="td-value has-text-weight-semibold"><span class="has-text-success">Check-in
-                                                nháp</span></div>
+                                        <div class="td-value has-text-weight-semibold">
+                                           
+                                            <div class="td-value"><span>@GetCheckInOKRs(okrs.idOKRs).statusCheckIn</span></div>
+                           
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -107,7 +118,7 @@
                                                     </div>
                                                 </td>
                                                 <td align="center"><label class="td-label">Tự tin</label>
-                                                    <div class="td-value has-text-weight-semibold"><span> @kr.confident </span></div>
+                                                    <div class="td-value has-text-weight-semibold"><span> @HandleOKRs.ConvertToConfident(kr.confident) </span></div>
                                                 </td>
                                             </tr>
                                         }
@@ -185,10 +196,10 @@ else{
                                     <label class="td-label">Tiến độ</label>
                                     <div class="td-value">
                                         <div class="progress_has_value">
-                                        <progress class="progress is-small is-dark" value="@progressCurrent.process" max="1">
+                                        <progress class="progress is-small is-dark" value="@GetProcessOfOKRs(OKR_Current.idOKRs)" max="1">
                                         </progress>
                                         <span>
-                                            @(progressCurrent.process * 100) %
+                                            @(GetProcessOfOKRs(OKR_Current.idOKRs) * 100) %
                                         </span>
                                     </div>
                                     </div>
@@ -201,7 +212,7 @@ else{
                                     <label class="td-label">Tự tin</label>
                                     <div class="td-value">
                                         <div class="select is-fullwidth">
-                                            <select @onchange="(e) => {OKR_Current.confident = Int32.Parse(e.Value.ToString());}" >
+                                            <select  @bind="OKR_Current.confident" >
                                                 <option value="0">- Chọn -</option>
                                                 <option value="1">Rất tốt</option>
                                                 <option value="2">Ổn</option>
@@ -244,7 +255,7 @@ else{
                                     <label class="td-label">Tự tin</label>
                                     <div class="td-value">
                                         <div class="select is-fullwidth">
-                                            <select @onchange="(e) => {kr.confident = Int32.Parse(e.Value.ToString());}" >
+                                            <select @bind="kr.confident" >
                                                 <option value="0">- Chọn -</option>
                                                 <option value="1">Rất tốt</option>
                                                 <option value="2">Ổn</option>
@@ -322,7 +333,7 @@ else{
                                 </li>
                                 <li class="column is-narrow">
                                     <div class="control is-expanded has-icons-left has-icons-right has_suggest">
-                                        <input class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..." autocomplete="off" @bind=checkInOKRs.idUserCheckIn >
+                                        <input class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..." autocomplete="off" @bind=OKR_Current.idUserCheckIn >
                                         <span class="icon is-left">
                                             <i class="material-icons-outlined is-size-6">search</i>
                                         </span>
@@ -374,25 +385,43 @@ else{
                             </div>
                         </div>
                     </li>
-                    <li class="column is-narrow">
-                        <a class="button is-link" href="/checkin/@(OKR_Current.idOKRs)/add">
-                            <span class="icon">
-                                <i class="material-icons-outlined is-size-6">
-                                    add
-                                </i>
-                            </span>
-                            @if(checkInOKRs.statusCheckIn == -1){
-                                <span>
-                                    Tạo Check-in nháp
-                                </span>
+                    
+                    @if(checkInOKRs.statusCheckIn == -1)
+                    {
+                        <li class="column is-narrow"><a class="button is-link" href="/checkin/@(OKR_Current.idOKRs)/add"><!--!--><span class="icon"><i class="material-icons-outlined is-size-6">add</i></span>
+                        <span>Tạo Check-in nháp</span></a></li>
+                    }
+                    else if(checkInOKRs.statusCheckIn == 0)
+                    {
+                        if(OKR_Current.idUserCheckIn == mainLayout.user.userId){
+                            <li class="column is-narrow"><a class="button is-success" @onclick="ComfirmCheckInNhap" ><!--!--><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
+                            <span>Xác nhận Check-in nháp</span></a></li>
+                        }
+                        else
+                        {
+                          <li class="column is-narrow"><a class="button is-link" href="/checkin/@(OKR_Current.idOKRs)/add"><!--!--><span class="icon"><i class="material-icons-outlined is-size-6">edit</i></span>
+                        <!--!--><span>Sửa bản nháp</span></a></li>
+                        }
+                                
+                    }
+                    else if(checkInOKRs.statusCheckIn == 1){
+                        if(OKR_Current.idUserCheckIn == mainLayout.user.userId){
+                            <li class="column is-narrow"><!--!--><span class="button is-white has-text-success"><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
+                            <span>Đã xác nhận Check-in nháp</span></span></li>
+                        }
+                        else{
+                            if(!isConfirmCheckIn){
+                                <li class="column is-narrow"><a class="button is-link" @onclick="CheckInToOkrs" ><!--!--><span class="icon"><i class="material-icons-outlined is-size-6">format_list_bulleted</i></span>
+                                <span>Check-in</span></a></li>
                             }
-                            else if(checkInOKRs.statusCheckIn == 0){
-                                <span>
-                                    Sửa Check-in nháp
-                                </span>
+                            else{
+                                <li class="column is-narrow"><a class="button is-link" @onclick="CheckInToOkrs" ><!--!--><span class="icon"><i class="material-icons-outlined is-size-6">format_list_bulleted</i></span>
+                                <span></span></a></li>
                             }
-                        </a>
-                    </li>
+                            
+                        }
+                        
+                    }
                 </ul>
                 <table class="table is-fullwidth is-noborder is-responsive">
                     <thead>
@@ -426,10 +455,10 @@ else{
                                 </label>
                                 <div class="td-value">
                                     <div class="progress_has_value">
-                                        <progress class="progress is-small is-dark" value="@progressCurrent.process" max="1">
+                                        <progress class="progress is-small is-dark" value="@(CalcAverage())" max="1">
                                         </progress>
                                         <span>
-                                            @(progressCurrent.process * 100) %
+                                            @(CalcAverage() * 100) %
                                         </span>
                                     </div>
                                 </div>
@@ -471,7 +500,7 @@ else{
                                 Tự tin
                             </td>
                         </tr>
-                        @if(checkInOKRs.statusCheckIn == 0){
+                        @if(checkInOKRs.statusCheckIn >= 0){
 
                             @foreach(var kr in listKr){
                                 <tr>
@@ -506,7 +535,7 @@ else{
                                     <label class="td-label">Tự tin</label>
                                     <div class="td-value">
                                         <div class="select is-fullwidth">
-                                            <select @onchange="(e) => {kr.confident = Int32.Parse(e.Value.ToString());}" >
+                                            <select @bind="kr.confident">
                                                 <option value="0">- Chọn -</option>
                                                 <option value="1">Rất tốt</option>
                                                 <option value="2">Ổn</option>
@@ -550,6 +579,263 @@ else{
                         }
                     </tbody>
                 </table>
+                
+
+                @if(isConfirmCheckIn){
+                    <div class="field is-grouped is-grouped-multiline mt-5"><!--!-->
+                        <div class="control has-icons-left" style="width: 140px;"><div class="input"><!--!-->  
+                        <input id="2a2632c7-6749-4a50-90ea-d60805f13959" type="text"><!--!-->
+                <!--!-->
+                <!--!-->
+                <div style="visibility:hidden;"><!--!-->
+                    <div id="6356ba0f-6da6-4fc7-95ab-e9323fbd07f5" class="daterangepicker auto-apply show-calendar drop-up opensright"><!--!-->
+
+                        <div class="ranges"><!--!-->
+                        </div><!--!-->
+
+                        <!--!--><!--!-->
+                            <div class="drp-calendar left single"><!--!-->
+                                <div class="calendar-table"><!--!-->
+                                    <!--!--><table class="table-condensed"><!--!-->
+                    <thead><!--!-->
+                        <tr><!--!-->
+                            <th class=""><!--!--><span></span></th><!--!-->
+                            <th colspan="5" class="month"><!--!-->
+                                    <select class="monthselect"><!--!-->
+                                            <option selected="" value="1"><!--!-->
+                                                Tháng Giêng<!--!-->
+                                            </option><!--!-->
+                                            <option value="2"><!--!-->
+                                                Tháng Hai<!--!-->
+                                            </option><!--!-->
+                                            <option value="3"><!--!-->
+                                                Tháng Ba<!--!-->
+                                            </option><!--!-->
+                                            <option value="4"><!--!-->
+                                                Tháng Tư<!--!-->
+                                            </option><!--!-->
+                                            <option value="5"><!--!-->
+                                                Tháng Năm<!--!-->
+                                            </option><!--!-->
+                                            <option value="6"><!--!-->
+                                                Tháng Sáu<!--!-->
+                                            </option><!--!-->
+                                            <option value="7"><!--!-->
+                                                Tháng Bảy<!--!-->
+                                            </option><!--!-->
+                                            <option value="8"><!--!-->
+                                                Tháng Tám<!--!-->
+                                            </option><!--!-->
+                                            <option value="9"><!--!-->
+                                                Tháng Chín<!--!-->
+                                            </option><!--!-->
+                                            <option value="10"><!--!-->
+                                                Tháng Mười<!--!-->
+                                            </option><!--!-->
+                                            <option value="11"><!--!-->
+                                                Tháng Mười Một<!--!-->
+                                            </option><!--!-->
+                                            <option value="12"><!--!-->
+                                                Tháng Mười Hai<!--!-->
+                                            </option><!--!-->
+                                    </select><!--!-->
+                                    <select class="yearselect"><!--!-->
+                                            <option value="2024" selected="">2024</option><!--!-->
+                                            <option value="2025">2025</option><!--!-->
+                                            <option value="2026">2026</option><!--!-->
+                                            <option value="2027">2027</option><!--!-->
+                                            <option value="2028">2028</option><!--!-->
+                                            <option value="2029">2029</option><!--!-->
+                                            <option value="2030">2030</option><!--!-->
+                                            <option value="2031">2031</option><!--!-->
+                                            <option value="2032">2032</option><!--!-->
+                                            <option value="2033">2033</option><!--!-->
+                                            <option value="2034">2034</option><!--!-->
+                                            <option value="2035">2035</option><!--!-->
+                                            <option value="2036">2036</option><!--!-->
+                                            <option value="2037">2037</option><!--!-->
+                                            <option value="2038">2038</option><!--!-->
+                                            <option value="2039">2039</option><!--!-->
+                                            <option value="2040">2040</option><!--!-->
+                                            <option value="2041">2041</option><!--!-->
+                                            <option value="2042">2042</option><!--!-->
+                                            <option value="2043">2043</option><!--!-->
+                                            <option value="2044">2044</option><!--!-->
+                                            <option value="2045">2045</option><!--!-->
+                                            <option value="2046">2046</option><!--!-->
+                                            <option value="2047">2047</option><!--!-->
+                                            <option value="2048">2048</option><!--!-->
+                                            <option value="2049">2049</option><!--!-->
+                                            <option value="2050">2050</option><!--!-->
+                                            <option value="2051">2051</option><!--!-->
+                                            <option value="2052">2052</option><!--!-->
+                                            <option value="2053">2053</option><!--!-->
+                                            <option value="2054">2054</option><!--!-->
+                                            <option value="2055">2055</option><!--!-->
+                                            <option value="2056">2056</option><!--!-->
+                                            <option value="2057">2057</option><!--!-->
+                                            <option value="2058">2058</option><!--!-->
+                                            <option value="2059">2059</option><!--!-->
+                                            <option value="2060">2060</option><!--!-->
+                                            <option value="2061">2061</option><!--!-->
+                                            <option value="2062">2062</option><!--!-->
+                                            <option value="2063">2063</option><!--!-->
+                                            <option value="2064">2064</option><!--!-->
+                                            <option value="2065">2065</option><!--!-->
+                                            <option value="2066">2066</option><!--!-->
+                                            <option value="2067">2067</option><!--!-->
+                                            <option value="2068">2068</option><!--!-->
+                                            <option value="2069">2069</option><!--!-->
+                                            <option value="2070">2070</option><!--!-->
+                                            <option value="2071">2071</option><!--!-->
+                                            <option value="2072">2072</option><!--!-->
+                                            <option value="2073">2073</option><!--!-->
+                                            <option value="2074">2074</option><!--!-->
+                                    </select><!--!-->
+                            </th><!--!-->
+                            <th class="next available"><!--!--><span></span></th><!--!-->
+
+                        </tr><!--!-->
+                        <tr><!--!-->
+
+                <!--!-->
+                                <th>H</th><!--!-->
+                                <th>B</th><!--!-->
+                                <th>T</th><!--!-->
+                                <th>N</th><!--!-->
+                                <th>S</th><!--!-->
+                                <th>B</th><!--!-->
+                                <th>C</th><!--!-->
+                <!--!-->
+                        </tr><!--!-->
+                    </thead><!--!-->
+                    <tbody><!--!-->
+                            <tr><!--!-->
+                <!--!-->               
+                                    <td class="off ends disabled "><!--!-->
+                25                    </td><!--!-->
+                                    <td class="off ends disabled "><!--!-->
+                26                    </td><!--!-->
+                                    <td class="off ends disabled "><!--!-->
+                27                    </td><!--!-->
+                                    <td class="off ends disabled "><!--!-->
+                28                    </td><!--!-->
+                                    <td class="off ends disabled "><!--!-->
+                29                    </td><!--!-->
+                                    <td class="weekend off ends disabled "><!--!-->
+                30                    </td><!--!-->
+                                    <td class="weekend off ends disabled "><!--!-->
+                31                    </td><!--!-->
+                            </tr><!--!-->
+                            <tr><!--!-->
+                <!--!-->               
+                                    <td class="off disabled "><!--!-->
+                1                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                2                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                3                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                4                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                5                    </td><!--!-->
+                                    <td class="weekend off disabled "><!--!-->
+                6                    </td><!--!-->
+                                    <td class="weekend off disabled "><!--!-->
+                7                    </td><!--!-->
+                            </tr><!--!-->
+                            <tr><!--!-->
+                <!--!-->               
+                                    <td class="off disabled "><!--!-->
+                8                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                9                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                10                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                11                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                12                    </td><!--!-->
+                                    <td class="weekend off disabled "><!--!-->
+                13                    </td><!--!-->
+                                    <td class="weekend off disabled "><!--!-->
+                14                    </td><!--!-->
+                            </tr><!--!-->
+                            <tr><!--!-->
+                <!--!-->               
+                                    <td class="off disabled "><!--!-->
+                15                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                16                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                17                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                18                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                19                    </td><!--!-->
+                                    <td class="weekend off disabled "><!--!-->
+                20                    </td><!--!-->
+                                    <td class="weekend off disabled "><!--!-->
+                21                    </td><!--!-->
+                            </tr><!--!-->
+                            <tr><!--!-->
+                <!--!-->               
+                                    <td class="off disabled "><!--!-->
+                22                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                23                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                24                    </td><!--!-->
+                                    <td class="off disabled "><!--!-->
+                25                    </td><!--!-->
+                                    <td class="today off disabled "><!--!-->
+                26                    </td><!--!-->
+                                    <td class="weekend  available"><!--!-->
+                27                    </td><!--!-->
+                                    <td class="weekend  available"><!--!-->
+                28                    </td><!--!-->
+                            </tr><!--!-->
+                            <tr><!--!-->
+                <!--!-->               
+                                    <td class=" available"><!--!-->
+                29                    </td><!--!-->
+                                    <td class=" available"><!--!-->
+                30                    </td><!--!-->
+                                    <td class=" available"><!--!-->
+                31                    </td><!--!-->
+                                    <td class="off ends  available"><!--!-->
+                1                    </td><!--!-->
+                                    <td class="off ends  available"><!--!-->
+                2                    </td><!--!-->
+                                    <td class="weekend off ends  available"><!--!-->
+                3                    </td><!--!-->
+                                    <td class="weekend off ends  available"><!--!-->
+                4                    </td><!--!-->
+                            </tr><!--!-->
+                    </tbody><!--!-->
+                </table><!--!-->
+                                </div><!--!-->
+                            </div><!--!-->
+                        <!--!-->
+
+                        <div class="drp-buttons"><!--!-->
+                <!--!-->                <span class="drp-selected"></span>
+                                <button class="cancelBtn button is-small btn-default" type="button">Hủy</button><!--!-->
+                                <button class="applyBtn button is-small is-link" disabled="" type="button">Xác nhận</button><!--!-->
+                        </div><!--!-->
+
+                    </div><!--!--></div></div><!--!-->
+                            <!--!--><span class="icon is-left has-text-link"><i class="material-icons-outlined is-size-6">calendar_today</i></span></div><!--!-->
+                        <!--!--><div class="control pl-2">
+                            hoặc chọn
+                        </div>
+                        <div class="control is-expanded pl-3"><label class="checkbox"><input type="checkbox"><!--!-->
+                            <!--!--><span class="has-text-weight-semibold">Hoàn thành OKRs</span></label></div><!--!-->
+                        <div class="control"><!--!--><a class="button is-white has-text-danger" onclick="goBack()"><span>Trở về</span></a>
+                            <a class="button is-link" @onclick="DoneCheckIn" ><!--!--><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
+                <!--!--><span>Hoàn tất Check-in</span></a></div></div>
+                }
+
             </div>
             </section>
             }
@@ -562,44 +848,47 @@ else{
     [Parameter] public string cmd { get; set; } = "";
 
     List<Process> listProcess { get; set; } = new List<Process>();
+    User userToViewOKRs { get; set; } = new User();
+
+    private bool isConfirmCheckIn = false;
 
     private List<OKRs> listO = new List<OKRs>();
     public List<KR> listKr { get; set; } = new List<KR>();
+    List<User> listUser = new List<User>();
     public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
     
-    CheckInOKRs checkInOKRs = new CheckInOKRs();
+    private CheckInOKRs checkInOKRs = new CheckInOKRs();
+    private List<CheckInOKRs> checkInOKRsList = new List<CheckInOKRs>();
+
+    private List<OKRs> listOKRsToCheckIn = new List<OKRs>();
     
     private OKRs OKR_Current = new OKRs();
 
     bool isEdit = false;
 
-    private Process progressCurrent = new Process();
-
     protected override async Task OnInitializedAsync()
     {
+        listUser = await DbUser.GetAllUser();
         Console.WriteLine("OnInitialized - CheckIn");
-        listO = mainLayout.listOKRs;
-        listProcess = await DbProcess.GetAllProcess();
-
+        listO.Clear();
+        listKr.Clear();
         isShowKR.Clear();
-        foreach (var okr in listO)
-        {
-            isShowKR.Add(okr.idOKRs, false);
-        }
-    }
+        checkInOKRsList.Clear();
 
-    //OnParameterSet
-    protected override async Task OnParametersSetAsync()
-    {
         isEdit = true;
         Console.WriteLine("OnParametersSet - CheckIn");
-        listO = mainLayout.listOKRs;
-        listProcess = await DbProcess.GetAllProcess();
-        isShowKR.Clear();
+        listO = await DbOKRs.GetAllOKRs(mainLayout.selectedCycle.idCycle,mainLayout.user.userId);
+        
+        var dict_temp = new Dictionary<string, bool>();
         foreach (var okr in listO)
         {
-            isShowKR.Add(okr.idOKRs, false);
+            dict_temp.Add(okr.idOKRs, false);
+            var rs = await DbCheckIn.GetCheckIn(okr.idOKRs);
+            checkInOKRsList.Add(rs);
+            
         }
+        isShowKR = dict_temp;
+        Console.WriteLine(checkInOKRsList.Count);
 
         if (!String.IsNullOrEmpty(id))
         {
@@ -608,11 +897,53 @@ else{
             if(checkInOKRs == null){
                 checkInOKRs = new CheckInOKRs();
             }
-            progressCurrent = await DbProcess.GetProcessLasted(OKR_Current.idOKRs);
-            if(progressCurrent == null || progressCurrent.type == 1){
-                progressCurrent = new Process();
+            foreach(var a in mainLayout.listKR){
+                if(a.idOKRs == OKR_Current.idOKRs){
+                    listKr.Add(a);
+                    if(a.answers != null){
+                            if(a.answers.Count == 0){
+                            a.answers = new List<string>();
+                            a.answers.Add("");
+                            a.answers.Add("");
+                            a.answers.Add("");
+                            a.answers.Add("");
+                        }
+                    }
+                }
             }
+        }
+        listProcess = await DbProcess.GetAllProcess();
+    }
 
+    //OnParameterSet
+    protected override async Task OnParametersSetAsync()
+    {
+        listO.Clear();
+        listKr.Clear();
+        isShowKR.Clear();
+        checkInOKRsList.Clear();
+
+        isEdit = true;
+        Console.WriteLine("OnParametersSet - CheckIn");
+        listO = await DbOKRs.GetAllOKRs(mainLayout.selectedCycle.idCycle,mainLayout.user.userId);
+        
+        var dict_temp = new Dictionary<string, bool>();
+
+        for( int i = 0; i < listO.Count; i++ ){
+            dict_temp.Add(listO[i].idOKRs, false);
+            var rs = await DbCheckIn.GetCheckIn(listO[i].idOKRs);
+            checkInOKRsList.Add(rs);
+        }
+        isShowKR = dict_temp;
+        Console.WriteLine(checkInOKRsList.Count);
+
+        if (!String.IsNullOrEmpty(id))
+        {
+            OKR_Current = await DbOKRs.GetOKRsById(id);
+            checkInOKRs = await DbCheckIn.GetCheckIn(id);
+            if(checkInOKRs == null){
+                checkInOKRs = new CheckInOKRs();
+            }
             listKr.Clear();
             foreach(var a in mainLayout.listKR){
                 if(a.idOKRs == OKR_Current.idOKRs){
@@ -629,6 +960,7 @@ else{
                 }
             }
         }
+        listProcess = await DbProcess.GetAllProcess();
     }
 
     private void ShowKR(string idOKR)
@@ -666,13 +998,104 @@ else{
 
     }
 
-    private double CalcAverage(){
+    private double CalcAverage()
+    {
         double sum = 0;
-        foreach(var kr in listKr){
-            sum += kr.processCurrent/kr.target;
+        foreach(var kr in listKr)
+        {
+            sum += (double)kr.processCurrent / kr.target;
         }
-        return sum/listKr.Count;
+
+        double average = sum / listKr.Count;
+
+        // Sử dụng Math.Round để làm tròn đến hai số thập phân
+        return Math.Round(average, 2);
     }
+
+
+    private async Task GetOKRsByUser(User u){
+
+        userToViewOKRs = new User(u);
+
+        listO.Clear();
+        listKr.Clear();
+        isShowKR.Clear();
+        checkInOKRsList.Clear();
+
+        listO = await DbOKRs.GetAllOKRsToCheckIn(mainLayout.selectedCycle.idCycle,mainLayout.user.userId, u.userId);
+
+        var dict_temp = new Dictionary<string, bool>();
+        foreach (var okr in listO)
+        {
+            dict_temp.Add(okr.idOKRs, false);
+            var rs = await DbCheckIn.GetCheckIn(okr.idOKRs);
+            checkInOKRsList.Add(rs);
+
+            var list_temp = await DbKR.GetKRByidOKRs(okr.idOKRs);
+            listKr.AddRange(list_temp);
+        }
+        isShowKR = dict_temp;
+        Console.WriteLine(checkInOKRsList.Count);
+    }
+
+    private CheckInOKRs GetCheckInOKRs(string idOKR)
+    {
+        // Tìm kiếm xem có CheckInOKRs nào có idOKRs khớp hay không
+        var existingCheckIn = checkInOKRsList.FirstOrDefault(a => a?.idOKRs == idOKR);
+
+        // Nếu tìm thấy, trả về CheckInOKRs đó
+        if (existingCheckIn != null)
+        {
+            return existingCheckIn;
+        }
+
+        // Nếu không tìm thấy, tạo mới CheckInOKRs và thêm vào danh sách
+        var newCheckIn = new CheckInOKRs(idOKR);
+        checkInOKRsList.Add(newCheckIn);
+
+        return newCheckIn;
+    }
+
+
+    private async Task ComfirmCheckInNhap(){
+        checkInOKRs.statusCheckIn = 1;
+        await DbCheckIn.UpdateCheckIn(checkInOKRs);
+    }
+
+    private void CheckInToOkrs(){
+        isConfirmCheckIn = true;
+    }
+
+    private double GetProcessOfOKRs(string id){
+        foreach(var process in listProcess){
+            if(process.idOKRs == id){
+                return process.process;
+            }
+        }
+        return 0.0;
+    }
+
+    private async void DoneCheckIn(){
+        isConfirmCheckIn = false;
+        checkInOKRs.statusCheckIn = 2;
+        await DbCheckIn.UpdateCheckIn(checkInOKRs);
+
+        var process = new Process();
+        process.idOKRs = OKR_Current.idOKRs;
+        process.process = CalcAverage();
+        process.date = DateTime.Today.Ticks;
+        await DbProcess.AddProcess(process);
+
+        OKR_Current.isDone = true;
+        await DbOKRs.UpdateOKRs(OKR_Current);
+
+        foreach (var kr in listKr)
+        {
+            await DbKR.UpdateKR(kr);
+        }
+    }
+
+
 
 
 

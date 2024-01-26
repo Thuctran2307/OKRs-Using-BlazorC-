@@ -9,8 +9,6 @@ namespace OKRs.Model
         public string id { get; set; }
         public string idOKRs { get; set; }
 
-        public string idUserCheckIn { get; set; }
-
         // 0 : chekc in nháp
         // 1 : gửi bản check in đến quản lý
         // 2 : quản lý gửi lại bản checkin để xác nhận
@@ -21,6 +19,12 @@ namespace OKRs.Model
 
         public CheckInOKRs(){
             id = ObjectId.GenerateNewId().ToString();
+            statusCheckIn = -1;
+        }
+
+        public CheckInOKRs(string idOKRs){
+            id = ObjectId.GenerateNewId().ToString();
+            this.idOKRs = idOKRs;
             statusCheckIn = -1;
         }
 

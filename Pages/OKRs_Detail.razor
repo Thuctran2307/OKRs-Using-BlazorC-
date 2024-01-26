@@ -53,9 +53,9 @@
 
                                 <td><label class="td-label">Tiến độ</label>
                                     <div class="td-value">
-                                        <div class="progress_has_value"><progress class="progress is-small is-dark" value="0"
-                                                max="100"></progress>
-                                            <span>0%</span>
+                                        <div class="progress_has_value"><progress class="progress is-small is-dark" value="@GetProcessOfOKRs(okr.idOKRs)"
+                                                max="1"></progress>
+                                            <span>@(GetProcessOfOKRs(okr.idOKRs) * 100) %</span>
                                         </div>
                                     </div>
                                 </td>
@@ -92,7 +92,7 @@
                                                 </div>
                                             </td>
                                             <td align="center"><label class="td-label">Tự tin</label>
-                                                <div class="td-value has-text-weight-semibold"><span> @kr.confident </span></div>
+                                                <div class="td-value has-text-weight-semibold"><span> @HandleOKRs.ConvertToConfident(@kr.confident) </span></div>
                                             </td>
                                         </tr>
                                     }
@@ -224,6 +224,8 @@
 
     public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
 
+    List<Process> listProcess { get; set; } = new List<Process>();
+
     async void AddProgress(){
         Process a = new Process();
         a.idOKRs = "65b1cc7e8336141a68522a21";
@@ -238,6 +240,16 @@
     {
         Console.WriteLine("Initial");
         init();
+        listProcess = await DbProcess.GetAllProcess();
+    }
+
+    private double GetProcessOfOKRs(string id){
+        foreach(var process in listProcess){
+            if(process.idOKRs == id){
+                return process.process;
+            }
+        }
+        return 0.0;
     }
 
     // onParameter
@@ -246,22 +258,23 @@
     {
         Console.WriteLine("Parameter" + "OKR_Detail");
         init();
+        mainLayout.listOKRs = list_OKRs;
+        mainLayout.listKR = list_KR;
     }
 
     private async void init()
     {
         idCycle = mainLayout.selectedCycle.idCycle;
 
-        list_OKRs = await DbOKRs.GetAllOKRsByIdCycle(idCycle, mainLayout.user.userId);
-        mainLayout.listOKRs = list_OKRs;
+        list_OKRs = await DbOKRs.GetAllOKRs(idCycle, mainLayout.user.userId);
+        
 
         if (list_OKRs == null)
         {
             list_OKRs = new List<OKRs>();
         }
+        
         list_KR = await DbKR.GetAllKRs();
-        mainLayout.listKR = list_KR;
-
         list_KR_Sample.Clear();
         okrs = new OKRs();
         list_KR_Sample.Add(new KR());

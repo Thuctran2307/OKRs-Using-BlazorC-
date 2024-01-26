@@ -18,5 +18,13 @@ namespace OKRs.Model
         public User(){
             this.userId = ObjectId.GenerateNewId().ToString();
         }
+
+        public User( User u){
+            this.userId = ObjectId.GenerateNewId().ToString();
+            this.userName = u.userName;
+            this.type = u.type;
+            this.idCycle = u.idCycle;
+            this.userId = u.userId;
+        }
     }
 }

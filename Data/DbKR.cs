@@ -68,5 +68,14 @@ namespace OKRs.Model
             return await collection.Find(x => true).ToListAsync();
         }
 
+        // getKr By idOKRs
+        public static async Task<List<KR>> GetKRByidOKRs(string idOKRs)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<KR>(_collectionName);
+            var kr = await collection.Find(x => x.idOKRs == idOKRs).ToListAsync();
+            return kr;
+        }
+
     }
 }
