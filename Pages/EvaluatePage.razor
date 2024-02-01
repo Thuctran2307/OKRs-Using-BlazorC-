@@ -1,0 +1,1639 @@
+@page "/review"
+@page "/review/{idOKRs}"
+@page "/review/{idOKRs}/{action}"
+
+@if (!String.IsNullOrEmpty(idOKRs))
+{
+    if(action == "add"){
+        <section class="main_content" b-82z1cy6rii="">
+            <div class="card" b-82z1cy6rii="">
+                <ul class="columns is-vcentered is-variable is-2 mb-2" b-82z1cy6rii="">
+                    
+                    <li class="column is-narrow" b-82z1cy6rii=""><a href="/review" class="icon-text" b-82z1cy6rii=""><span class="icon" b-82z1cy6rii=""><span class="material-icons-outlined" b-82z1cy6rii="">
+                        keyboard_backspace
+                        </span></span>
+                        <span b-82z1cy6rii="">
+                        Trở về
+                        </span></a>
+                    </li>
+                    <li class="column is-full-mobile" b-82z1cy6rii="">
+                        <div class="user_item" b-82z1cy6rii="">
+                        <img class="image is-36x36 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638397902369608569_bb896db4d8fd04a35dec.jpg" alt="IMG" b-82z1cy6rii="">
+                        <div b-82z1cy6rii="">
+                            <p class="has-text-weight-semibold has-text-info is-size-6" b-82z1cy6rii="">Trần Duy Thục</p>
+                            
+                            <p class="text_1_line has-text-grey is-size-7" style="max-width: 200px;" b-82z1cy6rii="">FASTDO ĐÀ NẴNG / PHÒNG SẢN XUẤT</p>
+                        </div>
+                        </div>
+                    </li>
+                    
+                    <li class="column is-one-third" b-82z1cy6rii="">
+                        <div class="field has-addons" b-82z1cy6rii="">
+                        
+                        <div class="control" b-82z1cy6rii=""><span class="button is-static" b-82z1cy6rii="">
+                            OKRs
+                            </span>
+                        </div>
+                        <div class="control is-expanded" b-82z1cy6rii="">
+                            <div class="select is-fullwidth" b-82z1cy6rii="">
+                                <select b-82z1cy6rii="">
+                                    @foreach(var o in mainLayout.listOKRs){
+                                        <option value="@(o.idOKRs)" b-82z1cy6rii="">@o._object</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        </div>
+                    </li>
+                    
+                    @if(evaluateSample.status == 0){
+                        <li class="column is-narrow" b-82z1cy6rii=""><div class="buttons" b-82z1cy6rii=""><span class="icon-text has-text-link" b-82z1cy6rii=""><span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">done</i></span>
+                            <span b-82z1cy6rii="">Đã gửi</span></span></div>
+                        </li>
+                    }
+                    else{
+                        
+                        <li class="column is-narrow" b-82z1cy6rii="">
+                            <div class="buttons" b-82z1cy6rii="">
+                            <a class="button is-danger" b-82z1cy6rii="">
+                                <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">cancel</i></span>
+                                <span b-82z1cy6rii="">Hủy</span>
+                            </a>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <div class="" b-82z1cy6rii="">
+                    <table class="table is-fullwidth is-vcentered is-noborder is-responsive" b-82z1cy6rii="">
+                        
+                        <thead b-82z1cy6rii="">
+                            <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;" b-82z1cy6rii="">
+                                <th class="pt-0" b-82z1cy6rii="">Mục tiêu</th>
+                                <th class="pt-0" width="150px" align="center" b-82z1cy6rii="">Tiến độ</th>
+                                <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">Điểm hệ thống</th>
+                                <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">Tự đánh giá</th>
+                                <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">QL đánh giá</th>
+                            </tr>
+                        </thead>
+                        <tbody b-82z1cy6rii="">
+
+                        <tr b-82z1cy6rii="">
+                            <td b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">@GetOKRsFromList(idOKRs)._object</span></td>
+                            
+                            <td b-82z1cy6rii="">
+                                <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
+                                <div class="td-value" b-82z1cy6rii="">
+                                    <div class="progress_has_value" b-82z1cy6rii="">
+                                    <progress class="progress is-small is-dark" value="@GetLastedProcessOfOKRs(idOKRs).process" max="1" b-82z1cy6rii=""></progress>
+                                    <span b-82z1cy6rii="">@(GetLastedProcessOfOKRs(idOKRs).process*100) %</span>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <td align="center" b-82z1cy6rii="">
+                                <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
+                                <div class="td-value" b-82z1cy6rii="">
+                                    <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                        @evaluateSample.dict_scoreSystem[idOKRs] %
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <td align="center" b-82z1cy6rii="">
+                                <label class="td-label" b-82z1cy6rii="">Tự đánh giá</label>
+                                <div class="td-value" b-82z1cy6rii="">
+                                    <div class="td-value" b-82z1cy6rii="">
+                                            <div class="control has-icons-right" b-82z1cy6rii="">
+                                            <input @bind="@evaluateSample.dict_scoreBySelf[idOKRs]" placeholder="Nhập số điểm" class="input has-text-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                            <span class="icon is-right has-text-dark" b-82z1cy6rii="">
+                                               %</span>
+                                            </div>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                            <td align="center" b-82z1cy6rii="">
+                                <label class="td-label" b-82z1cy6rii="">QL đánh giá</label>
+                                <div class="td-value" b-82z1cy6rii="">
+                                    <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                    @evaluateSample.dict_scoreByManager[idOKRs] %
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr b-82z1cy6rii="">
+                            <td colspan="5" class="td-block" b-82z1cy6rii="">
+                                <div class="field" b-82z1cy6rii="">
+                                    <label class="label" b-82z1cy6rii="">Nhân sự nhận xét OKRs</label>
+                                    <div class="control" b-82z1cy6rii="">
+                                        <textarea @bind="@evaluateSample.dict_comment[idOKRs]" class="textarea is_bg" rows="2" placeholder="Nhập nhận xét của bạn" b-82z1cy6rii=""></textarea></div>
+                                </div>
+                            </td>
+                        </tr>
+                        
+                        <tr class="is-hidden-mobile" b-82z1cy6rii="">
+                            <td colspan="5" b-82z1cy6rii="">
+                                <hr class="m-0" b-82z1cy6rii="">
+                            </td>
+                        </tr>
+                        
+                        <tr class="has-text-grey is-hidden-mobile" b-82z1cy6rii="">
+                            <td class="pl-6" b-82z1cy6rii="">Kết quả then chốt</td>
+                            <td align="center" b-82z1cy6rii="">Đạt được</td>
+                            <td align="center" b-82z1cy6rii="">Điểm hệ thống</td>
+                            <td align="center" b-82z1cy6rii="">Tự đánh giá</td>
+                            <td align="center" b-82z1cy6rii="">QL đánh giá</td>
+                        </tr>
+
+                        @foreach(var a in mainLayout.listKR){
+                            if(a.idOKRs == idOKRs){
+                                <tr b-82z1cy6rii="">
+                                    <td class="pl-6" b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">@a._keyResult</span></td>
+                                    
+                                    <td b-82z1cy6rii="">
+                                        <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
+                                        <div class="td-value" b-82z1cy6rii="">
+                                            <span class="has-text-success" b-82z1cy6rii="">@a.processCurrent/ @a.target </span>
+                                            <span class="is-pulled-right" b-82z1cy6rii="">@a.unit</span>
+                                        </div>
+                                    </td>
+                                    
+                                    <td align="center" b-82z1cy6rii="">
+                                        <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
+                                        <div class="td-value" b-82z1cy6rii="">
+                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                            @evaluateSample.dict_scoreSystem[a.idKR] %
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td align="center" b-82z1cy6rii="">
+                                        <label class="td-label" b-82z1cy6rii="">Tự đánh giá</label>
+                                        <div class="td-value" b-82z1cy6rii="">
+                                            <div class="control has-icons-right" b-82z1cy6rii="">
+                                            <input @bind="@evaluateSample.dict_scoreBySelf[a.idKR]" placeholder="Nhập số điểm" class="input has-text-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                            <span class="icon is-right has-text-dark" b-82z1cy6rii="">
+                                               %</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td align="center" b-82z1cy6rii="">
+                                        <label class="td-label" b-82z1cy6rii="">QL đánh giá</label>
+                                        <div class="td-value" b-82z1cy6rii="">
+                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                            @evaluateSample.dict_scoreByManager[a.idKR]%
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <tr b-82z1cy6rii="">
+                                    <td colspan="5" class="pl-6 td-block" b-82z1cy6rii="">
+                                        <div class="field" b-82z1cy6rii="">
+                                            <label class="label" b-82z1cy6rii="">Nhân sự nhận xét KRs</label>
+                                            <div class="control" b-82z1cy6rii="">
+                                                <textarea @bind="@evaluateSample.dict_comment[a.idKR]" class="textarea is_bg" rows="2" placeholder="Nhập nhận xét của bạn" b-82z1cy6rii=""></textarea></div>
+                                        </div>
+                                    </td>
+                                </tr>   
+                            }
+                        }
+                        
+                        <tr class="is-hidden-mobile" b-82z1cy6rii="">
+                            <td colspan="5" b-82z1cy6rii="">
+                                <hr class="m-0" b-82z1cy6rii="">
+                            </td>
+                        </tr>
+                        <tr b-82z1cy6rii="">
+                            <td colspan="5" class="td-block" b-82z1cy6rii="">
+                                <span class="has-text-weight-semibold is-size-6 has-text-info mr-2" b-82z1cy6rii="">Nhân sự phản hồi</span>
+                                
+                                <div class="dropdown is-up is-hoverable" b-82z1cy6rii="">
+                                    <div class="dropdown-trigger" b-82z1cy6rii=""><span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-5" b-82z1cy6rii="">infor</i></span></div>
+                                    <div class="dropdown-menu" b-82z1cy6rii="">
+                                    <div class="dropdown-content" style="min-width:400px;width:fit-content" b-82z1cy6rii="">
+                                        <div class="dropdown-item content" b-82z1cy6rii="">
+                                            <p class="has-text-weight-semibold" b-82z1cy6rii="">Gợi ý câu hỏi</p>
+                                            <p b-82z1cy6rii="">Bạn nhận được gì từ người quản lý của bạn mà bạn thấy hữu ích hoặc giúp đỡ bạn tốt?</p>
+                                            <p b-82z1cy6rii="">Điều gì từ người quản lý đã gây ảnh hưởng tới hoạt động OKRs này của bạn?</p>
+                                            <p b-82z1cy6rii="">Nếu quay lại thời gian, người quản lý nên làm gì để giúp bạn thành công trong OKRs này hơn?</p>
+                                            <p b-82z1cy6rii="">Các kỹ năng, năng lực tôi muốn cải thiện và tốt hơn trong tương lai?</p>
+                                            <p b-82z1cy6rii="">Điều gì từ công ty mà bạn kỳ vọng sẽ giúp ích cho việc cải thiện năng lực của bạn?</p>
+                                        </div>
+                                    </div>
+                                    </div>
+                                </div>
+                                @if(evaluateSample.status == -1){
+                                    <div class="control mt-2" b-82z1cy6rii="">
+                                    <textarea @bind="evaluateSample.response" class="textarea is_bg" rows="2" placeholder="Nhập phản hồi của bạn" b-82z1cy6rii=""></textarea></div>
+                                }
+                                
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    @if(evaluateSample.status == -1){
+                        <ul class="columns is-multiline is-variable is-2 is-mobile" b-82z1cy6rii="">
+                        <li class="column is-half is-full-mobile" b-82z1cy6rii="">
+                        
+                        <div class="has-text-grey mb-2" b-82z1cy6rii="">Chọn người đánh giá</div>
+                        <ul class="columns is-vcentered is-multiline is-variable is-2" b-82z1cy6rii="">
+                            <li class="column is-4" b-82z1cy6rii="">
+                                
+                                <div id="dropdown_422e9e96" class="dropdown is-left is-up  ">
+                                    <div class="dropdown-trigger">
+                                    <a class="icon-text">
+                                        <span class="has-text-link is-block" style="max-width: 200px;">Chọn phòng ban</span>
+                                        <span class="icon"><i class="material-icons-outlined is-size-5">arrow_drop_down</i></span>
+                                    </a>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li class="column is-6" b-82z1cy6rii="">
+                                
+                                <div class="control is-expanded has-icons-left has-icons-right has_suggest">
+                                    <input class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..." autocomplete="off" @bind="@userManager.userName" >
+                                    <span class="icon is-left"><i class="material-icons-outlined is-size-6">search</i></span>
+                                    <a class="is-hidden">
+                                    <i class="material-icons-outlined">close</i>
+                                    </a>
+                                    
+                                    <ul class="suggest">
+                                        @foreach(var u in mainLayout.listUser){
+                                            if(u.userId != mainLayout.user.userId){
+                                                <li class="rsitem" @onclick="() => { userManager = u; }" >
+                                                    <div class="user_item">
+                                                        <img class="image is-24x24 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638398966517082138_338186201_910224320311474_9209000584054955892_n.jpg" alt="IMG">
+                                                        <span>@u.userName</span>
+                                                    </div>
+                                                </li>
+                                            }
+                                            
+                                        }
+                                    </ul>
+                                </div>
+                            </li>
+                            
+                            <li class="column is-2" b-82z1cy6rii=""></li>
+                        </ul>
+                        </li>
+                        
+                        <li class="column is-half is-full-mobile" b-82z1cy6rii="">
+                        
+                        <div class="has-text-grey mb-2" b-82z1cy6rii="">Chọn người xem</div>
+                        <ul class="columns is-vcentered is-multiline is-variable is-2" b-82z1cy6rii="">
+                            <li class="column is-4" b-82z1cy6rii="">
+                                
+                                <div id="dropdown_8028d1c9" class="dropdown is-left is-up  ">
+                                    <div class="dropdown-trigger">
+                                    <a class="icon-text">
+                                        <span class="has-text-link is-block" style="max-width: 200px;">Chọn phòng ban</span>
+                                        <span class="icon"><i class="material-icons-outlined is-size-5">arrow_drop_down</i></span>
+                                    </a>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li class="column is-6" b-82z1cy6rii="">
+                                
+                                <div class="control is-expanded has-icons-left has-icons-right has_suggest">
+                                    <input class="input is-rounded" type="text" placeholder="Chọn người xem" autocomplete="off">
+                                    <span class="icon is-left"><i class="material-icons-outlined is-size-5">search</i></span>
+                                    <a class="is-hidden">
+                                    <i class="material-icons-outlined">close</i>
+                                    </a>
+                                    
+                                    <ul class="suggest"></ul>
+                                </div>
+                            </li>
+                            
+                            <li class="column is-2" b-82z1cy6rii=""></li>
+                        </ul>
+                        </li>
+                        
+                        <li class="column" b-82z1cy6rii="">
+                        <a class="button is-info" b-82z1cy6rii="">
+                            <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">save</i></span>
+                            <span b-82z1cy6rii="">Lưu nháp</span>
+                        </a>
+                        </li>
+                        
+                        <li class="column is-narrow" b-82z1cy6rii="">
+                        <a class="button is-white has-text-danger" b-82z1cy6rii="">
+                            <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">close</i></span>
+                            <span b-82z1cy6rii="">Hủy</span>
+                        </a>
+                        </li>
+                        
+                        <li class="column is-narrow is-full-mobile" b-82z1cy6rii="">
+                            <a class="button is-link" b-82z1cy6rii="" @onclick="SendEvaluate" >
+                                <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">fact_check</i></span>
+                                <span b-82z1cy6rii="">Gửi đánh giá</span>
+                            </a>
+                        </li>
+                    </ul>
+                    }
+                </div>
+            </div>
+        </section>
+    }
+    else if(action == "evaluate"){
+        Console.WriteLine("andjsdnjds");
+
+        <section id="content" class="column has_sidebar">
+            <section class="main_content" b-82z1cy6rii="">
+                <div class="card" b-82z1cy6rii="">
+                    <ul class="columns is-vcentered is-variable is-2 mb-2" b-82z1cy6rii="">
+                        
+                        <li class="column is-narrow" b-82z1cy6rii="">
+                            <a href="/okr/review" class="icon-text" b-82z1cy6rii="">
+                                <span class="icon" b-82z1cy6rii="">
+                                    <span class="material-icons-outlined" b-82z1cy6rii="">
+                                        keyboard_backspace
+                                    </span>
+                                </span>
+                                <span b-82z1cy6rii="">
+                                    Trở về
+                                </span>
+                            </a>
+                        </li>
+                        <li class="column is-full-mobile" b-82z1cy6rii="">
+                            <div class="user_item" b-82z1cy6rii="">
+                                <img class="image is-36x36 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638397902369608569_bb896db4d8fd04a35dec.jpg" alt="IMG" b-82z1cy6rii="" />
+                                
+                                <div b-82z1cy6rii="">
+                                    <p class="has-text-weight-semibold has-text-info is-size-6" b-82z1cy6rii="">Trần Duy Thục</p>
+                                    
+                                    <p class="text_1_line has-text-grey is-size-7" style="max-width: 200px;" b-82z1cy6rii="">FASTDO ĐÀ NẴNG / PHÒNG SẢN XUẤT</p>
+                                </div>
+                            </div>
+                        </li>
+                        
+                        <li class="column is-one-third" b-82z1cy6rii="">
+                            <div class="field has-addons" b-82z1cy6rii="">
+                                
+                                <div class="control" b-82z1cy6rii="">
+                                    <span class="button is-static" b-82z1cy6rii="">
+                                        OKRs
+                                    </span>
+                                </div>
+                                <div class="control is-expanded" b-82z1cy6rii="">
+                                    <div class="select is-fullwidth" b-82z1cy6rii="">
+                                        <select b-82z1cy6rii="">
+                                            <option value="241B885119" b-82z1cy6rii="">Đạt Doanh Thu và Lợi Nhuận Tăng Trưởng</option>
+                                            <option value="241G1DE933" b-82z1cy6rii="">sâdadasd</option>
+                                            <option value="241J38B6EA" b-82z1cy6rii="">ádasda</option>
+                                            <option value="241PFEBADD" b-82z1cy6rii="">aaaaaaaaaaaaaaaa</option>
+                                            <option value="241S65E14D" b-82z1cy6rii="">123</option>
+                                            <option value="2421486717" selected="" b-82z1cy6rii="">hay</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="column is-narrow" b-82z1cy6rii="">
+                            <div class="buttons" b-82z1cy6rii="">
+                                @if(!isReviewing){
+
+                                    if(evaluateSample.status == 0){
+                                        <a class="button is-link" b-82z1cy6rii="" @onclick="() => { isReviewing = !isReviewing; }"  >
+                                        
+                                        <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">fact_check</i></span>
+                                        
+                                        <span b-82z1cy6rii="">Đánh giá</span>
+                                    </a>            
+                                    }
+                                    else{
+
+                                        <a class="button is-info" b-82z1cy6rii="" @onclick="() => { isReviewing = !isReviewing; }" >
+                                        
+                                        <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">refresh</i></span>
+                                        
+                                        <span b-82z1cy6rii="">Đánh giá lại</span>
+                                        </a>
+                                    }
+                                }
+                                else{
+                                    <a class="button is-link is-danger" b-82z1cy6rii="" @onclick="() => { isReviewing = !isReviewing; }"  >
+                                        
+                                        <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">fact_check</i></span>
+                                        
+                                        <span b-82z1cy6rii="">Huỷ</span>
+                                    </a>
+                                }
+                            </div>
+                        </li>
+                    </ul>
+                    <div class="" b-82z1cy6rii="">
+                        <table class="table is-fullwidth is-vcentered is-noborder is-responsive" b-82z1cy6rii="">
+                            
+                            <thead b-82z1cy6rii="">
+                                <tr class="is-size-7" style="border-bottom: 1px solid #dedede;" b-82z1cy6rii="">
+                                    <th class="pt-0" b-82z1cy6rii="">Mục tiêu</th>
+                                    <th class="pt-0" width="150px" align="center" b-82z1cy6rii="">Tiến độ</th>
+                                    <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">Điểm hệ thống</th>
+                                    <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">Tự đánh giá</th>
+                                    <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">QL đánh giá</th>
+                                </tr>
+                            </thead>
+                            <tbody b-82z1cy6rii="">
+                                <tr b-82z1cy6rii="">
+                                    <td b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">@evaluateSample.okr._object</span></td>
+                                    
+                                    <td b-82z1cy6rii="">
+                                        
+                                        <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
+                                        <div class="td-value" b-82z1cy6rii="">
+                                            <div class="progress_has_value" b-82z1cy6rii="">
+                                                <progress class="progress is-small is-dark" value="0" max="100" b-82z1cy6rii=""></progress>
+                                                
+                                                <span b-82z1cy6rii="">@(GetLastedProcessOfOKRs(idOKRs).process*100) %</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td align="center" b-82z1cy6rii="">
+                                        
+                                        <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
+                                        <div class="td-value" b-82z1cy6rii="">
+                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreSystem[idOKRs] %</div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td align="center" b-82z1cy6rii="">
+                                        
+                                        <label class="td-label" b-82z1cy6rii="">Tự đánh giá</label>
+                                        <div class="td-value" b-82z1cy6rii="">
+                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreBySelf[idOKRs]%</div>
+                                        </div>
+                                    </td>
+                                    
+                                    <td align="center" b-82z1cy6rii="">
+                                        
+                                        <label class="td-label" b-82z1cy6rii="">QL đánh giá</label>
+                                        <div class="td-value" b-82z1cy6rii="">
+                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreByManager[idOKRs] %</div>
+                                        </div>
+                                    </td>
+                                </tr>
+                                
+                                <tr b-82z1cy6rii="">
+                                    <td colspan="5" class="td-block" b-82z1cy6rii="">
+                                        <div class="field" b-82z1cy6rii="">
+                                            
+                                            <label class="label" b-82z1cy6rii="">Nhân sự nhận xét OKRs</label>
+                                            <div class="control" b-82z1cy6rii="">
+                                                <div class="has_bg is_radius p-3 is-word-break" b-82z1cy6rii="" >@evaluateSample.dict_comment[idOKRs]</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                @if(isReviewing){
+                                    <tr>
+                                        <td colspan="5" class="">
+                                            <div class="field">
+                                                <label class="label">Quản lý nhận xét OKRs</label>
+                                                <div class="control" >
+                                                    <input  value="@evaluateSample.dict_response_manager[idOKRs]" type="text" class="input" @onchange="(e) => { evaluateSample.dict_response_manager[idOKRs] = e.Value.ToString();  }"  >
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                                
+                                <tr class="is-hidden-mobile" b-82z1cy6rii="">
+                                    <td colspan="5" b-82z1cy6rii=""><hr class="m-0" b-82z1cy6rii="" /></td>
+                                </tr>
+                                
+                                <tr class="has-text-grey is-hidden-mobile" b-82z1cy6rii="">
+                                    <td class="pl-6" b-82z1cy6rii="">Kết quả then chốt</td>
+                                    <td align="center" b-82z1cy6rii="">Đạt được</td>
+                                    <td align="center" b-82z1cy6rii="">Điểm hệ thống</td>
+                                    <td align="center" b-82z1cy6rii="">Tự đánh giá</td>
+                                    <td align="center" b-82z1cy6rii="">QL đánh giá</td>
+                                </tr>
+
+                                @foreach(var kr in evaluateSample.krs){
+                                    <tr b-82z1cy6rii="">
+                                        <td class="pl-6" b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">@kr._keyResult</span></td>
+                                        
+                                        <td b-82z1cy6rii="">
+                                            
+                                            <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <span class="has-text-success" b-82z1cy6rii=""> @kr.processCurrent / @kr.target </span>
+                                                
+                                                <span class="is-pulled-right" b-82z1cy6rii="">@kr.unit</span>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center" b-82z1cy6rii="">
+                                            
+                                            <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii=""> @evaluateSample.dict_scoreSystem[kr.idKR] %</div>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center" b-82z1cy6rii="">
+                                            
+                                            <label class="td-label" b-82z1cy6rii="">Tự đánh giá</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreBySelf[kr.idKR]%</div>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center" b-82z1cy6rii="">
+                                            
+                                            <label class="td-label" b-82z1cy6rii="">QL đánh giá</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreByManager[kr.idKR]%</div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr b-82z1cy6rii="">
+                                        <td colspan="5" class="pl-6 td-block" b-82z1cy6rii="">
+                                            <div class="field" b-82z1cy6rii="">
+                                                
+                                                <label class="label" b-82z1cy6rii="">Nhân sự nhận xét KRs</label>
+                                                <div class="control" b-82z1cy6rii="">
+                                                    <div class="has_bg is_radius p-3 is-word-break" b-82z1cy6rii="">@evaluateSample.dict_comment[kr.idKR]</div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                    @if(isReviewing){
+                                        <tr>
+                                            <td colspan="5" class="">
+                                                <div class="field">
+                                                    <label class="label">Quản lý nhận xét OKRs</label>
+                                                    <div class="control" >
+                                                        <input type="text" class="input" @onchange="(e) => { evaluateSample.dict_response_manager[idOKRs] = e.Value.ToString();  }"  >
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    }
+                                    
+                                    <tr class="is-hidden-mobile" b-82z1cy6rii="">
+                                        <td colspan="5" b-82z1cy6rii=""><hr class="m-0" b-82z1cy6rii="" /></td>
+                                    </tr>
+                                }
+                                <tr b-82z1cy6rii="">
+                                    <td colspan="5" class="td-block" b-82z1cy6rii="">
+                                        
+                                        <span class="has-text-weight-semibold is-size-6 has-text-info mr-2" b-82z1cy6rii="">Nhân sự phản hồi</span>
+                                        
+                                        <div class="dropdown is-up is-hoverable" b-82z1cy6rii="">
+                                            <div class="dropdown-trigger" b-82z1cy6rii="">
+                                                <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-5" b-82z1cy6rii="">infor</i></span>
+                                            </div>
+                                            <div class="dropdown-menu" b-82z1cy6rii="">
+                                                <div class="dropdown-content" style="min-width: 400px; width: fit-content;" b-82z1cy6rii="">
+                                                    <div class="dropdown-item content" b-82z1cy6rii="">
+                                                        <p class="has-text-weight-semibold" b-82z1cy6rii="">Gợi ý câu hỏi</p>
+                                                        <p b-82z1cy6rii="">Bạn nhận được gì từ người quản lý của bạn mà bạn thấy hữu ích hoặc giúp đỡ bạn tốt?</p>
+                                                        <p b-82z1cy6rii="">Điều gì từ người quản lý đã gây ảnh hưởng tới hoạt động OKRs này của bạn?</p>
+                                                        <p b-82z1cy6rii="">Nếu quay lại thời gian, người quản lý nên làm gì để giúp bạn thành công trong OKRs này hơn?</p>
+                                                        <p b-82z1cy6rii="">Các kỹ năng, năng lực tôi muốn cải thiện và tốt hơn trong tương lai?</p>
+                                                        <p b-82z1cy6rii="">Điều gì từ công ty mà bạn kỳ vọng sẽ giúp ích cho việc cải thiện năng lực của bạn?</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control mt-2" b-82z1cy6rii="">
+                                            <div class="has_bg is_radius p-3 is-word-break" b-82z1cy6rii="">@evaluateSample.response</div>
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                @if(isReviewing){
+                                    <tr b-82z1cy6rii="">
+                                        <td colspan="5" class="td-block" b-82z1cy6rii="">
+                                            
+                                            <span class="has-text-weight-semibold is-size-6 has-text-info mr-2" b-82z1cy6rii="">Quản lý phản hồi</span>
+                                            
+                                            <div class="dropdown is-up is-hoverable" b-82z1cy6rii="">
+                                                <div class="dropdown-trigger" b-82z1cy6rii="">
+                                                    <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-5" b-82z1cy6rii="">infor</i></span>
+                                                </div>
+                                                <div class="dropdown-menu" b-82z1cy6rii="">
+                                                    <div class="dropdown-content" style="min-width: 400px; width: fit-content;" b-82z1cy6rii="">
+                                                        <div class="dropdown-item content" b-82z1cy6rii="">
+                                                            <p class="has-text-weight-semibold" b-82z1cy6rii="">Gợi ý câu hỏi</p>
+                                                            <p b-82z1cy6rii="">OKRs này, Nhân sự làm việc như thế nào, hiệu quả chưa?</p>
+                                                            <p b-82z1cy6rii="">Nhân sự cần làm gì để quý cải thiện và tốt hơn?</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="control mt-2" b-82z1cy6rii="">
+                                                <textarea  class="textarea is_bg" rows="2" placeholder="Nhập phản hồi của bạn" b-82z1cy6rii="" @bind="@evaluateSample.dict_response_manager["0"]" ></textarea></div>
+                                        </td>
+                                    </tr>
+
+                                    <ul class="columns is-multiline is-variable is-2 is-mobile" b-82z1cy6rii="">
+                                        
+                                        <li class="column" b-82z1cy6rii=""></li>
+                                        <li class="column is-narrow" b-82z1cy6rii="">
+                                            <a class="button is-white has-text-danger" b-82z1cy6rii="">
+                                                
+                                                <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">close</i></span>
+                                                
+                                                <span b-82z1cy6rii="">Hủy</span>
+                                            </a>
+                                        </li>
+                                        
+                                        <li class="column is-narrow" b-82z1cy6rii="">
+                                            <a class="button is-link" b-82z1cy6rii="" @onclick="ConfirmEvaluate" >
+                                                
+                                                <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">done</i></span>
+                                                
+                                                <span b-82z1cy6rii="">Hoàn tất</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+        </section>
+    }
+    else{
+        @if(evaluateSample.status != -1){
+            <section class="main_content" b-82z1cy6rii="">
+                <div class="card" b-82z1cy6rii="">
+                    <ul class="columns is-vcentered is-variable is-2 mb-2" b-82z1cy6rii="">
+                        
+                        <li class="column is-narrow" b-82z1cy6rii=""><a href="/review" class="icon-text" b-82z1cy6rii=""><span class="icon" b-82z1cy6rii=""><span class="material-icons-outlined" b-82z1cy6rii="">
+                            keyboard_backspace
+                            </span></span>
+                            <span b-82z1cy6rii="">
+                            Trở về
+                            </span></a>
+                        </li>
+                        <li class="column is-full-mobile" b-82z1cy6rii="">
+                            <div class="user_item" b-82z1cy6rii="">
+                            <img class="image is-36x36 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638397902369608569_bb896db4d8fd04a35dec.jpg" alt="IMG" b-82z1cy6rii="">
+                            <div b-82z1cy6rii="">
+                                <p class="has-text-weight-semibold has-text-info is-size-6" b-82z1cy6rii="">Trần Duy Thục</p>
+                                
+                                <p class="text_1_line has-text-grey is-size-7" style="max-width: 200px;" b-82z1cy6rii="">FASTDO ĐÀ NẴNG / PHÒNG SẢN XUẤT</p>
+                            </div>
+                            </div>
+                        </li>
+                        
+                        <li class="column is-one-third" b-82z1cy6rii="">
+                            <div class="field has-addons" b-82z1cy6rii="">
+                            
+                            <div class="control" b-82z1cy6rii=""><span class="button is-static" b-82z1cy6rii="">
+                                OKRs
+                                </span>
+                            </div>
+                            <div class="control is-expanded" b-82z1cy6rii="">
+                                <div class="select is-fullwidth" b-82z1cy6rii="">
+                                    <select b-82z1cy6rii="">
+                                        @foreach(var o in mainLayout.listOKRs){
+                                            <option value="@(o.idOKRs)" b-82z1cy6rii="">@o._object</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                            </div>
+                        </li>
+                        
+                        @if(evaluateSample.status == 0){
+                            <li class="column is-narrow" b-82z1cy6rii=""><div class="buttons" b-82z1cy6rii=""><span class="icon-text has-text-link" b-82z1cy6rii=""><span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">done</i></span>
+                                <span b-82z1cy6rii="">Đã gửi</span></span></div>
+                            </li>
+                        }
+                        else{
+                            
+                            <li class="column is-narrow" b-82z1cy6rii="">
+                                <div class="buttons" b-82z1cy6rii="">
+                                <a class="button is-primary" b-82z1cy6rii="">
+                                    <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">cancel</i></span>
+                                    <span b-82z1cy6rii="">Đã Xác Nhận</span>
+                                </a>
+                                </div>
+                            </li>
+                        }
+                    </ul>
+                    <div class="" b-82z1cy6rii="">
+                        <table class="table is-fullwidth is-vcentered is-noborder is-responsive" b-82z1cy6rii="">
+                            
+                            <thead b-82z1cy6rii="">
+                                <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;" b-82z1cy6rii="">
+                                    <th class="pt-0" b-82z1cy6rii="">Mục tiêu</th>
+                                    <th class="pt-0" width="150px" align="center" b-82z1cy6rii="">Tiến độ</th>
+                                    <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">Điểm hệ thống</th>
+                                    <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">Tự đánh giá</th>
+                                    <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">QL đánh giá</th>
+                                </tr>
+                            </thead>
+                            <tbody b-82z1cy6rii="">
+
+                            <tr b-82z1cy6rii="">
+                                <td b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">@GetOKRsFromList(idOKRs)._object</span></td>
+                                
+                                <td b-82z1cy6rii="">
+                                    <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
+                                    <div class="td-value" b-82z1cy6rii="">
+                                        <div class="progress_has_value" b-82z1cy6rii="">
+                                        <progress class="progress is-small is-dark" value="@GetLastedProcessOfOKRs(idOKRs).process" max="1" b-82z1cy6rii=""></progress>
+                                        <span b-82z1cy6rii="">@(GetLastedProcessOfOKRs(idOKRs).process*100) %</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                <td align="center" b-82z1cy6rii="">
+                                    <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
+                                    <div class="td-value" b-82z1cy6rii="">
+                                        <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                            @evaluateSample.dict_scoreSystem[idOKRs] %
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                <td align="center" b-82z1cy6rii="">
+                                    <label class="td-label" b-82z1cy6rii="">Tự đánh giá</label>
+                                    <div class="td-value" b-82z1cy6rii="">
+                                        <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                            @evaluateSample.dict_scoreBySelf[idOKRs]%
+                                        </div>
+                                    </div>
+                                </td>
+                                
+                                <td align="center" b-82z1cy6rii="">
+                                    <label class="td-label" b-82z1cy6rii="">QL đánh giá</label>
+                                    <div class="td-value" b-82z1cy6rii="">
+                                        <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                        @evaluateSample.dict_scoreByManager[idOKRs] %
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr b-82z1cy6rii="">
+                                <td colspan="5" class="td-block" b-82z1cy6rii="">
+                                    <div class="field" b-82z1cy6rii="">
+                                        <label class="label" b-82z1cy6rii="">Nhân sự nhận xét OKRs</label>
+                                        <div class="control" b-82z1cy6rii="">
+                                            <textarea @bind="@evaluateSample.dict_comment[idOKRs]" class="textarea is_bg" rows="2" placeholder="Nhập nhận xét của bạn" b-82z1cy6rii=""></textarea></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            
+                            <tr class="is-hidden-mobile" b-82z1cy6rii="">
+                                <td colspan="5" b-82z1cy6rii="">
+                                    <hr class="m-0" b-82z1cy6rii="">
+                                </td>
+                            </tr>
+                            
+                            <tr class="has-text-grey is-hidden-mobile" b-82z1cy6rii="">
+                                <td class="pl-6" b-82z1cy6rii="">Kết quả then chốt</td>
+                                <td align="center" b-82z1cy6rii="">Đạt được</td>
+                                <td align="center" b-82z1cy6rii="">Điểm hệ thống</td>
+                                <td align="center" b-82z1cy6rii="">Tự đánh giá</td>
+                                <td align="center" b-82z1cy6rii="">QL đánh giá</td>
+                            </tr>
+
+                            @foreach(var a in mainLayout.listKR){
+                                if(a.idOKRs == idOKRs){
+                                    <tr b-82z1cy6rii="">
+                                        <td class="pl-6" b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">@a._keyResult</span></td>
+                                        
+                                        <td b-82z1cy6rii="">
+                                            <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <span class="has-text-success" b-82z1cy6rii="">@a.processCurrent/ @a.target </span>
+                                                <span class="is-pulled-right" b-82z1cy6rii="">@a.unit</span>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center" b-82z1cy6rii="">
+                                            <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                                @evaluateSample.dict_scoreSystem[a.idKR] %
+                                                </div>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center" b-82z1cy6rii="">
+                                            <label class="td-label" b-82z1cy6rii="">Tự đánh giá</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <div class="control has-icons-right" b-82z1cy6rii="">
+                                                <input @bind="@evaluateSample.dict_scoreBySelf[a.idKR]" placeholder="Nhập số điểm" class="input has-text-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                                <span class="icon is-right has-text-dark" b-82z1cy6rii="">
+                                                    %</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center" b-82z1cy6rii="">
+                                            <label class="td-label" b-82z1cy6rii="">QL đánh giá</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                                @evaluateSample.dict_scoreByManager[a.idKR]%
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    
+                                    <tr b-82z1cy6rii="">
+                                        <td colspan="5" class="pl-6 td-block" b-82z1cy6rii="">
+                                            <div class="field" b-82z1cy6rii="">
+                                                <label class="label" b-82z1cy6rii="">Nhân sự nhận xét KRs</label>
+                                                <div class="control" b-82z1cy6rii="">
+                                                    <textarea @bind="@evaluateSample.dict_comment[a.idKR]" class="textarea is_bg" rows="2" placeholder="Nhập nhận xét của bạn" b-82z1cy6rii=""></textarea></div>
+                                            </div>
+                                        </td>
+                                    </tr>   
+                                }
+                            }
+                            
+                            <tr class="is-hidden-mobile" b-82z1cy6rii="">
+                                <td colspan="5" b-82z1cy6rii="">
+                                    <hr class="m-0" b-82z1cy6rii="">
+                                </td>
+                            </tr>
+                            <tr b-82z1cy6rii="">
+                                <td colspan="5" class="td-block" b-82z1cy6rii="">
+                                    <span class="has-text-weight-semibold is-size-6 has-text-info mr-2" b-82z1cy6rii="">Nhân sự phản hồi</span>
+                                    
+                                    <div class="dropdown is-up is-hoverable" b-82z1cy6rii="">
+                                        <div class="dropdown-trigger" b-82z1cy6rii=""><span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-5" b-82z1cy6rii="">infor</i></span></div>
+                                        <div class="dropdown-menu" b-82z1cy6rii="">
+                                        <div class="dropdown-content" style="min-width:400px;width:fit-content" b-82z1cy6rii="">
+                                            <div class="dropdown-item content" b-82z1cy6rii="">
+                                                <p class="has-text-weight-semibold" b-82z1cy6rii="">Gợi ý câu hỏi</p>
+                                                <p b-82z1cy6rii="">Bạn nhận được gì từ người quản lý của bạn mà bạn thấy hữu ích hoặc giúp đỡ bạn tốt?</p>
+                                                <p b-82z1cy6rii="">Điều gì từ người quản lý đã gây ảnh hưởng tới hoạt động OKRs này của bạn?</p>
+                                                <p b-82z1cy6rii="">Nếu quay lại thời gian, người quản lý nên làm gì để giúp bạn thành công trong OKRs này hơn?</p>
+                                                <p b-82z1cy6rii="">Các kỹ năng, năng lực tôi muốn cải thiện và tốt hơn trong tương lai?</p>
+                                                <p b-82z1cy6rii="">Điều gì từ công ty mà bạn kỳ vọng sẽ giúp ích cho việc cải thiện năng lực của bạn?</p>
+                                            </div>
+                                        </div>
+                                        </div>
+                                    </div>
+                                    @if(evaluateSample.status == -1){
+                                        <div class="control mt-2" b-82z1cy6rii="">
+                                        <textarea @bind="evaluateSample.response" class="textarea is_bg" rows="2" placeholder="Nhập phản hồi của bạn" b-82z1cy6rii=""></textarea></div>
+                                    }
+                                    
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        @if(evaluateSample.status == -1){
+                            <ul class="columns is-multiline is-variable is-2 is-mobile" b-82z1cy6rii="">
+                            <li class="column is-half is-full-mobile" b-82z1cy6rii="">
+                            
+                            <div class="has-text-grey mb-2" b-82z1cy6rii="">Chọn người đánh giá</div>
+                            <ul class="columns is-vcentered is-multiline is-variable is-2" b-82z1cy6rii="">
+                                <li class="column is-4" b-82z1cy6rii="">
+                                    
+                                    <div id="dropdown_422e9e96" class="dropdown is-left is-up  ">
+                                        <div class="dropdown-trigger">
+                                        <a class="icon-text">
+                                            <span class="has-text-link is-block" style="max-width: 200px;">Chọn phòng ban</span>
+                                            <span class="icon"><i class="material-icons-outlined is-size-5">arrow_drop_down</i></span>
+                                        </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                
+                                <li class="column is-6" b-82z1cy6rii="">
+                                    
+                                    <div class="control is-expanded has-icons-left has-icons-right has_suggest">
+                                        <input class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..." autocomplete="off" @bind="@userManager.userName" >
+                                        <span class="icon is-left"><i class="material-icons-outlined is-size-6">search</i></span>
+                                        <a class="is-hidden">
+                                        <i class="material-icons-outlined">close</i>
+                                        </a>
+                                        
+                                        <ul class="suggest">
+                                            @foreach(var u in mainLayout.listUser){
+                                                if(u.userId != mainLayout.user.userId){
+                                                    <li class="rsitem" @onclick="() => { userManager = u; }" >
+                                                        <div class="user_item">
+                                                            <img class="image is-24x24 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638398966517082138_338186201_910224320311474_9209000584054955892_n.jpg" alt="IMG">
+                                                            <span>@u.userName</span>
+                                                        </div>
+                                                    </li>
+                                                }
+                                                
+                                            }
+                                        </ul>
+                                    </div>
+                                </li>
+                                
+                                <li class="column is-2" b-82z1cy6rii=""></li>
+                            </ul>
+                            </li>
+                            
+                            <li class="column is-half is-full-mobile" b-82z1cy6rii="">
+                            
+                            <div class="has-text-grey mb-2" b-82z1cy6rii="">Chọn người xem</div>
+                            <ul class="columns is-vcentered is-multiline is-variable is-2" b-82z1cy6rii="">
+                                <li class="column is-4" b-82z1cy6rii="">
+                                    
+                                    <div id="dropdown_8028d1c9" class="dropdown is-left is-up  ">
+                                        <div class="dropdown-trigger">
+                                        <a class="icon-text">
+                                            <span class="has-text-link is-block" style="max-width: 200px;">Chọn phòng ban</span>
+                                            <span class="icon"><i class="material-icons-outlined is-size-5">arrow_drop_down</i></span>
+                                        </a>
+                                        </div>
+                                    </div>
+                                </li>
+                                
+                                <li class="column is-6" b-82z1cy6rii="">
+                                    
+                                    <div class="control is-expanded has-icons-left has-icons-right has_suggest">
+                                        <input class="input is-rounded" type="text" placeholder="Chọn người xem" autocomplete="off">
+                                        <span class="icon is-left"><i class="material-icons-outlined is-size-5">search</i></span>
+                                        <a class="is-hidden">
+                                        <i class="material-icons-outlined">close</i>
+                                        </a>
+                                        
+                                        <ul class="suggest"></ul>
+                                    </div>
+                                </li>
+                                
+                                <li class="column is-2" b-82z1cy6rii=""></li>
+                            </ul>
+                            </li>
+                            
+                            <li class="column" b-82z1cy6rii="">
+                            <a class="button is-info" b-82z1cy6rii="">
+                                <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">save</i></span>
+                                <span b-82z1cy6rii="">Lưu nháp</span>
+                            </a>
+                            </li>
+                            
+                            <li class="column is-narrow" b-82z1cy6rii="">
+                            <a class="button is-white has-text-danger" b-82z1cy6rii="">
+                                <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">close</i></span>
+                                <span b-82z1cy6rii="">Hủy</span>
+                            </a>
+                            </li>
+                            
+                            <li class="column is-narrow is-full-mobile" b-82z1cy6rii="">
+                                <a class="button is-link" b-82z1cy6rii="" @onclick="SendEvaluate" >
+                                    <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">fact_check</i></span>
+                                    <span b-82z1cy6rii="">Gửi đánh giá</span>
+                                </a>
+                            </li>
+                        </ul>
+                        }
+                    </div>
+                </div>
+            </section>
+        }
+        else{
+            <section id="content" class="column has_sidebar">
+                <section class="main_content" b-82z1cy6rii="">
+                    <div class="card" b-82z1cy6rii="">
+                        <ul class="columns is-vcentered is-variable is-2 mb-2" b-82z1cy6rii="">
+                            
+                            <li class="column is-narrow" b-82z1cy6rii="">
+                                <a href="/review" class="icon-text" b-82z1cy6rii="">
+                                    <span class="icon" b-82z1cy6rii="">
+                                        <span class="material-icons-outlined" b-82z1cy6rii="">
+                                            keyboard_backspace
+                                        </span>
+                                    </span>
+                                    <span b-82z1cy6rii="">
+                                        Trở về
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="column is-full-mobile" b-82z1cy6rii="">
+                                <div class="user_item" b-82z1cy6rii="">
+                                    <img class="image is-36x36 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638397902369608569_bb896db4d8fd04a35dec.jpg" alt="IMG" b-82z1cy6rii="" />
+                                    
+                                    <div b-82z1cy6rii="">
+                                        <p class="has-text-weight-semibold has-text-info is-size-6" b-82z1cy6rii="">@mainLayout.user.userName</p>
+                                        
+                                        <p class="text_1_line has-text-grey is-size-7" style="max-width: 200px;" b-82z1cy6rii="">FASTDO ĐÀ NẴNG / PHÒNG SẢN XUẤT</p>
+                                    </div>
+                                </div>
+                            </li>
+                            
+                            <li class="column is-one-third" b-82z1cy6rii="">
+                                <div class="field has-addons" b-82z1cy6rii="">
+                                    
+                                    <div class="control" b-82z1cy6rii="">
+                                        <span class="button is-static" b-82z1cy6rii="">
+                                            OKRs
+                                        </span>
+                                    </div>
+                                    <div class="control is-expanded" b-82z1cy6rii="">
+                                        <div class="select is-fullwidth" b-82z1cy6rii="">
+                                            <select b-82z1cy6rii="">
+                                                @foreach(var o in mainLayout.listOKRs){
+                                                    <option value="@o.idOKRs" b-82z1cy6rii="">@o.idOKRs</option>
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="column is-narrow" b-82z1cy6rii="">
+                                <div class="buttons" b-82z1cy6rii="">
+                                    <a class="button is-link" b-82z1cy6rii="" href="/review/@idOKRs/add" >
+                                        
+                                        <span class="icon" b-82z1cy6rii=""><i class="material-icons-outlined is-size-6" b-82z1cy6rii="">fact_check</i></span>
+                                        
+                                        <span b-82z1cy6rii="">Tạo bản đánh giá</span>
+                                    </a>
+                                </div>
+                            </li>
+                        </ul>
+                        <div class="inner_section" b-82z1cy6rii="">
+                            <table class="table is-fullwidth is-vcentered is-noborder is-responsive" b-82z1cy6rii="">
+                                
+                                <thead b-82z1cy6rii="">
+                                    <tr class="is-size-7" style="border-bottom: 1px solid #dedede;" b-82z1cy6rii="">
+                                        <th class="pt-0" b-82z1cy6rii="">Mục tiêu</th>
+                                        <th class="pt-0" width="150px" align="center" b-82z1cy6rii="">Tiến độ</th>
+                                        <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">Điểm hệ thống</th>
+                                        <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">Tự đánh giá</th>
+                                        <th class="pt-0" width="120px" align="center" b-82z1cy6rii="">QL đánh giá</th>
+                                    </tr>
+                                </thead>
+                                <tbody b-82z1cy6rii="">
+                                    <tr b-82z1cy6rii="">
+                                        <td b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">@evaluateSample.okr._object</span></td>
+                                        
+                                        <td b-82z1cy6rii="">
+                                            
+                                            <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <div class="progress_has_value" b-82z1cy6rii="">
+                                                    <progress class="progress is-small is-dark" value="0" max="100" b-82z1cy6rii=""></progress>
+                                                    
+                                                    <span b-82z1cy6rii="">@(GetLastedProcessOfOKRs(idOKRs).process*100) %</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center" b-82z1cy6rii="">
+                                            
+                                            <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
+                                            <div class="td-value" b-82z1cy6rii="">
+                                                <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreSystem[idOKRs] %</div>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center" b-82z1cy6rii=""></td>
+                                        <td align="center" b-82z1cy6rii=""></td>
+                                    </tr>
+                                    
+                                    
+                                    <tr class="tr-hide" b-82z1cy6rii="">
+                                        <td colspan="5" b-82z1cy6rii=""><hr class="m-0" b-82z1cy6rii="" /></td>
+                                    </tr>
+                                    
+                                    <tr class="has-text-grey" b-82z1cy6rii="">
+                                        <td class="pl-6" b-82z1cy6rii="">Kết quả then chốt</td>
+                                        <td align="center" b-82z1cy6rii="">Đạt được</td>
+                                        <td align="center" b-82z1cy6rii="">Điểm hệ thống</td>
+                                        <td align="center" b-82z1cy6rii="">Tự đánh giá</td>
+                                        <td align="center" b-82z1cy6rii="">QL đánh giá</td>
+                                    </tr>
+
+                                    @if(evaluateSample.status == 0){
+                                        foreach(var kr in evaluateSample.krs){
+                                            if(listShowKR[kr.idKR]){
+                                                <tr b-82z1cy6rii="">
+                                                    <td class="pl-6" b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">aaaa</span></td>
+                                                    
+                                                    <td b-82z1cy6rii="">
+                                                        
+                                                        <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
+                                                        <div class="td-value" b-82z1cy6rii="">
+                                                            <span class="has-text-success" b-82z1cy6rii="">0/100</span>
+                                                            
+                                                            <span class="is-pulled-right" b-82z1cy6rii="">$</span>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                    <td align="center" b-82z1cy6rii="">
+                                                        
+                                                        <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
+                                                        <div class="td-value" b-82z1cy6rii="">
+                                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">0%</div>
+                                                        </div>
+                                                    </td>
+                                                    
+                                                    <td align="center" b-82z1cy6rii=""></td>
+                                                    <td align="center" b-82z1cy6rii=""></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                    else{
+                                        <tr b-82z1cy6rii="">
+                                            <td colspan="5" class="pl-6 has-text-grey has-text-weight-semibold is-italic" b-82z1cy6rii="">
+                                                Chưa có bản đánh giá cho OKRs này
+                                            </td>
+                                        </tr>
+                                    }
+                                    
+                                    
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+            </section>
+
+        }
+    }
+}
+else{
+    <section id="content" class="column has_sidebar">
+
+    <div class="tabs">
+
+        <div class="tabs_name">
+            Đánh giá OKRs
+        </div>
+        <ul>
+            <li class="@(isPagePersonal ? "is-active" : "")">
+
+                <a class="has-text-weight-normal" @onclick="() => { isPagePersonal = true;} ">Cá nhân</a>
+            </li>
+
+            <li class="@(isPagePersonal ? "" : "is-active")">
+
+                <a class="has-text-weight-normal" @onclick="() => { isPagePersonal = false;} ">Đội nhóm</a>
+            </li>
+        </ul>
+    </div>
+    @if (isPagePersonal)
+    {
+        <section class="main_content">
+            <div class="">
+                <div class="inner_section">
+                    <table class="table is-fullwidth is-vcentered is-noborder is-responsive">
+                        <thead>
+                            <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;">
+                                <th class="pt-0">Mục tiêu</th>
+                                <th class="pt-0" width="60px"></th>
+                                <th class="pt-0" width="130px" align="center">Tiến độ</th>
+                                <th class="pt-0" width="120px" align="center">Điểm hệ thống</th>
+                                <th class="pt-0" width="120px" align="center">Tự đánh giá</th>
+                                <th class="pt-0" width="120px" align="center">QL đánh giá</th>
+                                <th class="pt-0" width="110px" align="center">Nhân viên</th>
+                                <th class="pt-0" width="110px" align="center">Quản lý</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach(var o in mainLayout.listOKRs){
+                                var evaluate = GetEvaluateFromOKRs(o.idOKRs);
+
+                                <tr>
+                                    <td>
+                                        <div class="is-flex"><a class="has-text-weight-semibold has-text-link"
+                                                href="/review/@o.idOKRs">@o._object</a></div>
+                                    </td>
+                                    <td align="right"><span class="icon-text" @onclick="() => ShowKR(o.idOKRs)" ><a class="icon"><i
+                                                    class="material-icons-outlined is-size-5">arrow_drop_down</i></a></span>
+                                    </td>
+                                    <td><label class="td-label">Tiến độ</label>
+                                        <div class="td-value">
+                                            <div class="progress_has_value"><progress class="progress is-small is-dark"
+                                                    value="@GetLastedProcessOfOKRs(o.idOKRs).process" max="1"></progress>
+                                                <span> @(GetLastedProcessOfOKRs(o.idOKRs).process *100 )% </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="center"><label class="td-label">Điểm hệ thống</label>
+                                        <div class="td-value">
+                                            <div class="input is-centered has-text-weight-semibold is_bg">@evaluate.dict_scoreSystem[o.idOKRs] %
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="center"><label class="td-label">Tự đánh giá</label>
+                                        <div class="td-value">
+                                            <div class="input is-centered has-text-weight-semibold is_bg"> @evaluate.dict_scoreBySelf[o.idOKRs] %
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="center"><label class="td-label">QL đánh giá</label>
+                                        <div class="td-value">
+                                            <div class="input is-centered has-text-weight-semibold is_bg">@evaluate.dict_scoreByManager[o.idOKRs] %
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="center"><label class="td-label">Nhân viên</label>
+                                        <div class="td-value"></div>
+                                    </td>
+                                    <td align="center"><label class="td-label">Quản lý</label>
+                                        <div class="td-value"></div>
+                                    </td>
+                                </tr>
+
+                                @if(listShowKR.Count > 0){
+                                    if(listShowKR[o.idOKRs]){
+                                        foreach(var a in mainLayout.listKR){
+                                            if(a.idOKRs == o.idOKRs){
+                                                <tr>
+                                                    <td class="pl-4">@a._keyResult</td>
+                                                    <td class="td-hide"></td>
+                                                    <td><label class="td-label">Tiến độ</label>
+                                                        <div class="td-value"><span class="has-text-success"
+                                                                title="00.000 / 100.000">@a.processCurrent/@a.target</span>
+                                                            <span class="is-pulled-right">%</span>
+                                                        </div>
+                                                    </td>
+                                                    <td align="center"><label class="td-label">Điểm hệ thống</label>
+                                                        <div class="td-value">
+                                                            <div class="input is-centered has-text-weight-semibold is_bg">@evaluate.dict_scoreSystem[a.idKR] %
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="center"><label class="td-label">Tự đánh giá</label>
+                                                        <div class="td-value">
+                                                            <div class="input is-centered has-text-weight-semibold is_bg">@evaluate.dict_scoreBySelf[a.idKR] %
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="center"><label class="td-label">QL đánh giá</label>
+                                                        <div class="td-value">
+                                                            <div class="input is-centered has-text-weight-semibold is_bg">@evaluate.dict_scoreByManager[a.idKR] %
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td align="center"></td>
+                                                    <td align="center"></td>
+                                                </tr>
+                                            }
+                                        }
+                                    }
+                                    
+                                }
+                                
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    }
+    else
+    {
+        <section class="main_content">
+            <div class="">
+                <ul class="columns is-vcentered is-variable is-2 mb-2">
+                    <li class="column is-narrow">
+
+                        <div class="dropdown is-right ">
+                            <div class="dropdown-trigger">
+                                <a class="icon-text">
+                                    <span class="has-text-link">Tất cả trạng thái</span>
+
+                                    <span class="icon"><i
+                                            class="material-icons-outlined is-size-5">arrow_drop_down</i></span>
+                                </a>
+                            </div>
+                        </div>
+                    </li> 
+
+                    <li class="column is-narrow">
+                        <div id="dropdown_b06e579e" class="dropdown is-left  ">
+                            <div class="dropdown-trigger">
+                                <a class="icon-text">
+                                    <span class="has-text-link is-block" style="max-width: 200px;">OKRs xem hoặc đánh
+                                        giá</span>
+                                    <span class="icon"><i
+                                            class="material-icons-outlined is-size-5">arrow_drop_down</i></span>
+                                </a>
+                            </div>
+                        </div>
+                    </li>
+
+                    <li class="column is-one-quarter">
+
+                        <div class="control is-expanded has-icons-left has-icons-right has_suggest">
+                            <input @bind="@userView.userName" class="input is-rounded is-small" type="text" placeholder="Nhập tên nhân viên..." autocomplete="off">
+
+
+                            <span class="icon is-left"><i class="material-icons-outlined is-size-6">search</i></span>
+                            <a class="is-hidden">
+                                <i class="material-icons-outlined">close</i>
+                            </a>
+
+                            <ul class="suggest">
+                                    @foreach(var u in mainLayout.listUser){
+                                        if(u.userId != mainLayout.user.userId){
+                                            <li class="rsitem" @onclick="() => { userView = u; evaluates = GetListEvaluateFromIdUser(u.userId); }" >
+                                                <div class="user_item">
+                                                    <img class="image is-24x24 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638398966517082138_338186201_910224320311474_9209000584054955892_n.jpg" alt="IMG">
+                                                    <span>@u.userName</span>
+                                                </div>
+                                            </li>
+                                        } 
+                                    }
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+
+                <div class="inner_section">
+                    <table class="table is-fullwidth is-vcentered is-noborder is-responsive">
+                        
+                        <thead>
+                            <tr class="is-size-7" style="border-bottom: 1px solid #DEDEDE;">
+                                <th class="pt-0">Mục tiêu</th>
+                                <th class="pt-0" width="60px"></th>
+                                <th class="pt-0" width="130px" align="center">Tiến độ</th>
+                                <th class="pt-0" width="120px" align="center">Điểm hệ thống</th>
+                                <th class="pt-0" width="120px" align="center">Tự đánh giá</th>
+                                <th class="pt-0" width="120px" align="center">QL đánh giá</th>
+                                <th class="pt-0" width="110px" align="center">Nhân viên</th>
+                                <th class="pt-0" width="110px" align="center">Quản lý</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td colspan="8">
+                                <div class="user_item">
+                                    <img class="image is-36x36 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638397892712111783_305765668_3349443641956452_8173267747623672115_n.jpg" alt="IMG">
+                                    <div>
+                                        <p class="has-text-weight-semibold has-text-info is-size-6">@userView.userName</p>
+                                        
+                                        <p class="text_1_line has-text-grey is-size-7" style="max-width: 400px;">FASTDO ĐÀ NẴNG / PHÒNG SẢN XUẤT</p>
+                                    </div>
+                                </div>
+                                </td>
+                            </tr>
+            
+                            @foreach(var a in evaluates){
+                                if( (a.idUser == userView.userId && a.idManager == mainLayout.user.userId)  || a.listIdUserView.Contains(mainLayout.user.userId)){                                                                                
+                                    <tr>
+                                        <td>
+                                        <div class="is-flex"><a class="has-text-weight-semibold has-text-link" href="/review/@a.okr.idOKRs/evaluate">@a.okr._object</a></div>
+                                        </td>
+                                        
+                                        @* <td align="right">
+                                        <span class="icon-text">
+                                            <span class="ml-1 icon" title="OKRs đã hoàn thành"><i class="material-icons-outlined is-size-6 has-text-success">check_circle</i></span><a class="icon"><i class="material-icons-outlined is-size-5">arrow_right</i></a>
+                                        </span>
+                                        </td> *@
+                                        <td align="right">
+                                            <span class="icon-text">
+                                                
+                                                @* <span class="ml-1 icon" title="OKRs đã hoàn thành">
+                                                    <i class="material-icons-outlined is-size-6 has-text-success">check_circle</i>
+                                                </span> *@
+                                                <a class="icon" @onclick="() => { listShowKR[a.okr.idOKRs] = !listShowKR[a.okr.idOKRs]; }" >
+                                                    <i class="material-icons-outlined is-size-5">arrow_drop_down</i>
+                                                </a>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <label class="td-label">Tiến độ</label>
+                                            <div class="td-value">
+                                                <div class="progress_has_value">
+                                                    <progress class="progress is-small is-danger" value="@GetLastedProcessOfOKRs(a.okr.idOKRs).process" max="1"></progress>
+                                                    <span>@(GetLastedProcessOfOKRs(a.okr.idOKRs).process *100) %</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        
+                                        <td align="center">
+                                        <label class="td-label">Điểm hệ thống</label>
+                                        <div class="td-value">
+                                            <div class="input is-centered has-text-weight-semibold is_bg">
+                                                @a.dict_scoreSystem[a.okr.idOKRs] %
+                                            </div>
+                                        </div>
+                                        </td>
+                                        
+                                        <td align="center">
+                                        <label class="td-label">Tự đánh giá</label>
+                                        <div class="td-value">
+                                            <div class="input is-centered has-text-weight-semibold is_bg">
+                                                @a.dict_scoreBySelf[a.okr.idOKRs] %
+                                            </div>
+                                        </div>
+                                        </td>
+                                        
+                                        <td align="center">
+                                        <label class="td-label">QL đánh giá</label>
+                                        <div class="td-value">
+                                            <div class="input is-centered has-text-weight-semibold is_bg">
+                                                @a.dict_scoreByManager[a.okr.idOKRs] %
+                                            </div>
+                                        </div>
+                                        </td>
+                                        
+                                        <td align="center">
+                                            <label class="td-label">Nhân viên</label>
+                                            <div class="td-value"><span class="has-text-grey">@a.dateCreate</span></div>
+                                        </td>
+                                        
+                                        <td align="center">
+                                            <label class="td-label">Quản lý</label>
+                                            <div class="td-value"><span class="has-text-grey">@a.dateReview</span></div>
+                                        </td>
+                                    </tr>
+
+                                    @if(listShowKR[a.okr.idOKRs]){
+                                        var e = evaluates.FirstOrDefault(x => x.okr.idOKRs == a.okr.idOKRs);
+                                        @foreach( var kr in e.krs){
+                                            <tr>
+                                                <td class="pl-4">@kr._keyResult</td>
+                                                <td class="td-hide"></td>
+                                                <td>
+                                                    <label class="td-label">Tiến độ</label>
+                                                    <div class="td-value">
+                                                        <span class="has-text-success" >@kr.processCurrent/ @kr.target</span>
+                                                        <span class="is-pulled-right">%</span>
+                                                    </div>
+                                                </td>
+                                                
+                                                <td align="center">
+                                                    <label class="td-label">Điểm hệ thống</label>
+                                                    <div class="td-value">
+                                                        <div class="input is-centered has-text-weight-semibold is_bg">@e.dict_scoreSystem[kr.idKR] %</div>
+                                                    </div>
+                                                </td>
+                                                
+                                                <td align="center">
+                                                    <label class="td-label">Tự đánh giá</label>
+                                                    <div class="td-value">
+                                                        <div class="input is-centered has-text-weight-semibold is_bg">@e.dict_scoreBySelf[kr.idKR] %</div>
+                                                    </div>
+                                                </td>
+                                                
+                                                <td align="center">
+                                                    <label class="td-label">QL đánh giá</label>
+                                                    <div class="td-value">
+                                                        <div class="input is-centered has-text-weight-semibold is_bg">@e.dict_scoreBySelf[kr.idKR] %</div>
+                                                    </div>
+                                                </td>
+                                                
+                                                <td align="center"></td>
+                                                <td align="center"></td>
+                                            </tr>
+                                        }
+                                    }
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    
+    }
+
+</section>
+}
+
+@code {
+    private bool isPagePersonal = true;
+
+    [Parameter] public string idOKRs { get; set; }
+    [Parameter] public string action { get; set; }
+
+    public bool isReviewing { get; set; }
+    [CascadingParameter] public MainLayout mainLayout { get; set; }
+
+    private List<Evaluate> evaluates = new();
+    
+    Evaluate evaluateSample = new Evaluate();
+
+    private List<Process> ListProcess = new List<Process>();
+
+    private Dictionary<string, bool> listShowKR = new Dictionary<string, bool>();
+
+    private User userManager = new();
+    private User userView = new User();
+    // onInitial
+
+    protected override async Task OnInitializedAsync() {
+        listShowKR.Clear();
+        Console.WriteLine("OnInitializedAsync -- Review");
+        evaluates = await DbEvaluate.GetAll();
+        ListProcess = await DbProcess.GetAllProcess();
+
+        var okrs = await DbOKRs.GetAllOKRs();
+        
+        foreach(var o in okrs){
+            listShowKR.Add(o.idOKRs, false);
+        }
+    }
+
+    private List<Evaluate> GetListEvaluateFromIdUser(string id){
+        var rs = new List<Evaluate>();
+        foreach(var e in evaluates){
+            if(e.idUser == id){
+                rs.Add(e);
+            }
+        }
+        return rs;
+    }
+
+    private async void ConfirmEvaluate(){
+        isReviewing = false;
+        evaluateSample.status = 1;
+        await DbEvaluate.UpdateEvaluate(evaluateSample);
+    }
+
+    protected override void OnParametersSet() {
+        Console.WriteLine("IdOKRs: " + idOKRs);
+        Console.WriteLine("Action: " + action);
+        if(!String.IsNullOrEmpty(idOKRs)){
+            evaluateSample = GetEvaluateFromOKRs(idOKRs);
+        }
+    }
+
+    private void ShowKR(string idOKRs){
+        listShowKR[idOKRs] = !listShowKR[idOKRs];
+    }
+
+    private Process GetLastedProcessOfOKRs(string idOKRs) {
+        var rs = ListProcess.Where(x => x.idOKRs == idOKRs).OrderByDescending(x => x.date).FirstOrDefault();
+        if(rs == null){
+            rs = new Process();
+            rs.idOKRs = idOKRs;
+            rs.date = DateTime.Today.Ticks;
+        }
+        return rs;
+    }
+
+    private Evaluate GetEvaluateFromOKRs(string idOKRs) {
+        var rs = evaluates.FirstOrDefault(x => x.okr.idOKRs == idOKRs);
+        if(rs != null){
+            return rs;
+        }
+        return CreateNewEvaluateFromOKRs(idOKRs);
+    }
+
+    private Evaluate CreateNewEvaluateFromOKRs(string idOKRs) {
+        var rs = new Evaluate();
+        var okr = mainLayout.listOKRs.FirstOrDefault(x => x.idOKRs == idOKRs);
+        rs.dict_response_manager.Add("0","");
+        if(okr != null){
+            rs.okr = okr;
+            rs.dict_response_manager.Add(idOKRs,"");
+            rs.dict_comment.Add(idOKRs, "");
+            rs.dict_scoreSystem.Add(idOKRs, 0);
+            rs.dict_scoreBySelf.Add(idOKRs, 0);
+            rs.dict_scoreByManager.Add(idOKRs, 0);
+            
+
+            foreach(var kr in mainLayout.listKR){
+                if(kr.idOKRs == idOKRs){
+                    rs.krs.Add(kr);
+                    rs.dict_comment.Add(kr.idKR, "");
+                    rs.dict_scoreSystem.Add(kr.idKR, 0);
+                    rs.dict_scoreBySelf.Add(kr.idKR, 0);
+                    rs.dict_scoreByManager.Add(kr.idKR, 0);
+                    rs.dict_response_manager.Add(kr.idKR, "");
+                }
+            }
+        }
+        return rs;
+    }
+
+    private OKRs GetOKRsFromList(string idOKRs) {
+        var rs = mainLayout.listOKRs.FirstOrDefault(x => x.idOKRs == idOKRs);
+        if(rs != null){
+            return rs;
+        }
+        return new OKRs();
+    }
+    
+    private async void SendEvaluate(){
+        evaluateSample.idUser = mainLayout.user.userId;
+        if(evaluateSample.status == -1){
+            Console.WriteLine("SendEvaluate");
+            evaluateSample.dateCreate = DateTime.Today.Ticks;
+            evaluateSample.idManager = userManager.userId;
+            evaluateSample.status = 0;
+            await DbEvaluate.AddEvaluate(evaluateSample);
+        }
+        else if(evaluateSample.status == 0){
+            Console.WriteLine("UpdateEvaluate");
+            evaluateSample.idManager = userManager.userId;
+            await DbEvaluate.UpdateEvaluate(evaluateSample);
+        }
+        
+    }
+}

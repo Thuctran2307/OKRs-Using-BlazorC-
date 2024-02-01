@@ -188,7 +188,8 @@
     public List<KR> listKR = new();
     public List<OKRs> listOKRs = new();
     public List<Cycle> listCycle = new List<Cycle>();
-
+    
+    public List<User> listUser = new List<User>();
     public Cycle selectedCycle = new Cycle();
 
     // onAfterRenderAsync
@@ -201,6 +202,10 @@
             Console.WriteLine("onAfterRenderAsync- MainLayout");
             var idUser = await JSRuntime.InvokeAsync<string>("a.ReadCookie");
             selectedCycle = await DbCycle.GetCycleLast();
+
+            if(selectedCycle == null){
+                selectedCycle = new Cycle();
+            }
             listCycle = await DbCycle.GetListCycle();
             if (idUser != null)
             {
@@ -226,6 +231,7 @@
     {
         selectedCycle = await DbCycle.GetCycleLast();
         Console.WriteLine("OnInitializedAsync - MainLayout");
+        listUser = await DbUser.GetAllUser();
     }
 
     // onParameterSet

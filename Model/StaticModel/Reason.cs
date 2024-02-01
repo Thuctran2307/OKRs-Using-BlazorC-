@@ -1,4 +1,4 @@
-namespace OKRs.Models
+namespace OKRs.Models.StaticModel
 {
     public class Reason{
         /*<option value="237RB0BA32">Chuyển đổi số và áp dụng công nghệ nhiều hơn</option>
@@ -14,17 +14,18 @@ namespace OKRs.Models
                         </option>
                         <option value="239R336BA5">TEST ABC </option>
         */
-        public static List<string> listReason = new List<string>(){
-            "Chuyển đổi số và áp dụng công nghệ nhiều hơn",
-            "Gia tăng giá trị sản phẩm",
-            "Gia tăng khách hàng (số lượng, trải nghiệm, giá trị đơn hàng...)",
-            "Hệ thống quản trị tốt hơn",
-            "Hệ thống vận hành (quy trình, quy định, biểu mẫu..) tốt hơn",
-            "Nhân sự tốt hơn",
-            "Phát triển tốt hơn",
-            "Phát triển văn hóa doanh nghiệp hơn",
-            "Tài chính vững mạnh (gia tăng doanh thu, l��i nhuận, giảm chi phí...)",
-            "TEST ABC"
+        public static Dictionary<string, string> listReason = new Dictionary<string, string>()
+        {
+            { "237RB0BA32", "Chuyển đổi số và áp dụng công nghệ nhiều hơn" },
+            { "237R9F2BC0", "Gia tăng giá trị sản phẩm" },
+            { "237R38F2DF", "Gia tăng khách hàng (số lượng, trải nghiệm, giá trị đơn hàng...)" },
+            { "237R6A9D9F", "Hệ thống quản trị tốt hơn" },
+            { "237RCB2089", "Hệ thống vận hành (quy trình, quy định, biểu mẫu..) tốt hơn" },
+            { "237R4809BA", "Nhân sự tốt hơn" },
+            { "239E4618A6", "Phát triển tốt hơn" },
+            { "237R811639", "Phát triển văn hóa doanh nghiệp hơn" },
+            { "237R75FD48", "Tài chính vững mạnh (gia tăng doanh thu, lợi nhuận, giảm chi phí...)" },
+            { "239R336BA5", "TEST ABC" }
         };
     }
 }

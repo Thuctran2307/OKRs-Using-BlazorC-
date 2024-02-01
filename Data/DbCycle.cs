@@ -36,5 +36,31 @@ namespace OKRs.Model
             return cycles.FirstOrDefault();
         }
 
+        // delete cycle
+
+        public static async Task<bool> DeleteCycle(string idCycle)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<Cycle>(_collectionName);
+            var filter = Builders<Cycle>.Filter.Eq("idCycle", idCycle);
+            var result = await collection.DeleteOneAsync(filter);
+            return result.DeletedCount != 0;
+        }
+
+        // update cycle
+        public static async Task<bool> UpdateCycle(Cycle cycle)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<Cycle>(_collectionName);
+            var filter = Builders<Cycle>.Filter.Eq("idCycle", cycle.idCycle);
+            var update = Builders<Cycle>.Update
+                .Set("nameCycle", cycle.nameCycle)
+                .Set("startDate", cycle.dateStart)
+                .Set("endDate", cycle.dateEnd)
+                .Set("status", cycle.status);
+            var result = await collection.UpdateOneAsync(filter, update);
+            return result.ModifiedCount != 0;
+        }
+
     }
 }

@@ -17,6 +17,8 @@ namespace OKRs.Model
 
         public long dateCheckIn { get; set; }
 
+        public long nextCheckIn { get; set; }
+
         public CheckInOKRs(){
             id = ObjectId.GenerateNewId().ToString();
             statusCheckIn = -1;

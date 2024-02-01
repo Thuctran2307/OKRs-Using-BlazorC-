@@ -54,23 +54,25 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
+                    
                         @foreach (var suggest in list)
                         {
+                            <tr>
                             <td>
                                 <div class="is-word-break">@suggest.content</div>
                             </td>
                             <td><label class="td-label">Gửi đến</label>
-                                <div class="td-value">@suggest.idUserSend</div>
+                                <div class="td-value">@(listPhongBan[suggest.idUserRecive])</div>
                             </td>
                             <td><label class="td-label">Lý do</label>
-                                <div class="td-value">@suggest.reason</div>
+                                <div class="td-value">@(listReason[suggest.reason])</div>
                             </td>
                             <td><label class="td-label">Ngày gửi</label>
-                                <div class="td-value">@suggest.dateSend</div>
+                                <div class="td-value">@((new DateTime(suggest.dateSend)).ToString("dd/MM/yyyy"))</div>
                             </td>
+                            </tr>
                         }
-                    </tr>
+                    
                 </tbody>
             </table>
         </div>
@@ -131,7 +133,7 @@
                         <div class="field"><label class="label"><span>Nội dung mục góp ý *</span>
                                 <a class="icon is-pulled-right has-text-info"><i
                                         class="material-icons-outlined">close</i></a></label>
-                            <div class="control"><textarea class="textarea is_bg"
+                            <div class="control"><textarea class="textarea is_bg" @bind="suggest.content"
                                     placeholder="Bạn muốn công ty dành nguồn lực tập trung vào mục tiêu / điều gì trong quý tới... "></textarea>
                             </div>
                         </div>
@@ -156,7 +158,25 @@
 
 
 @code {
-
+    public static Dictionary<string, string> listPhongBan = new Dictionary<string, string>()
+        {
+            { "241A2D9F3B", "FASTDO ĐÀ NẴNG" },
+            { "241AF38879", "└─ PHÒNG KT - TC" },
+            { "241A0E45FC", "└─ PHÒNG MARKETING" },
+            { "241AAACC71", "└─ PHÒNG NHÂN SỰ" },
+            { "241A651B1A", "└─ PHÒNG SALES - CS" },
+            { "241AA0BDEA", "└─ PHÒNG SẢN XUẤT" }
+        };
+    public static Dictionary<string, string> listReason = new Dictionary<string, string>()
+        {
+            { "241AEF604C", "Chuyển đổi số và áp dụng công nghệ nhiều hơn" },
+            { "241A7B1A7D", "Gia tăng giá trị sản phẩm" },
+            { "241A662F7B", "Gia tăng khách hàng (số lượng, trải nghiệm, giá trị đơn hàng...)" },
+            { "241AEAF915", "Hệ thống quản trị tốt hơn" },
+            { "241A1B75FD", "Hệ thống vận hành (quy trình, quy định, biểu mẫu..) tốt hơn" },
+            { "241A298580", "Nhân sự tốt hơn" },
+            { "241ADDE7B6", "Phát triển văn hóa doanh nghiệp tốt hơn" },
+        };
     private bool isSlider = false;
 
     private Suggest suggest = new Suggest();
@@ -192,5 +212,7 @@
         isSlider = false;
         list = await DbSuggest.GetListSuggest();
     }
+
+    
 
 }

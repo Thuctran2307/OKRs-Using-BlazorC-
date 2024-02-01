@@ -35,13 +35,6 @@ namespace OKRs.Service
 
 
         public static string ConvertToConfident(int i){
-            /*<select  @bind="OKR_Current.confident" >
-                                                <option value="0">- Chọn -</option>
-                                                <option value="1">Rất tốt</option>
-                                                <option value="2">Ổn</option>
-                                                <option value="3">Không ổn</option>
-                                            </select>
-            */
             switch (i)
             {
                 case 1:
@@ -53,6 +46,30 @@ namespace OKRs.Service
                 default:
                     return "Chưa đánh giá";
             }
+        }
+
+        public static string ConvertStatus(float i){
+            switch (i)
+            {
+                case -1:
+                    return "";
+                case 0:
+                    return "Check-in nháp";
+                case 1:
+                    return "Đã xác nhận checkin nháp";
+                case 2:
+                    return "Đã check-in";
+                    case 3:
+                    return "Đã xác nhận";
+                default:
+                    return "";
+            }
+        }
+
+        public static string ConvertTicksToDate(long ticks)
+        {
+            DateTime date = new DateTime(ticks);
+            return date.ToString("dd/MM/yyyy");
         }
     }
 }

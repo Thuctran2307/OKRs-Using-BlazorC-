@@ -67,7 +67,7 @@
                                 </td>
 
                                 <td align="center"><label class="td-label">Ngày tạo</label>
-                                    <div class="td-value">@okr.dateCreate</div>
+                                    <div class="td-value">@((new DateTime(okr.dateCreate)).ToString("dd/MM/yyyy"))</div>
                                 </td>
                             </tr>
 
@@ -226,14 +226,6 @@
 
     List<Process> listProcess { get; set; } = new List<Process>();
 
-    async void AddProgress(){
-        Process a = new Process();
-        a.idOKRs = "65b1cc7e8336141a68522a21";
-        a.process = 0.2;
-        a.date = DateTime.Today.Ticks;
-        await DbProcess.AddProcess(a);
-    }
-
     // onInitialize
 
     protected override async Task OnInitializedAsync()
@@ -285,7 +277,6 @@
             isShowKR.Add(okr.idOKRs, false);
         }
         isSlider = false;
-        StateHasChanged();
     }
 
     private void AddKrToList()
@@ -314,6 +305,7 @@
     {
         okrs.idCycle = idCycle;
         okrs.idUser = mainLayout.user.userId;
+        okrs.dateCreate = DateTime.Today.Ticks;
         if (!FindOkrInList(okrs.idOKRs))
         {
             await DbOKRs.AddOKRs(okrs);
@@ -340,7 +332,6 @@
             await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được cập nhập thành công");
         }
         init();
-        StateHasChanged();
     }
 
     private int GetNumberKrOfOKRs(string idOKR)

@@ -23,29 +23,39 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td><span class="has-text-weight-semibold">QUÝ I.2024</span></td>
-                    <td><label class="td-label">Bắt đầu</label>
-                        <div class="td-value">01/01/2024</div>
-                    </td>
-                    <td><label class="td-label">Kết thúc</label>
-                        <div class="td-value">31/03/2024</div>
-                    </td>
-                    <td><label class="td-label">Trạng thái</label>
-                        <div class="td-value"><span class="tag is-success">Đang thực hiện</span></div>
-                    </td>
-                    <td align="center"><label class="td-label">Xử lý</label>
-                        <div class="td-value"><a class="icon has-text-link" title="Chỉnh sửa"><i
-                                    class="material-icons-outlined is-size-5">
-                                    edit
-                                </i></a>
-                            <a class="icon has-text-danger" title="Xóa"><i
-                                    class="material-icons-outlined is-size-5">
-                                    delete
-                                </i></a>
-                        </div>
-                    </td>
-                </tr>
+                @foreach(var cycle in cycleList) {
+                    <tr>
+                        <td><span class="has-text-weight-semibold">@cycle.nameCycle</span></td>
+                        <td>
+                            <label class="td-label">Bắt đầu</label>
+                            <div class="td-value">@(new DateTime(cycle.dateStart))</div>
+                        </td>
+                        <td>
+                            <label class="td-label">Kết thúc</label>
+                            <div class="td-value">@(new DateTime(cycle.dateEnd))</div>
+                        </td>
+                        <td>
+                            <label class="td-label">Trạng thái</label>
+                            @if(cycle.status == true){
+                                <div class="td-value"><span class="tag is-success">Đang thực hiện</span></div>
+                            }
+                            else{
+                                <div class="td-value"><span class="tag is-danger">Đã kết thúc</span></div>
+                            }
+                        </td>
+                        <td align="center">
+                            <label class="td-label">Xử lý</label>
+                            <div class="td-value">
+                                <a class="icon has-text-link" title="Chỉnh sửa" @onclick="() => EditCycle(cycle)" >
+                                    <i class="material-icons-outlined is-size-5">edit</i>
+                                </a>
+                                <a class="icon has-text-danger" title="Xóa" @onclick="() => DeleteCycle(cycle)" >
+                                    <i class="material-icons-outlined is-size-5">delete</i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
             </tbody>
         </table>
 
@@ -135,6 +145,8 @@
     Cycle cycle = new Cycle();
     private bool isAddCycle = false;
 
+    List<Cycle> cycleList = new List<Cycle>();
+
     private void ActiveFormAdd()
     {
         
@@ -143,14 +155,59 @@
 
     private async void AddCycle()
     {
-        var rs = await DbCycle.AddCycle(cycle);
+        try{
+            var rs = await DbCycle.AddCycle(cycle);
         
-        if (rs != null)
-        {
-            await JSRuntime.InvokeVoidAsync("notify.success", "Tạo chu kỳ thành công");
-            isAddCycle = false;
-            cycle = new Cycle();
-            StateHasChanged();
+            if (rs != null)
+            {
+                await JSRuntime.InvokeVoidAsync("notify.success", "Tạo chu kỳ thành công");
+                isAddCycle = false;
+                cycle = new Cycle();
+                StateHasChanged();
+            }
         }
+        catch(Exception ex){
+            var rs = await DbCycle.UpdateCycle(cycle);
+            if(rs){
+                await JSRuntime.InvokeVoidAsync("notify.success", "Cập nhật chu kỳ thành công");
+                isAddCycle = false;
+                cycle = new Cycle();
+                StateHasChanged();
+            }
+            else{
+                await JSRuntime.InvokeVoidAsync("notify.error", "Đã có lỗi xảy ra");
+            
+            }
+        }
+
+        cycleList = await DbCycle.GetListCycle();
     }
+
+    // OnInitialize
+    protected override async Task OnInitializedAsync()
+    {
+        cycleList = await DbCycle.GetListCycle();
+    }
+
+    private void EditCycle(Cycle c)
+    {
+        cycle = c;
+        isAddCycle = true;
+    }
+    private async void DeleteCycle(Cycle c)
+    {
+        var rs = await DbCycle.DeleteCycle(c.idCycle);
+        if(rs){
+            await JSRuntime.InvokeVoidAsync("notify.success","Xoá chu kì thành công!");
+        }
+        else{
+            await JSRuntime.InvokeVoidAsync("notify.success","Đã có lỗi xảy ra!");
+        }
+
+        cycleList = await DbCycle.GetListCycle();
+        StateHasChanged();
+
+    }
+
+
 }

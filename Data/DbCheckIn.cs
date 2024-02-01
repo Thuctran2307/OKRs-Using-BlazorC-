@@ -20,15 +20,18 @@ namespace OKRs.Data
 
         // get CHekcin by idOKRs
 
-        public static async Task<CheckInOKRs> GetCheckIn(string idOKRs)
+        public static async Task<CheckInOKRs> GetCheckInLastest(string idOKRs)
         {
             var _db = Mongo.GetDatabase();
             var collection = _db.GetCollection<CheckInOKRs>(_collectionName);
-            var checkIn = await collection.FindAsync(x => x.idOKRs == idOKRs);
-            if(checkIn == null){
+            var checkIn = await collection.Find(x => x.idOKRs == idOKRs)
+                                          .SortByDescending(x => x.dateCheckIn)
+                                          .FirstOrDefaultAsync();
+            if (checkIn == null)
+            {
                 return new CheckInOKRs(idOKRs);
             }
-            return checkIn.FirstOrDefault();
+            return checkIn;
         }
 
         // update Checkin

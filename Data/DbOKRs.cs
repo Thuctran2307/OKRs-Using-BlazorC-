@@ -48,6 +48,15 @@ namespace OKRs.Model
             return okrs;
         }
 
+        // get all okr
+        public static async Task<List<OKRs>> GetAllOKRs()
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<OKRs>(_collectionName);
+            var okrs = await collection.Find(x => true).ToListAsync();
+            return okrs;
+        }
+
         public static async Task<List<OKRs>> GetAllOKRsToCheckIn(string idCycle, string idUserCheckIn, string idToViewOKRs)
         {
             if(idUserCheckIn == idToViewOKRs){
