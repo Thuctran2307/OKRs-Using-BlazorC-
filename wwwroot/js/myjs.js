@@ -32,42 +32,8 @@ window.a = {
         return "";
     },
 
-    Draw: function (data) {
-        var data = {
-            labels: data[0],
-            datasets: [{
-                label: "Doanh số bán hàng",
-                data: data[1],  
-                borderColor: 'rgba(75, 192, 192, 1)',
-                borderWidth: 2,
-                fill: false
-            }]
-        };
-    
-        // Cấu hình biểu đồ
-        var options = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    type: 'category',
-                    labels: data.labels
-                },
-                y: {
-                    beginAtZero: true
-                }
-            }
-        };
-    
-        // Lấy tham chiếu đến canvas
-        var ctx = document.getElementById('chartLine').getContext('2d');
-    
-        // Tạo biểu đồ đường
-        var myLineChart = new Chart(ctx, {
-            type: 'line',
-            data: data,
-            options: options
-        });
+    Draw: function drawChart(process, date) {
+          
     },
 
     WriteCycle: function(value){

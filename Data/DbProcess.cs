@@ -62,5 +62,14 @@ namespace OKRs.Model
             var process = await collection.FindAsync(x => x.idProcess == idProcess);
             return process.Any();
         }
+
+        // getALlProcess of idOKRs
+        public static async Task<List<Process>> GetAllProcess(string idOKRs)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<Process>(_collectionName);
+            var list = await collection.FindAsync(x => x.idOKRs == idOKRs);
+            return list.ToList();
+        }
     }
 }

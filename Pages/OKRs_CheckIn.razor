@@ -63,6 +63,9 @@
                                     <td>
                                         <div class="is-flex"><a class="has-text-weight-semibold"
                                                 href="/checkin/@checkInOKRs.id">@checkInOKRs.okr._object</a></div>
+                                        @if(checkInOKRs.okr.isDone){
+                                        <span class="ml-1 icon" title="OKRs đã hoàn thành"><i class="material-icons-outlined is-size-6 has-text-success">check_circle</i></span>
+                                        }
                                     </td>
                                     <td>
                                         <label class="td-label">Kết quả</label>
@@ -88,7 +91,7 @@
                                     </td>
                                     <td align="center"><label class="td-label">Check-in</label>
                                         
-                                        <div class="td-value"><span>@(HandleOKRs.ConvertTicksToDate(checkInOKRs.dateCheckIn))</span></div>
+                                        <div class="td-value"><span>@( checkInOKRs.dateCheckIn != 0 ? HandleOKRs.ConvertTicksToDate(checkInOKRs.dateCheckIn) : "")</span></div>
                               
                                     </td>
                                     <td align="center"><label class="td-label">Trạng thái</label>
@@ -438,7 +441,7 @@ else{
                                 </div>
                             </li>
                             @if(checkInOKRsExample != null){
-                                @if(checkInOKRsExample.statusCheckIn == -1 || checkInOKRsExample.statusCheckIn == 2 || checkInOKRsExample.statusCheckIn == 3 )
+                                @if(checkInOKRsExample.statusCheckIn == -1 || checkInOKRsExample.statusCheckIn == 2)
                                 {
                                         if(checkInOKRsExample.idUserCheckIn != mainLayout.user.userId){
                                             <li class="column is-narrow"><a class="button is-link" href="/checkin/@checkInOKRsExample.id/add" @onclick="() => isEdit = true" >
@@ -472,7 +475,7 @@ else{
                                     if(checkInOKRsExample.idUserCheckIn == mainLayout.user.userId){
                                             <li class="column is-narrow"><span class="button is-white has-text-success"><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
                                             <span>Đã xác nhận Check-in nháp</span></span></li>
-                                        }
+                                    }
                                     else{
                                         if(!isCheckIn){
                                                 <li class="column is-narrow"><a class="button is-link" @onclick="() => isCheckIn = true" ><span class="icon"><i class="material-icons-outlined is-size-6">format_list_bulleted</i></span>
@@ -484,7 +487,11 @@ else{
                                             }
                                             
                                         }
-                                    }
+                                }
+                                else if(checkInOKRsExample.statusCheckIn == 3){
+                                    <li class="column is-narrow"><span class="button is-white has-text-success"><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
+                                    <span>OKRs đã hoàn thành</span></span></li>
+                                }
                             }
                             else{
                                 NavigationManager.NavigateTo("/checkin");
@@ -647,7 +654,7 @@ else{
                             </tbody>
                         </table>
                         
-                        @if(isCheckIn){
+                        @if(isCheckIn && checkInOKRsExample.idUser == mainLayout.user.userId ){
                         <div class="field is-grouped is-grouped-multiline mt-5">
                             <input type="date" @onchange="(e) => { dateNextCheckIn = e.Value.ToString(); }" >
                             
@@ -661,14 +668,13 @@ else{
                                 <a class="button is-white has-text-danger" href="/checkin/@checkInOKRsExample.id">
                                     <span>Trở về</span>
                                 </a>
-                                <a class="button is-link" @onclick="CheckInToOkrs">
+                                <a class="button is-link" @onclick="CheckInToOkrs" href="/checkin" >
                                     <span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
                                     <span>Hoàn tất Check-in</span>
                                 </a>
                             </div>
                         </div>
                         }
-
                     </div>
                 </section>
             }
@@ -773,16 +779,50 @@ else{
         isEdit = false;
     }
 
-    private void CheckInToOkrs(){
-        if(isDone){
-            checkInOKRsExample.statusCheckIn = 3;
+    private bool CheckIsValid(CheckInOKRs c){
+        if(c.okr.confident != 0){
+            foreach(var kr in c.krs){
+                if(kr.confident == 0) return false;
+
+                foreach(var answer in c.answersKr[kr.idKR]){
+                    if(String.IsNullOrEmpty(answer)){
+                        return false;
+                    }
+                }
+            }
         }
         else{
-            checkInOKRsExample.statusCheckIn = 2;
+            return false;
         }
-        
-        DbCheckIn.Update(checkInOKRsExample);
-        isCheckIn = false;
+        return true;
+    }
+
+    private async void CheckInToOkrs(){
+        if(CheckIsValid(checkInOKRsExample)){
+            if(isDone){
+                checkInOKRsExample.statusCheckIn = 3;
+                checkInOKRsExample.okr.isDone = true;
+                await DbOKRs.UpdateOKRs(checkInOKRsExample.okr);
+            }
+            else{
+                checkInOKRsExample.statusCheckIn = 2;
+            }
+            
+            DbCheckIn.Update(checkInOKRsExample);
+
+            var newProcess = new Process();
+            newProcess.idOKRs = checkInOKRsExample.okr.idOKRs;
+            newProcess.date = checkInOKRsExample.dateCheckIn;
+            newProcess.process = checkInOKRsExample.progress;
+            await DbProcess.AddProcess(newProcess);
+
+            isCheckIn = false;
+
+            await JSRuntime.InvokeVoidAsync("tagline", true, "Check-in thành công");
+        }
+        else{
+            await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng nhập đầy đủ thông tin");
+        }
     }
 
     private double CalcAverage()
@@ -801,32 +841,40 @@ else{
     }
 
     private void ComfirmCheckInDraft(){
-        checkInOKRsExample.statusCheckIn = 1;
-        DbCheckIn.Update(checkInOKRsExample);
-        isCheckIn = true;
-        NavigationManager.NavigateTo("/checkin/" + checkInOKRsExample.id);
+        if(CheckIsValid(checkInOKRsExample)){
+            checkInOKRsExample.statusCheckIn = 1;
+            DbCheckIn.Update(checkInOKRsExample);
+            isCheckIn = true;
+            NavigationManager.NavigateTo("/checkin/" + checkInOKRsExample.id);
+        }
+        else{
+            JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng nhập đầy đủ thông tin");
+        }
     }
 
     private async void CreateCheckInDraft(){
-        isEdit = false;
-        if(checkInOKRsExample.statusCheckIn == -1){
-            checkInOKRsExample.idUser = mainLayout.user.userId;
-            checkInOKRsExample.statusCheckIn = 0;
-            checkInOKRsExample.dateCheckIn = DateTime.Today.Ticks;
-            var check = await DbCheckIn.Add(checkInOKRsExample);
-            if(check){
-                await JSRuntime.InvokeVoidAsync("notify.success","Tạo CheckIn nháp thành công");
+
+        if(CheckIsValid(checkInOKRsExample)){
+            isEdit = false;
+            if(checkInOKRsExample.statusCheckIn == -1){
+                checkInOKRsExample.idUser = mainLayout.user.userId;
+                checkInOKRsExample.statusCheckIn = 0;
+                checkInOKRsExample.dateCheckIn = DateTime.Today.Ticks;
+                var check = await DbCheckIn.Add(checkInOKRsExample);
+                if(check){
+                    await JSRuntime.InvokeVoidAsync("tagline", true, "Tạo check-in nháp thành công");
+                }
+            }
+            else{
+                checkInOKRsExample.dateCheckIn = DateTime.Today.Ticks;
+                DbCheckIn.Update(checkInOKRsExample);
+                await JSRuntime.InvokeVoidAsync("tagline", true, "Cập nhập check-in nháp thành công");
+                
             }
         }
         else{
-            checkInOKRsExample.dateCheckIn = DateTime.Today.Ticks;
-            DbCheckIn.Update(checkInOKRsExample);
-            
-            await JSRuntime.InvokeVoidAsync("notify.success","Cập nhật CheckIn nháp thành công");
-            
+            await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng nhập đầy đủ thông tin");
         }
-        NavigationManager.NavigateTo("/checkin/" + checkInOKRsExample.id);
-        
     }
 
 
@@ -841,11 +889,6 @@ else{
         isShowKR = dict;
     }
 
-    private CheckInOKRs GetCheckInOKRs(string idOKR)
-    {
-        return null;   
-    }
-
 
 
     private double GetProcessOfOKRs(string id){
@@ -857,16 +900,8 @@ else{
         return 0.0;
     }
 
-    private async void DoneCheckIn(){
-    }
-
     private void SetUserCheckIn(User u){
         nameUser = u.userName;
         checkInOKRsExample.idUserCheckIn = u.userId;
     }
-
-
-
-
-
 }

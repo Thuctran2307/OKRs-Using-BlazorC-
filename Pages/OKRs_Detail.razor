@@ -36,9 +36,15 @@
                             <tr>
                                 <td>
                                     <div class="is-flex"><a class="has-text-weight-semibold" title="Chỉnh sửa OKRs"
-                                            @onclick="() => EditOKR(okr.idOKRs)"> @okr._object</a></div>
+                                    @onclick="() => EditOKR(okr.idOKRs)"> @okr._object</a></div>
                                 </td>
-
+                                @if(okr.isDone){
+                                <td>
+                                        
+                                        <span class="ml-1 icon" title="OKRs đã hoàn thành"><i class="material-icons-outlined is-size-6 has-text-success">check_circle</i></span>
+                                        
+                                </td>
+                                }
 
                                 <td><label class="td-label">Kết quả</label>
                                     <div class="td-value" @onclick="() => ShowKR(okr.idOKRs)">
@@ -113,18 +119,27 @@
                 </h1>
             </li>
             <li class="column is-narrow">
-                <div id="dropdown_faac2a59" class="dropdown is-right  ">
-                    <div class="dropdown-trigger"><a class="icon-text"><span class="has-text-link text_1_line"
-                                style="max-width: 200px;">Bộc phá kiến thức C#</span>
-                            <span class="icon"><i
-                                    class="material-icons-outlined is-size-6">arrow_drop_down</i></span></a></div>
+            <div id="dropdown_ff9a0925" class="dropdown is-right @(isDropDown ? "is-active" : "")">
+                    <div class="dropdown-trigger" @onclick="() => isDropDown = !isDropDown" >
+                        <a class="icon-text">
+                            <span class="has-text-link text_1_line" style="max-width: 200px;">@okrs._object</span>
+                        </a>
+                    </div>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-content scrolly is-mobile">
+                            
+                            @foreach(var o in list_OKRs){
+                                <a class="dropdown-item" @onclick="() => GetListProgress(o)" >@o._object</a>
+                            }
+                            
+                        </div>
+                    </div>
                 </div>
             </li>
+
         </ul>
         <div style="min-height: 210px;flex:1" class="inner_section pt-6">
-            <canvas id="chartLine" height="490"
-                style="display: block; box-sizing: border-box; height: 490px; width: 951px;" width="951">
-            </canvas>
+            <canvas id="chartLine" height="490"></canvas>
         </div>
     </div>
 </section>
@@ -217,6 +232,8 @@
 
     private string idCycle = "";
 
+    private bool isDropDown = false;
+
     private List<KR> list_KR_Sample = new List<KR>();
     private List<OKRs> list_OKRs = new List<OKRs>();
 
@@ -224,14 +241,15 @@
 
     public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
 
-    List<Process> listProcess { get; set; } = new List<Process>();
+    private List<Process> listProcess { get; set; } = new List<Process>();
 
     // onInitialize
 
     protected override async Task OnInitializedAsync()
     {
         Console.WriteLine("Initial");
-        listProcess = await DbProcess.GetAllProcess();
+        init();
+        listProcess = await DbProcess.GetAllProcess(okrs.idOKRs);
     }
 
     private double GetProcessOfOKRs(string id){
@@ -243,10 +261,13 @@
         return 0.0;
     }
 
+    
+
     // onParameter
 
     protected override async Task OnParametersSetAsync()
     {
+        listProcess = await DbProcess.GetAllProcess();
         Console.WriteLine("Parameter" + "OKR_Detail");
         init();
         mainLayout.listOKRs = list_OKRs;
@@ -259,7 +280,6 @@
 
         list_OKRs = await DbOKRs.GetAllOKRs(idCycle, mainLayout.user.userId);
         
-
         if (list_OKRs == null)
         {
             list_OKRs = new List<OKRs>();
@@ -276,6 +296,28 @@
             isShowKR.Add(okr.idOKRs, false);
         }
         isSlider = false;
+        if(list_OKRs.Count > 0){
+            okrs = list_OKRs[0];
+        }
+        
+    }
+
+    // onAfterRender
+    protected async override Task OnAfterRenderAsync(bool firstRender)
+    {
+        var data = new List<double>();
+        var date = new List<string>();
+        
+
+        listProcess.Sort((x, y) => x.date.CompareTo(y.date));
+
+        foreach(var a in listProcess ){
+            if(a.idOKRs == okrs.idOKRs){
+                data.Add(a.process);
+                date.Add((new DateTime(a.date)).ToString("dd/MM/yyyy"));
+            }
+        }
+        await JSRuntime.InvokeVoidAsync("runChartLine","Biểu đồ OKRS", date, data);
     }
 
     private void AddKrToList()
@@ -286,6 +328,10 @@
     private void DeleteKRInList(KR kr)
     {
         list_KR_Sample.Remove(kr);
+    }
+
+    private async Task GetListProgress(OKRs o){
+        okrs = o;
     }
 
     private bool FindOkrInList(string idOKR)
@@ -305,32 +351,43 @@
         okrs.idCycle = idCycle;
         okrs.idUser = mainLayout.user.userId;
         okrs.dateCreate = DateTime.Today.Ticks;
-        if (!FindOkrInList(okrs.idOKRs))
-        {
-            await DbOKRs.AddOKRs(okrs);
-
+        if( okrs._object != null ){
             foreach (KR kr in list_KR_Sample)
             {
-                kr.idOKRs = okrs.idOKRs;
-                await DbKR.AddKRs(kr);
+                if( String.IsNullOrEmpty(kr._keyResult ) ||  kr.target == 0 || String.IsNullOrEmpty(kr.unit)){
+                    await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng nhập đủ thông tin");
+                    return;
+                }
             }
-
-            await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được tạo thành công");
-        }
-        else
-        {
-            await DbOKRs.UpdateOKRs(okrs);
-            await DbKR.DeleteAllKRsByIdOkr(okrs.idOKRs);
-
-
-            foreach (KR kr in list_KR_Sample)
+            if (!FindOkrInList(okrs.idOKRs))
             {
-                kr.idOKRs = okrs.idOKRs;
-                await DbKR.AddKRs(kr);
+                await DbOKRs.AddOKRs(okrs);
+
+                foreach (KR kr in list_KR_Sample)
+                {
+                    kr.idOKRs = okrs.idOKRs;
+                    await DbKR.AddKRs(kr);
+                }
+
+                await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được tạo thành công");
             }
-            await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được cập nhập thành công");
+            else
+            {
+                await DbOKRs.UpdateOKRs(okrs);
+                await DbKR.DeleteAllKRsByIdOkr(okrs.idOKRs);
+
+                foreach (KR kr in list_KR_Sample)
+                {
+                    kr.idOKRs = okrs.idOKRs;
+                    await DbKR.AddKRs(kr);
+                }
+                await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được cập nhập thành công");
+            }
+            init();
         }
-        init();
+        else{
+            await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng nhập tên OKR");
+        }
     }
 
     private int GetNumberKrOfOKRs(string idOKR)
