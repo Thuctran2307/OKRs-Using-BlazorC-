@@ -23,12 +23,9 @@ namespace OKRs.Model
 
         public string idUserCross { get; set; }
 
-        public List<string> answers { get; set; }
-
         public KR()
         {
             idKR = MongoDB.Bson.ObjectId.GenerateNewId().ToString();
-            answers = new List<string>();
         }
     }
 }

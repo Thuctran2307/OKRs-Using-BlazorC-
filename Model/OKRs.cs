@@ -21,8 +21,6 @@ namespace OKRs.Model
         public long dateCreate { get; set; }
         public int confident { get; set; }
 
-        public string idUserCheckIn { get; set; }
-
         public bool isDone { get; set; }
 
 

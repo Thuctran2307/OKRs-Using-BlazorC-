@@ -57,25 +57,6 @@ namespace OKRs.Model
             return okrs;
         }
 
-        public static async Task<List<OKRs>> GetAllOKRsToCheckIn(string idCycle, string idUserCheckIn, string idToViewOKRs)
-        {
-            if(idUserCheckIn == idToViewOKRs){
-                return await GetAllOKRs(idCycle, idUserCheckIn);
-            }
-            var _db = Mongo.GetDatabase();
-            var collection = _db.GetCollection<OKRs>(_collectionName);
-
-            var okrs = await collection.Find(x => x.idCycle == idCycle && x.idUser == idToViewOKRs).ToListAsync();
-            
-            var rs = new List<OKRs>();
-            foreach(var okr in okrs){
-                if(okr.idUserCheckIn == idUserCheckIn){
-                    rs.Add(okr);
-                }
-            }
-            return rs;
-        }
-
 
         // Update okr
 

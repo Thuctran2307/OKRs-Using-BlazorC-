@@ -2,6 +2,9 @@
 @page "/checkin/{id}"
 @page "/checkin/{id}/{cmd}"
 
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+
 @if(String.IsNullOrEmpty(id)){
 
     <section class="main_content">
@@ -27,7 +30,7 @@
                             <a class="icon is-right has-text-danger"><i class="material-icons-outlined">close</i></a>
                        <ul class="suggest">
                         @foreach(var u in listUser){
-                            <li class="rsitem" @onclick="() => GetOKRsByUser(u)" >
+                            <li class="rsitem" @onclick="() => GetCheckInOKRsByUser(u)" >
                                     <div class="user_item"><img class="image is-24x24 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638398966517082138_338186201_910224320311474_9209000584054955892_n.jpg" alt="IMG">
                                     <span>@u.userName</span></div>
                             </li>
@@ -52,27 +55,27 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @if (listO.Count > 0)
+                        @if (checkInOKRsList.Count > 0)
                         {
-                            foreach (var okrs in listO)
+                            foreach (var checkInOKRs in checkInOKRsList )
                             {
                                 <tr>
                                     <td>
                                         <div class="is-flex"><a class="has-text-weight-semibold"
-                                                href="/checkin/@okrs.idOKRs">@okrs._object</a></div>
+                                                href="/checkin/@checkInOKRs.id">@checkInOKRs.okr._object</a></div>
                                     </td>
                                     <td>
                                         <label class="td-label">Kết quả</label>
-                                        <div class="td-value"><a class="icon-text has-text-weight-semibold has-text-info" @onclick="() => ShowKR(okrs.idOKRs)" >
-                                            <span>@HandleOKRs.GetNumberKrOfOKRs(okrs.idOKRs,mainLayout.listKR) kết quả</span>
+                                        <div class="td-value"><a class="icon-text has-text-weight-semibold has-text-info" @onclick="() => ShowKR(checkInOKRs.okr.idOKRs)" >
+                                            <span>@checkInOKRs.krs.Count kết quả</span>
                                                 <span class="icon"><i class="material-icons-outlined is-size-5">arrow_right</i></span></a>
                                         </div>
                                     </td>
                                     <td><label class="td-label">Tiến độ</label>
                                         <div class="td-value">
                                             <div class="progress_has_value">
-                                                <progress class="progress is-small is-dark" value="@GetProcessOfOKRs(okrs.idOKRs)" max="1"></progress>
-                                                <span>@(GetProcessOfOKRs(okrs.idOKRs) * 100) %</span>
+                                                <progress class="progress is-small is-dark" value="@(checkInOKRs.progress)" max="1"></progress>
+                                                <span>@((checkInOKRs.progress) * 100) %</span>
                                             </div>
                                         </div>
                                     </td>
@@ -81,23 +84,23 @@
                                         </div>
                                     </td>
                                     <td align="center"><label class="td-label">Tự tin</label>
-                                        <div class="td-value has-text-weight-semibold"><span>@HandleOKRs.ConvertToConfident(@okrs.confident)</span></div>
+                                        <div class="td-value has-text-weight-semibold"><span>@HandleOKRs.ConvertToConfident(checkInOKRs.okr.confident)</span></div>
                                     </td>
                                     <td align="center"><label class="td-label">Check-in</label>
                                         
-                                        <div class="td-value"><span>@(HandleOKRs.ConvertTicksToDate(GetCheckInOKRs(okrs.idOKRs).dateCheckIn))</span></div>
+                                        <div class="td-value"><span>@(HandleOKRs.ConvertTicksToDate(checkInOKRs.dateCheckIn))</span></div>
                               
                                     </td>
                                     <td align="center"><label class="td-label">Trạng thái</label>
                                         <div class="td-value has-text-weight-semibold">
                                         
-                                            @if(GetCheckInOKRs(okrs.idOKRs).statusCheckIn == -1){
+                                            @if(checkInOKRs.statusCheckIn == -1){
                                                 
                                                 <div class="td-value"><span></span></div>
                                                 
                                             }
-                                            else if(GetCheckInOKRs(okrs.idOKRs).statusCheckIn == 0){
-                                                if(OKR_Current.idUserCheckIn == mainLayout.user.userId){
+                                            else if(checkInOKRs.statusCheckIn == 0){
+                                                if(checkInOKRs.idUserCheckIn == mainLayout.user.userId){
                                                     <div class="td-value"><span class="has-text-warning"> Xác nhận Nháp</span></div>
                                                 }
                                                 else{
@@ -105,8 +108,8 @@
                                                 
                                                 }
                                             }
-                                            else if(GetCheckInOKRs(okrs.idOKRs).statusCheckIn == 1){
-                                                if(OKR_Current.idUserCheckIn == mainLayout.user.userId){
+                                            else if(checkInOKRs.statusCheckIn == 1){
+                                                if(checkInOKRs.idUserCheckIn == mainLayout.user.userId){
                                                     <div class="td-value"><span class="has-text-warning"></span></div>
                                                 }
                                                 else{
@@ -114,8 +117,8 @@
                                                 
                                                 }
                                             }
-                                            else if(GetCheckInOKRs(okrs.idOKRs).statusCheckIn == 2){
-                                                if(OKR_Current.idUserCheckIn == mainLayout.user.userId){
+                                            else if(checkInOKRs.statusCheckIn == 2){
+                                                if(checkInOKRs.idUserCheckIn == mainLayout.user.userId){
                                                     <div class="td-value"><span class="has-text-warning"></span></div>
                                                 }
                                                 else{
@@ -133,10 +136,9 @@
 
                                 @if (isShowKR.Count > 0)
                                 {
-                                    @if (isShowKR[okrs.idOKRs])
+                                    @if (isShowKR[checkInOKRs.okr.idOKRs])
                                     {
-                                        var list = @HandleOKRs.GetKROfOKR(okrs.idOKRs, mainLayout.listKR);
-                                        foreach (KR kr in list)
+                                        foreach (KR kr in checkInOKRs.krs)
                                         {
                                             <tr>
                                                 <td class="pl-4">@kr._keyResult</td>
@@ -156,7 +158,6 @@
                                                 </td>
                                             </tr>
                                         }
-
                                     }
                                 }
 
@@ -202,7 +203,7 @@ else{
                 </ul>
             </div>
 
-            @if(cmd == "add" && isEdit){
+            @if(cmd == "add"){
                 <section class="main_content">
                 <div class="card">
                     <ul class="columns is-vcentered is-variable is-2 mb-5">
@@ -212,6 +213,16 @@ else{
                             </h1>
                         </li>
                     </ul>
+
+                    @* @if(checkInOKRsExample.statusCheckIn == 0 && !isEdit){
+                        <li class="column is-narrow">
+                            <a class="button is-link" @onclick="() => { isEdit = true; }" >
+                                <span class="icon"><i class="material-icons-outlined is-size-6">edit</i></span>
+                                <span>Sửa bản nháp</span>
+                            </a>
+                        </li>
+                    } *@
+                    
                     <table class="table is-fullwidth is-vcentered is-noborder is-responsive mb-0">
                         <thead>
                             <tr>
@@ -224,16 +235,16 @@ else{
                         <tbody>
                             <tr>
                                 <td>
-                                    <span class="has-text-weight-semibold has-text-link">@OKR_Current._object</span>
+                                    <span class="has-text-weight-semibold has-text-link">@checkInOKRsExample.okr._object</span>
                                 </td>
                                 <td>
                                     <label class="td-label">Tiến độ</label>
                                     <div class="td-value">
                                         <div class="progress_has_value">
-                                        <progress class="progress is-small is-dark" value="@GetProcessOfOKRs(OKR_Current.idOKRs)" max="1">
+                                        <progress class="progress is-small is-dark" value="@CalcAverage()" max="1">
                                         </progress>
                                         <span>
-                                            @(GetProcessOfOKRs(OKR_Current.idOKRs) * 100) %
+                                            @(CalcAverage() * 100) %
                                         </span>
                                     </div>
                                     </div>
@@ -246,7 +257,7 @@ else{
                                     <label class="td-label">Tự tin</label>
                                     <div class="td-value">
                                         <div class="select is-fullwidth">
-                                            <select  @bind="OKR_Current.confident" >
+                                            <select  @bind="checkInOKRsExample.okr.confident" >
                                                 <option value="0">- Chọn -</option>
                                                 <option value="1">Rất tốt</option>
                                                 <option value="2">Ổn</option>
@@ -256,8 +267,8 @@ else{
                                     </div>
                                 </td>
                             </tr>
-                            @foreach(var kr in listKr){
-                                <tr>
+                            @foreach(var kr in checkInOKRsExample.krs){
+                            <tr>
                                 <td colspan="4">
                                     <hr class="m-0">
                                 </td>
@@ -305,25 +316,25 @@ else{
                                         <li class="column is-full">
                                             <div class="has-text-grey">Tiến độ, kết quả công việc?</div>
                                             <div class="control pt-2">
-                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[0] ></textarea>
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=checkInOKRsExample.answersKr[kr.idKR][0] ></textarea>
                                             </div>
                                         </li>
                                         <li class="column is-full">
                                             <div class="has-text-grey">Công việc nào đang &amp; sẽ chậm tiến độ?</div>
                                             <div class="control pt-2">
-                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[1] ></textarea>
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=checkInOKRsExample.answersKr[kr.idKR][1] ></textarea>
                                             </div>
                                         </li>
                                         <li class="column is-full">
                                             <div class="has-text-grey">Trở ngại, khó khăn là gì?</div>
                                             <div class="control pt-2">
-                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[2] ></textarea>
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=checkInOKRsExample.answersKr[kr.idKR][2] ></textarea>
                                             </div>
                                         </li>
                                         <li class="column is-full">
                                             <div class="has-text-grey">Cần làm gì để vượt qua trở ngại?</div>
                                             <div class="control pt-2">
-                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[3] ></textarea>
+                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=checkInOKRsExample.answersKr[kr.idKR][3] ></textarea>
                                             </div>
                                         </li>
                                     </ul>
@@ -384,270 +395,282 @@ else{
                                 </li>
                             </ul>
                         </div>
-                        <div class="control is-expanded has-text-right">
-                            <a class="button is-white has-text-danger" onclick="goBack()">
-                                <span>Hủy nhập</span>
-                            </a>
-                            <a class="button is-link" @onclick="CheckIn" >
-                                <span class="icon">
-                                    <i class="material-icons-outlined is-size-6">done</i>
-                                </span>
-                                <span>Hoàn tất</span>
-                            </a>
-                        </div>
+                        @if(isEdit){
+                            <div class="control is-expanded has-text-right">
+                                <a class="button is-white has-text-danger" onclick="goBack()">
+                                    <span>Hủy nhập</span>
+                                </a>
+                                <a class="button is-link" @onclick="CreateCheckInDraft" >
+                                    <span class="icon">
+                                        <i class="material-icons-outlined is-size-6">done</i>
+                                    </span>
+                                    <span>Hoàn tất</span>
+                                </a>
+                            </div>
+                        }
                     </div>
                 </div>
             </section>
             }
             else{
-            <section class="main_content">
-            <div class="card">
-                <ul class="columns is-vcentered is-variable is-2 mb-5">
-                    <li class="column">
-                        <h1 class="title is-5 has-text-info">
-                            CHECK-IN 1:1
-                        </h1>
-                    </li>
-                    <li class="column is-narrow">
-                        <div class="field is-grouped">
-                            <div class="control has-text-weight-semibold">
-                                Chu kỳ Check-in:
-                            </div>
-                            <div class="control is-expanded">
-                                <div class="select is-fullwidth">
-                                    <select>
-                                        <option value="">
-                                            Chưa có Check-in
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                    
-                    @if(checkInOKRs.statusCheckIn == -1)
-                    {
-                        if(OKR_Current.idUserCheckIn != mainLayout.user.userId){
-                            <li class="column is-narrow"><a class="button is-link" href="/checkin/@(OKR_Current.idOKRs)/add"><span class="icon"><i class="material-icons-outlined is-size-6">add</i></span>
-                            <span>Tạo Check-in nháp</span></a></li>
-                        }
-                        else
-                        {
-                        }
-                        
-                    }
-                    else if(checkInOKRs.statusCheckIn == 0)
-                    {
-                        if(OKR_Current.idUserCheckIn == mainLayout.user.userId){
-                            <li class="column is-narrow"><a class="button is-success" @onclick="ComfirmCheckInNhap" ><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
-                            <span>Xác nhận Check-in nháp</span></a></li>
-                        }
-                        else
-                        {
-                          <li class="column is-narrow"><a class="button is-link" href="/checkin/@(OKR_Current.idOKRs)/add"><span class="icon"><i class="material-icons-outlined is-size-6">edit</i></span>
-                          <span>Sửa bản nháp</span></a></li>
-                        }
-                                
-                    }
-                    else if(checkInOKRs.statusCheckIn == 1){
-                        if(OKR_Current.idUserCheckIn == mainLayout.user.userId){
-                            <li class="column is-narrow"><span class="button is-white has-text-success"><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
-                            <span>Đã xác nhận Check-in nháp</span></span></li>
-                        }
-                        else{
-                            if(!isConfirmCheckIn){
-                                <li class="column is-narrow"><a class="button is-link" @onclick="CheckInToOkrs" ><span class="icon"><i class="material-icons-outlined is-size-6">format_list_bulleted</i></span>
-                                <span>Check-in</span></a></li>
-                            }
-                            else{
-                                <li class="column is-narrow"><a class="button is-link" @onclick="CheckInToOkrs" ><span class="icon"><i class="material-icons-outlined is-size-6">format_list_bulleted</i></span>
-                                <span></span></a></li>
-                            }
-                            
-                        }
-                    }
-                </ul>
-                <table class="table is-fullwidth is-noborder is-responsive">
-                    <thead>
-                        <tr>
-                            <th>
-                                Mục tiêu
-                            </th>
-                            <th width="250px" align="center">
-                                Tiến độ
-                            </th>
-                            <th width="100px" align="center">
-                                Thay đổi
-                            </th>
-                            <th width="100px" align="center">
-                                Tự tin
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div class="is-flex">
-                                    <span class="has-text-weight-semibold has-text-link">
-                                        @OKR_Current._object
-                                    </span>
-                                </div>
-                            </td>
-                            <td>
-                                <label class="td-label">
-                                    Tiến độ
-                                </label>
-                                <div class="td-value">
-                                    <div class="progress_has_value">
-                                        <progress class="progress is-small is-dark" value="@(CalcAverage())" max="1">
-                                        </progress>
-                                        <span>
-                                            @(CalcAverage() * 100) %
-                                        </span>
+                <section class="main_content">
+                    <div class="card">
+                        <ul class="columns is-vcentered is-variable is-2 mb-5">
+                            <li class="column">
+                                <h1 class="title is-5 has-text-info">
+                                    CHECK-IN 1:1
+                                </h1>
+                            </li>
+                            <li class="column is-narrow">
+                                <div class="field is-grouped">
+                                    <div class="control has-text-weight-semibold">
+                                        Chu kỳ Check-in:
                                     </div>
-                                </div>
-                            </td>
-                            <td align="center">
-                                <label class="td-label">
-                                    Thay đổi
-                                </label>
-                                <div class="td-value has-text-weight-semibold">
-                                    0%
-                                </div>
-                            </td>
-                            <td align="center">
-                                <label class="td-label">
-                                    Tự tin
-                                </label>
-                                <div class="td-value has-text-weight-semibold">
-                                    <span>
-                                    </span>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="tr-hide">
-                            <td colspan="4">
-                                <hr class="m-0">
-                            </td>
-                        </tr>
-                        <tr class="tr-hide">
-                            <td>
-                                Kết quả then chốt
-                            </td>
-                            <td align="center">
-                                Đạt được
-                            </td>
-                            <td align="center">
-                                Thay đổi
-                            </td>
-                            <td align="center">
-                                Tự tin
-                            </td>
-                        </tr>
-                        @if(checkInOKRs.statusCheckIn >= 0){
-
-                            @foreach(var kr in listKr){
-                                <tr>
-                                <td colspan="4">
-                                    <hr class="m-0">
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Kết quả then chốt</td>
-                                <td align="center">Đạt được</td>
-                                <td></td>
-                                <td align="center">Tự tin</td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <span class="has-text-weight-semibold has-text-link">@kr._keyResult</span>
-                                </td>
-                                <td colspan="2">
-                                    <label class="td-label">Đạt được</label>
-                                    <div class="td-value">
-                                        <div class="field has-addons">
-                                            <div class="control" style="width: 140px">
-                                                <input class="input has-text-right" type="text" placeholder="Đã đạt được" @bind=kr.processCurrent >
-                                            </div>
-                                            <div class="control is-expanded">
-                                                <div class="button is-static has-text-link">@kr.target</div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td align="center">
-                                    <label class="td-label">Tự tin</label>
-                                    <div class="td-value">
+                                    <div class="control is-expanded">
                                         <div class="select is-fullwidth">
-                                            <select @bind="kr.confident">
-                                                <option value="0">- Chọn -</option>
-                                                <option value="1">Rất tốt</option>
-                                                <option value="2">Ổn</option>
-                                                <option value="3">Không ổn</option>
+                                            <select>
+                                                <option value="">
+                                                    Chưa có Check-in
+                                                </option>
                                             </select>
                                         </div>
                                     </div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="4" class="pl-6 pb-4">
-                                    <ul class="columns is-multiline is-variable is-2">
-                                        <li class="column is-full">
-                                            <div class="has-text-grey">Tiến độ, kết quả công việc?</div>
-                                            <div class="control pt-2">
-                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[0] ></textarea>
-                                            </div>
-                                        </li>
-                                        <li class="column is-full">
-                                            <div class="has-text-grey">Công việc nào đang &amp; sẽ chậm tiến độ?</div>
-                                            <div class="control pt-2">
-                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[1] ></textarea>
-                                            </div>
-                                        </li>
-                                        <li class="column is-full">
-                                            <div class="has-text-grey">Trở ngại, khó khăn là gì?</div>
-                                            <div class="control pt-2">
-                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[2] ></textarea>
-                                            </div>
-                                        </li>
-                                        <li class="column is-full">
-                                            <div class="has-text-grey">Cần làm gì để vượt qua trở ngại?</div>
-                                            <div class="control pt-2">
-                                                <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=kr.answers[3] ></textarea>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </td>
-                            </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
-                
-                @if(isConfirmCheckIn){
-                <div class="field is-grouped is-grouped-multiline mt-5">
-                    <input type="date" @onchange="(e) => { dateNextCheckIn = e.Value.ToString(); }" >
-                     
-                    <div class="control is-expanded pl-3">
-                        <label class="checkbox">
-                            <input type="checkbox" @bind="isDone">
-                            <span class="has-text-weight-semibold">Hoàn thành OKRs</span>
-                        </label>
-                    </div>
-                    <div class="control">
-                        <a class="button is-white has-text-danger" onclick="goBack()">
-                            <span>Trở về</span>
-                        </a>
-                        <a class="button is-link" @onclick="DoneCheckIn">
-                            <span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
-                            <span>Hoàn tất Check-in</span>
-                        </a>
-                    </div>
-                </div>
-                }
+                                </div>
+                            </li>
+                            @if(checkInOKRsExample != null){
+                                @if(checkInOKRsExample.statusCheckIn == -1 || checkInOKRsExample.statusCheckIn == 2 || checkInOKRsExample.statusCheckIn == 3 )
+                                {
+                                        if(checkInOKRsExample.idUserCheckIn != mainLayout.user.userId){
+                                            <li class="column is-narrow"><a class="button is-link" href="/checkin/@checkInOKRsExample.id/add" @onclick="() => isEdit = true" >
+                                            <span class="icon"><i class="material-icons-outlined is-size-6">add</i></span>
+                                            <span>Tạo Check-in nháp</span></a></li>
+                                        }
+                                        else
+                                        {
 
-            </div>
-            </section>
+                                        }
+                                        
+                                }
+                                else if(checkInOKRsExample.statusCheckIn == 0)
+                                    {
+                                        if(checkInOKRsExample.idUserCheckIn == mainLayout.user.userId){
+                                            <li class="column is-narrow"><a class="button is-success" @onclick="ComfirmCheckInDraft" ><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
+                                            <span>Xác nhận Check-in nháp</span></a></li>
+                                        }
+                                        else
+                                        {
+                                            if(!isEdit){
+                                                <li class="column is-narrow"><a class="button is-link" href="/checkin/@(checkInOKRsExample.id)/add" @onclick="() => isEdit = true" ><span class="icon"><i class="material-icons-outlined is-size-6">edit</i></span>
+                                                <span>Sửa bản nháp</span></a></li>
+                                            }
+                                            
+                                        }
+                                                
+                                    }
+                                else if(checkInOKRsExample.statusCheckIn == 1){
+
+                                    if(checkInOKRsExample.idUserCheckIn == mainLayout.user.userId){
+                                            <li class="column is-narrow"><span class="button is-white has-text-success"><span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
+                                            <span>Đã xác nhận Check-in nháp</span></span></li>
+                                        }
+                                    else{
+                                        if(!isCheckIn){
+                                                <li class="column is-narrow"><a class="button is-link" @onclick="() => isCheckIn = true" ><span class="icon"><i class="material-icons-outlined is-size-6">format_list_bulleted</i></span>
+                                                <span>Check-in</span></a></li>
+                                            }
+                                        else{
+                                                <li class="column is-narrow"><a class="button is-link" ><span class="icon"><i class="material-icons-outlined is-size-6">format_list_bulleted</i></span>
+                                                <span></span></a></li>
+                                            }
+                                            
+                                        }
+                                    }
+                            }
+                            else{
+                                NavigationManager.NavigateTo("/checkin");
+                            }
+                        </ul>
+                        <table class="table is-fullwidth is-noborder is-responsive">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Mục tiêu
+                                    </th>
+                                    <th width="250px" align="center">
+                                        Tiến độ
+                                    </th>
+                                    <th width="100px" align="center">
+                                        Thay đổi
+                                    </th>
+                                    <th width="100px" align="center">
+                                        Tự tin
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="is-flex">
+                                            <span class="has-text-weight-semibold has-text-link">
+                                                @checkInOKRsExample.okr._object
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <label class="td-label">
+                                            Tiến độ
+                                        </label>
+                                        <div class="td-value">
+                                            <div class="progress_has_value">
+                                                <progress class="progress is-small is-dark" value="@(CalcAverage())" max="1">
+                                                </progress>
+                                                <span>
+                                                    @(CalcAverage() * 100) %
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td align="center">
+                                        <label class="td-label">
+                                            Thay đổi
+                                        </label>
+                                        <div class="td-value has-text-weight-semibold">
+                                            0%
+                                        </div>
+                                    </td>
+                                    <td align="center">
+                                        <label class="td-label">
+                                            Tự tin
+                                        </label>
+                                        <div class="td-value has-text-weight-semibold">
+                                            <span>
+                                            </span>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr class="tr-hide">
+                                    <td colspan="4">
+                                        <hr class="m-0">
+                                    </td>
+                                </tr>
+                                <tr class="tr-hide">
+                                    <td>
+                                        Kết quả then chốt
+                                    </td>
+                                    <td align="center">
+                                        Đạt được
+                                    </td>
+                                    <td align="center">
+                                        Thay đổi
+                                    </td>
+                                    <td align="center">
+                                        Tự tin
+                                    </td>
+                                </tr>
+                                @if(checkInOKRsExample.statusCheckIn >= 0){
+
+                                    @foreach(var kr in checkInOKRsExample.krs){
+                                        <tr>
+                                        <td colspan="4">
+                                            <hr class="m-0">
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kết quả then chốt</td>
+                                        <td align="center">Đạt được</td>
+                                        <td></td>
+                                        <td align="center">Tự tin</td>
+                                    </tr>
+                                    <tr>
+                                        <td>
+                                            <span class="has-text-weight-semibold has-text-link">@kr._keyResult</span>
+                                        </td>
+                                        <td colspan="2">
+                                            <label class="td-label">Đạt được</label>
+                                            <div class="td-value">
+                                                <div class="field has-addons">
+                                                    <div class="control" style="width: 140px">
+                                                        <input class="input has-text-right" type="text" placeholder="Đã đạt được" @bind=kr.processCurrent >
+                                                    </div>
+                                                    <div class="control is-expanded">
+                                                        <div class="button is-static has-text-link">@kr.target</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td align="center">
+                                            <label class="td-label">Tự tin</label>
+                                            <div class="td-value">
+                                                <div class="select is-fullwidth">
+                                                    <select @bind="kr.confident">
+                                                        <option value="0">- Chọn -</option>
+                                                        <option value="1">Rất tốt</option>
+                                                        <option value="2">Ổn</option>
+                                                        <option value="3">Không ổn</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td colspan="4" class="pl-6 pb-4">
+                                            <ul class="columns is-multiline is-variable is-2">
+                                                <li class="column is-full">
+                                                    <div class="has-text-grey">Tiến độ, kết quả công việc?</div>
+                                                    <div class="control pt-2">
+                                                        <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=checkInOKRsExample.answersKr[kr.idKR][0] ></textarea>
+                                                    </div>
+                                                </li>
+                                                <li class="column is-full">
+                                                    <div class="has-text-grey">Công việc nào đang &amp; sẽ chậm tiến độ?</div>
+                                                    <div class="control pt-2">
+                                                        <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=checkInOKRsExample.answersKr[kr.idKR][1] ></textarea>
+                                                    </div>
+                                                </li>
+                                                <li class="column is-full">
+                                                    <div class="has-text-grey">Trở ngại, khó khăn là gì?</div>
+                                                    <div class="control pt-2">
+                                                        <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=checkInOKRsExample.answersKr[kr.idKR][2] ></textarea>
+                                                    </div>
+                                                </li>
+                                                <li class="column is-full">
+                                                    <div class="has-text-grey">Cần làm gì để vượt qua trở ngại?</div>
+                                                    <div class="control pt-2">
+                                                        <textarea class="textarea is_bg " rows="3" placeholder="Nhập đầy đủ thông tin bắt buộc..." @bind=checkInOKRsExample.answersKr[kr.idKR][3] ></textarea>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </td>
+                                    </tr>
+                                    }
+                                }
+                            </tbody>
+                        </table>
+                        
+                        @if(isCheckIn){
+                        <div class="field is-grouped is-grouped-multiline mt-5">
+                            <input type="date" @onchange="(e) => { dateNextCheckIn = e.Value.ToString(); }" >
+                            
+                            <div class="control is-expanded pl-3">
+                                <label class="checkbox">
+                                    <input type="checkbox" @bind="isDone">
+                                    <span class="has-text-weight-semibold">Hoàn thành OKRs</span>
+                                </label>
+                            </div>
+                            <div class="control">
+                                <a class="button is-white has-text-danger" href="/checkin/@checkInOKRsExample.id">
+                                    <span>Trở về</span>
+                                </a>
+                                <a class="button is-link" @onclick="CheckInToOkrs">
+                                    <span class="icon"><i class="material-icons-outlined is-size-6">done</i></span>
+                                    <span>Hoàn tất Check-in</span>
+                                </a>
+                            </div>
+                        </div>
+                        }
+
+                    </div>
+                </section>
             }
         </section>
 }
@@ -660,19 +683,7 @@ else{
     List<Process> listProcess { get; set; } = new List<Process>();
     User userToViewOKRs { get; set; } = new User();
 
-    private bool isConfirmCheckIn = false;
-
-    private List<OKRs> listO = new List<OKRs>();
-    public List<KR> listKr { get; set; } = new List<KR>();
-    List<User> listUser = new List<User>();
-    public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
-    
-    private CheckInOKRs checkInOKRs = new CheckInOKRs();
-    private List<CheckInOKRs> checkInOKRsList = new List<CheckInOKRs>();
-
-    private List<OKRs> listOKRsToCheckIn = new List<OKRs>();
-    
-    private OKRs OKR_Current = new OKRs();
+    private bool isCheckIn = false;
 
     bool isEdit = false;
 
@@ -682,101 +693,73 @@ else{
 
     private string dateNextCheckIn = "";
 
+
+    List<User> listUser = new List<User>();
+    public Dictionary<string, bool> isShowKR = new Dictionary<string, bool>();
+    private CheckInOKRs checkInOKRsExample = new CheckInOKRs();
+    private List<CheckInOKRs> checkInOKRsList = new List<CheckInOKRs>();
+
+
+
     protected override async Task OnInitializedAsync()
     {
         listUser = await DbUser.GetAllUser();
-        Console.WriteLine("OnInitialized - CheckIn");
-        listO.Clear();
-        listKr.Clear();
-        isShowKR.Clear();
-        checkInOKRsList.Clear();
+        listProcess = await DbProcess.GetAllProcess();
+        var listO = await DbOKRs.GetAllOKRs(mainLayout.selectedCycle.idCycle, mainLayout.user.userId);
+        var listKR = await DbKR.GetAllKRs();
 
-        isEdit = true;
-        Console.WriteLine("OnParametersSet - CheckIn");
-        listO = await DbOKRs.GetAllOKRs(mainLayout.selectedCycle.idCycle,mainLayout.user.userId);
-        
-        var dict_temp = new Dictionary<string, bool>();
-        foreach (var okr in listO)
-        {
-            dict_temp.Add(okr.idOKRs, false);
-            var rs = await DbCheckIn.GetCheckInLastest(okr.idOKRs);
-            checkInOKRsList.Add(rs);
-            
-        }
-        isShowKR = dict_temp;
-        Console.WriteLine(checkInOKRsList.Count);
 
-        if (!String.IsNullOrEmpty(id))
-        {
-            OKR_Current = await DbOKRs.GetOKRsById(id);
-            checkInOKRs = await DbCheckIn.GetCheckInLastest(id);
-            if(checkInOKRs == null || checkInOKRs.statusCheckIn == 2 || checkInOKRs.statusCheckIn == 3){
-                checkInOKRs = new CheckInOKRs();
-            }
-            foreach(var a in mainLayout.listKR){
-                if(a.idOKRs == OKR_Current.idOKRs){
-                    listKr.Add(a);
-                    if(a.answers != null){
-                            if(a.answers.Count == 0){
-                            a.answers = new List<string>();
-                            a.answers.Add("");
-                            a.answers.Add("");
-                            a.answers.Add("");
-                            a.answers.Add("");
-                        }
+        foreach(var o in listO){
+            var rs = DbCheckIn.GetCheckInLasted(o.idOKRs);
+            if(rs == null){
+                rs = new CheckInOKRs();
+                rs.okr = o;
+                foreach(var kr in listKR ){
+                    if(kr.idOKRs == o.idOKRs){
+                        rs.krs.Add(kr);
+                        rs.answersKr.Add(kr.idKR, new List<string>(4));
+
+                        rs.answersKr[kr.idKR].Add("");
+                        rs.answersKr[kr.idKR].Add("");
+                        rs.answersKr[kr.idKR].Add("");
+                        rs.answersKr[kr.idKR].Add("");
                     }
                 }
             }
+            checkInOKRsList.Add(rs);
+            isShowKR.Add(rs.okr.idOKRs, false);
         }
-        listProcess = await DbProcess.GetAllProcess();
+        Console.WriteLine("OnInitialized - CheckIn");
     }
 
     //OnParameterSet
-    protected override async Task OnParametersSetAsync()
+    protected async override Task OnParametersSetAsync()
     {
-        listO.Clear();
-        listKr.Clear();
-        isShowKR.Clear();
-        checkInOKRsList.Clear();
-
-        isEdit = true;
         Console.WriteLine("OnParametersSet - CheckIn");
-        listO = await DbOKRs.GetAllOKRs(mainLayout.selectedCycle.idCycle,mainLayout.user.userId);
-        
-        var dict_temp = new Dictionary<string, bool>();
+        if(!String.IsNullOrEmpty(id)){
+            checkInOKRsExample = checkInOKRsList.OrderByDescending(x => x.dateCheckIn).FirstOrDefault(x => x.id == id);
+            if(checkInOKRsExample != null){
+                if(cmd == "add"){
+                    if(checkInOKRsExample.statusCheckIn == 2 || checkInOKRsExample.statusCheckIn == 3)
+                    {
+                        var o = checkInOKRsExample.okr;
+                        var listKR = checkInOKRsExample.krs;
 
-        for( int i = 0; i < listO.Count; i++ ){
-            dict_temp.Add(listO[i].idOKRs, false);
-            var rs = await DbCheckIn.GetCheckInLastest(listO[i].idOKRs);
-            checkInOKRsList.Add(rs);
-        }
-        isShowKR = dict_temp;
-        Console.WriteLine(checkInOKRsList.Count);
+                        checkInOKRsExample = new CheckInOKRs();
+                        checkInOKRsExample.okr = o;
+                        foreach(var kr in listKR ){
+                            checkInOKRsExample.krs.Add(kr);
+                            checkInOKRsExample.answersKr.Add(kr.idKR, new List<string>(4));
 
-        if (!String.IsNullOrEmpty(id))
-        {
-            OKR_Current = await DbOKRs.GetOKRsById(id);
-            checkInOKRs = await DbCheckIn.GetCheckInLastest(id);
-            if(checkInOKRs == null || checkInOKRs.statusCheckIn == 2 || checkInOKRs.statusCheckIn == 3){
-                checkInOKRs = new CheckInOKRs();
-            }
-            listKr.Clear();
-            foreach(var a in mainLayout.listKR){
-                if(a.idOKRs == OKR_Current.idOKRs){
-                    listKr.Add(a);
-                    if(a.answers != null){
-                            if(a.answers.Count == 0){
-                            a.answers = new List<string>();
-                            a.answers.Add("");
-                            a.answers.Add("");
-                            a.answers.Add("");
-                            a.answers.Add("");
+                            checkInOKRsExample.answersKr[kr.idKR].Add("");
+                            checkInOKRsExample.answersKr[kr.idKR].Add("");
+                            checkInOKRsExample.answersKr[kr.idKR].Add("");
+                            checkInOKRsExample.answersKr[kr.idKR].Add("");
                         }
                     }
                 }
             }
         }
-        listProcess = await DbProcess.GetAllProcess();
     }
 
     private void ShowKR(string idOKR)
@@ -786,106 +769,84 @@ else{
 
     private async void CheckIn()
     {
-        TaoCheckInNhap();
+        
         isEdit = false;
     }
 
-
-    public async void TaoCheckInNhap(){
-
-        checkInOKRs.idOKRs = OKR_Current.idOKRs;
-        
-        checkInOKRs.dateCheckIn = DateTime.Today.Ticks;
-
-        await DbOKRs.UpdateOKRs(OKR_Current);
-        foreach (var kr in listKr)
-        {
-            await DbKR.UpdateKR(kr);
+    private void CheckInToOkrs(){
+        if(isDone){
+            checkInOKRsExample.statusCheckIn = 3;
         }
-
-        if(checkInOKRs.statusCheckIn == -1){
-            checkInOKRs.statusCheckIn += 1;
-            await DbCheckIn.AddCheckIn(checkInOKRs);
-        }
-        else if(checkInOKRs.statusCheckIn == 0){
-            await DbCheckIn.UpdateCheckIn(checkInOKRs);
+        else{
+            checkInOKRsExample.statusCheckIn = 2;
         }
         
-
+        DbCheckIn.Update(checkInOKRsExample);
+        isCheckIn = false;
     }
 
     private double CalcAverage()
     {
         double sum = 0;
-        foreach(var kr in listKr)
+        foreach(var kr in checkInOKRsExample.krs)
         {
             sum += (double)kr.processCurrent / kr.target;
         }
 
-        double average = sum / listKr.Count;
+        double average = sum / checkInOKRsExample.krs.Count;
+        checkInOKRsExample.progress = Math.Round(average, 2);
 
         // Sử dụng Math.Round để làm tròn đến hai số thập phân
         return Math.Round(average, 2);
     }
 
+    private void ComfirmCheckInDraft(){
+        checkInOKRsExample.statusCheckIn = 1;
+        DbCheckIn.Update(checkInOKRsExample);
+        isCheckIn = true;
+        NavigationManager.NavigateTo("/checkin/" + checkInOKRsExample.id);
+    }
 
-    private async Task GetOKRsByUser(User u){
-
-        userToViewOKRs = new User(u);
-
-        listO.Clear();
-        listKr.Clear();
-        isShowKR.Clear();
-        checkInOKRsList.Clear();
-
-        listO = await DbOKRs.GetAllOKRsToCheckIn(mainLayout.selectedCycle.idCycle,mainLayout.user.userId, u.userId);
-
-        var dict_temp = new Dictionary<string, bool>();
-        foreach (var okr in listO)
-        {
-            dict_temp.Add(okr.idOKRs, false);
-            var rs = await DbCheckIn.GetCheckInLastest(okr.idOKRs);
-            checkInOKRsList.Add(rs);
-
-            var list_temp = await DbKR.GetKRByidOKRs(okr.idOKRs);
-            listKr.AddRange(list_temp);
+    private async void CreateCheckInDraft(){
+        isEdit = false;
+        if(checkInOKRsExample.statusCheckIn == -1){
+            checkInOKRsExample.idUser = mainLayout.user.userId;
+            checkInOKRsExample.statusCheckIn = 0;
+            checkInOKRsExample.dateCheckIn = DateTime.Today.Ticks;
+            var check = await DbCheckIn.Add(checkInOKRsExample);
+            if(check){
+                await JSRuntime.InvokeVoidAsync("notify.success","Tạo CheckIn nháp thành công");
+            }
         }
-        isShowKR = dict_temp;
-        Console.WriteLine(checkInOKRsList.Count);
+        else{
+            checkInOKRsExample.dateCheckIn = DateTime.Today.Ticks;
+            DbCheckIn.Update(checkInOKRsExample);
+            
+            await JSRuntime.InvokeVoidAsync("notify.success","Cập nhật CheckIn nháp thành công");
+            
+        }
+        NavigationManager.NavigateTo("/checkin/" + checkInOKRsExample.id);
+        
+    }
+
+
+    private void GetCheckInOKRsByUser(User u){
+        userToViewOKRs = u;
+        checkInOKRsList = DbCheckIn.GetCheckInOKRsByUser(u.userId);
+
+        var dict  = new Dictionary<string, bool>();
+        foreach(var checkInOKRs in checkInOKRsList){
+            dict.Add(checkInOKRs.okr.idOKRs, false);
+        }
+        isShowKR = dict;
     }
 
     private CheckInOKRs GetCheckInOKRs(string idOKR)
     {
-        // Tìm kiếm xem có CheckInOKRs nào có idOKRs khớp hay không
-        var existingCheckIn = checkInOKRsList.FirstOrDefault(a => a?.idOKRs == idOKR);
-
-        // Nếu tìm thấy, trả về CheckInOKRs đó
-        if (existingCheckIn != null)
-        {
-            return existingCheckIn;
-        }
-
-        // Nếu không tìm thấy, tạo mới CheckInOKRs và thêm vào danh sách
-        var newCheckIn = new CheckInOKRs(idOKR);
-        checkInOKRsList.Add(newCheckIn);
-
-        return newCheckIn;
-    }
-
-    private void SetUserCheckIn(User u){
-        OKR_Current.idUserCheckIn = u.userId;
-        nameUser =  u.userName;
+        return null;   
     }
 
 
-    private async Task ComfirmCheckInNhap(){
-        checkInOKRs.statusCheckIn = 1;
-        await DbCheckIn.UpdateCheckIn(checkInOKRs);
-    }
-
-    private void CheckInToOkrs(){
-        isConfirmCheckIn = true;
-    }
 
     private double GetProcessOfOKRs(string id){
         foreach(var process in listProcess){
@@ -897,45 +858,11 @@ else{
     }
 
     private async void DoneCheckIn(){
-        isConfirmCheckIn = false;
-        
+    }
 
-        if(isDone){
-            checkInOKRs.statusCheckIn = 1;
-            await DbCheckIn.UpdateCheckIn(checkInOKRs);
-
-            var process = new Process();
-            process.idOKRs = OKR_Current.idOKRs;
-            process.process = CalcAverage();
-            process.date = DateTime.Today.Ticks;
-            await DbProcess.AddProcess(process);
-
-            OKR_Current.isDone = true;
-            await DbOKRs.UpdateOKRs(OKR_Current);
-        }
-        else{
-            checkInOKRs.statusCheckIn = 2;
-            var dayNextCheckIn = DateTime.Parse(dateNextCheckIn);
-            checkInOKRs.nextCheckIn = dayNextCheckIn.Ticks;
-
-            await DbCheckIn.UpdateCheckIn(checkInOKRs);
-
-            var process = new Process();
-            process.idOKRs = OKR_Current.idOKRs;
-            process.process = CalcAverage();
-            process.date = DateTime.Today.Ticks;
-            await DbProcess.AddProcess(process);
-
-            OKR_Current.isDone = false;
-            await DbOKRs.UpdateOKRs(OKR_Current);
-        }
-
-        
-
-        foreach (var kr in listKr)
-        {
-            await DbKR.UpdateKR(kr);
-        }
+    private void SetUserCheckIn(User u){
+        nameUser = u.userName;
+        checkInOKRsExample.idUserCheckIn = u.userId;
     }
 
 
