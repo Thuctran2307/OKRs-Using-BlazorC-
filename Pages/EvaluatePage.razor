@@ -4,6 +4,7 @@
 
 
 @inject NavigationManager NavigationManager
+@inject IJSRuntime JSRuntime
 
 @if (!String.IsNullOrEmpty(idOKRs))
 {
@@ -1638,6 +1639,18 @@ else{
     }
     
     private async void SendEvaluate(){
+
+        if(String.IsNullOrEmpty(evaluateSample.response) || String.IsNullOrEmpty(evaluateSample.idManager)){
+            await JSRuntime.InvokeVoidAsync("tagline", false, "Người phê duyệt và phản hồi không được để trống");
+            return;
+        }
+        foreach(var a in evaluateSample.dict_comment){
+            if(String.IsNullOrEmpty(a.Value)){
+                await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng nhập đầy đủ nhận xét");
+                return;
+            }
+        }
+
         evaluateSample.idUser = mainLayout.user.userId;
         if(evaluateSample.status == -1){
             Console.WriteLine("SendEvaluate");
