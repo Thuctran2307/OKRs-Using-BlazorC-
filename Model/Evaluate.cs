@@ -29,6 +29,7 @@ namespace OKRs.Model
         public List<string> listIdUserView {get; set;}
 
         public long dateCreate { get; set; }
+        public long dateEvaluate { get; set; }
         public long dateReview { get; set; }
 
         public int status { get; set; }

@@ -195,13 +195,13 @@ else{
                 </div>
                 <ul>
                     <li class="is-active">
-                        <a class="has-text-weight-normal" href="/okr/checkin/241J38B6EA/info">Check-in 1:1</a>
+                        <a class="has-text-weight-normal" href="/checkin/@id">Check-in 1:1</a>
                     </li>
                     <li class="">
-                        <a class="has-text-weight-normal" href="/okr/checkin/241J38B6EA/feedback">Phản hồi</a>
+                        <a class="has-text-weight-normal" href="/checkin/@id/feedback">Phản hồi</a>
                     </li>
                     <li class="">
-                        <a class="has-text-weight-normal" href="/okr/checkin/241J38B6EA/overview">Tổng quan</a>
+                        <a class="has-text-weight-normal" href="/checkin/@id/overview">Tổng quan</a>
                     </li>
                 </ul>
             </div>
@@ -414,6 +414,115 @@ else{
                     </div>
                 </div>
             </section>
+            }
+            else if(cmd == "feedback"){
+                <div class="inner_section">
+                    <div id="feedback" class="scrolly" style="height: calc(100vh - 282px);">
+                        <table class="table is-fullwidth is-vcentered is-noborder is-responsive">
+                            <!--!-->
+                            <thead>
+                                <tr>
+                                    <th>Mục tiêu</th>
+                                    <th width="200px" align="center">Tiến độ</th>
+                                    <th width="100px" align="center">Thay đổi</th>
+                                    <th width="70px" align="center" class="pl-0">Tự tin</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <div class="is-flex"><span class="has-text-weight-semibold has-text-link">@checkInOKRsExample.okr._object</span></div>
+                                    </td>
+                                    <!--!-->
+                                    <td>
+                                        <!--!-->
+                                        <label class="td-label">Tiến độ</label>
+                                        <div class="td-value">
+                                            <div class="progress_has_value">
+                                                <progress class="progress is-small is-link" value="@@GetProcessOfOKRs(id)" max="1"></progress>
+                                                <!--!-->
+                                                <span>@(GetProcessOfOKRs(checkInOKRsExample.okr.idOKRs)*100) %</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <!--!-->
+                                    <td align="center">
+                                        <!--!-->
+                                        <label class="td-label">Thay đổi</label>
+                                        <div class="td-value has-text-weight-semibold">63.3<!--!-->%</div>
+                                    </td>
+                                    <!--!-->
+                                    <td align="center" class="pl-0">
+                                        <!--!-->
+                                        <label class="td-label">Tự tin</label>
+                                        <div class="td-value has-text-weight-semibold"><span class="has-text-info">@HandleOKRs.ConvertToConfident(checkInOKRsExample.okr.confident)</span></div>
+                                    </td>
+                                </tr>
+                                <!--!-->
+                                <!--!-->
+                                <tr class="tr-hide">
+                                    <td colspan="4"><hr class="m-0" /></td>
+                                </tr>
+                                @foreach(var a in checkInOKRsExample.krs){
+                                    <tr>
+                                    <td colspan="4"><span class="has-text-weight-semibold has-text-link">@a._keyResult</span></td>
+                                </tr>
+                                <!--!-->
+                                <tr>
+                                    <td colspan="3" class="pr-0">
+                                        <div class="has_bg is_radius p-3 is-word-break"><!--!-->a</div>
+                                    </td>
+                                    <!--!-->
+                                    <td align="center" class="pl-0">
+                                        <a class="icon has-text-link" title="Trả lời phản hồi">
+                                            <!--!-->
+                                            <i class="material-icons-outlined is-size-5">reply</i>
+                                        </a>
+                                    </td>
+                                </tr>
+                                }
+                                <tr>
+                                    <td colspan="4" class="pt-3 pr-3"><ul class="columns is-multiline is-mobile"></ul></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!--!-->
+                    <div class="field pr-3" style="height: 60px;"></div>
+                    <!--!-->
+                    <div class="field is-grouped pr-3" style="height: 75px;">
+                        <div class="control is-expanded has-icons-right">
+                            <!--!-->
+                            <textarea id="replyInput" class="textarea scrolly" rows="1" placeholder="Nội dung phản hồi..." autocomplete="off" style="height: 33px; overflow: hidden;"></textarea>
+                            <!--!-->
+                            <!--!-->
+                            <a class="icon is-right has-text-link" onclick="document.getElementById('file').click()" title="Đính kèm hình ảnh" style="pointer-events: auto;"><i class="material-icons-outlined is-size-5">image</i></a>
+                            <div class="is-hidden">
+                                <!--!-->
+                                <div class="control file_upload" _bl_59c91011-2e29-4b4b-81d5-54ac3e92af3e="">
+                                    <a class="button is-outlined has-text-link" onclick="document.getElementById('file').click()" title="Chọn file">
+                                        <!--!-->
+                                        <span class="icon"><i class="material-icons-outlined is-size-5">upload</i></span>
+                                    </a>
+                                    <!--!-->
+                                    <input id="file" class="is-hidden" accept="image/*" type="file" _bl_1af73d88-d315-474b-9a7b-cdd9d9935423="" />
+                                    <!--!-->
+                                    <span style="opacity: 0; pointer-events: none; position: absolute;">Chọn file</span>
+                                </div>
+                            </div>
+                        </div>
+                        <!--!-->
+                        <div class="control">
+                            <a class="button is-link">
+                                <!--!-->
+                                <span class="icon"><i class="material-icons-outlined is-size-6">send</i></span>
+                                <!--!-->
+                                <span>Gửi</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
             }
             else{
                 <section class="main_content">

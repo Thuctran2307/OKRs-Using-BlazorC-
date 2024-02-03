@@ -1252,10 +1252,22 @@ else{
                                         </div>
                                     </td>
                                     <td align="center"><label class="td-label">Nhân viên</label>
-                                        <div class="td-value"></div>
+                                        <div class="td-value">
+                                            @if(evaluate.dateCreate != 0){
+                                                @(new DateTime(evaluate.dateCreate).ToString("dd/MM/yyyy"))
+                                            }
+                                            
+                                        </div>
                                     </td>
                                     <td align="center"><label class="td-label">Quản lý</label>
-                                        <div class="td-value"></div>
+                                        <div class="td-value">
+                                            @if(evaluate.status == 1){
+                                                @(new DateTime(@evaluate.dateEvaluate).ToString("dd/MM/yyyy"))
+                                            }
+                                            else if(evaluate.status == 0){
+                                                <span class="has-text-success">Chưa xác nhận</span>
+                                            }
+                                        </div>
                                     </td>
                                 </tr>
 
@@ -1570,6 +1582,7 @@ else{
     private async void ConfirmEvaluate(){
         isReviewing = false;
         evaluateSample.status = 1;
+        evaluateSample.dateEvaluate = DateTime.Today.Ticks;
         await DbEvaluate.UpdateEvaluate(evaluateSample);
     }
 
@@ -1640,8 +1653,8 @@ else{
     
     private async void SendEvaluate(){
 
-        if(String.IsNullOrEmpty(evaluateSample.response) || String.IsNullOrEmpty(evaluateSample.idManager)){
-            await JSRuntime.InvokeVoidAsync("tagline", false, "Người phê duyệt và phản hồi không được để trống");
+        if(String.IsNullOrEmpty(userManager.userId)){
+            await JSRuntime.InvokeVoidAsync("tagline", false, "Người phê duyệt không được để trống");
             return;
         }
         foreach(var a in evaluateSample.dict_comment){
@@ -1650,12 +1663,21 @@ else{
                 return;
             }
         }
+        foreach(var a in evaluateSample.dict_scoreBySelf){
+            Console.WriteLine(a.Value);
+            if(a.Value <= 0 || a.Value > 100){
+                await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng nhập điểm từ 0 đến 100");
+                return;
+            }
+        }
+
+
 
         evaluateSample.idUser = mainLayout.user.userId;
         if(evaluateSample.status == -1){
             Console.WriteLine("SendEvaluate");
             evaluateSample.dateCreate = DateTime.Today.Ticks;
-            evaluateSample.idManager = userManager.userId;
+            evaluateSample.idManager = userManager.userId ;
             evaluateSample.status = 0;
             await DbEvaluate.AddEvaluate(evaluateSample);
         }
