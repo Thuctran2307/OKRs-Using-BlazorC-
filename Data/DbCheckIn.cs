@@ -41,6 +41,30 @@ namespace OKRs.Data
             return checkIn;
         }
 
+        // getcheckin by id
+
+        public static async Task<CheckInOKRs> GetById(string id)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<CheckInOKRs>(_collectionName);
+            var checkIn = await collection.Find(x => x.id == id).FirstOrDefaultAsync();
+            return checkIn;
+        }
+
+        // get listCheckIn by idUser lasted checkin
+        public static List<CheckInOKRs> GetLatestCheckInsByOKRs(string idUser)
+        {
+            var _db = Mongo.GetDatabase();
+            var collection = _db.GetCollection<CheckInOKRs>(_collectionName);
+            var checkIns = collection
+                .Find(x => x.idUser == idUser)
+                .SortByDescending(x => x.dateCheckIn)
+                .ToList() // Add ToList() to convert the result to a list
+                .GroupBy(x => x.okr.idOKRs)
+                .Select(x => x.First())
+                .ToList();
+            return checkIns;
+        }
         // update Checkin
 
         public static void Update(CheckInOKRs checkIn)

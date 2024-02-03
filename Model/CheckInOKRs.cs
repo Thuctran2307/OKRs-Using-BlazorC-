@@ -28,10 +28,13 @@ namespace OKRs.Model
 
         public long nextCheckIn { get; set; }
 
+        public List<Chat> chats { get; set; }
+
         public CheckInOKRs(){
             id = ObjectId.GenerateNewId().ToString();
             krs = new List<KR>();
             answersKr = new Dictionary<string, List<string>>();
+            chats = new List<Chat>();
             statusCheckIn = -1;
         }
 
