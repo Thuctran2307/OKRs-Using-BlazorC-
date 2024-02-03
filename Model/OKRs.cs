@@ -12,7 +12,7 @@ namespace OKRs.Model
 
         public string idCycle { get; set; }
 
-        public bool type { get; set; }
+        public int type { get; set; }
 
         public string _object { get; set; }
 

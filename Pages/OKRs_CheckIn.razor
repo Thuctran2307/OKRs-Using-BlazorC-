@@ -494,7 +494,6 @@ else{
                                 }
                             }
                             else{
-                                NavigationManager.NavigateTo("/checkin");
                             }
                         </ul>
                         <table class="table is-fullwidth is-noborder is-responsive">
@@ -709,33 +708,39 @@ else{
 
     protected override async Task OnInitializedAsync()
     {
-        listUser = await DbUser.GetAllUser();
-        listProcess = await DbProcess.GetAllProcess();
-        var listO = await DbOKRs.GetAllOKRs(mainLayout.selectedCycle.idCycle, mainLayout.user.userId);
-        var listKR = await DbKR.GetAllKRs();
+        if(NavigationManager.Uri != "http://localhost:5107/checkin" ){
+            NavigationManager.NavigateTo("http://localhost:5107/checkin");
+        }
+        else{
+            listUser = await DbUser.GetAllUser();
+            listProcess = await DbProcess.GetAllProcess();
+            var listO = await DbOKRs.GetAllOKRs(mainLayout.selectedCycle.idCycle, mainLayout.user.userId);
+            var listKR = await DbKR.GetAllKRs();
 
 
-        foreach(var o in listO){
-            var rs = DbCheckIn.GetCheckInLasted(o.idOKRs);
-            if(rs == null){
-                rs = new CheckInOKRs();
-                rs.okr = o;
-                foreach(var kr in listKR ){
-                    if(kr.idOKRs == o.idOKRs){
-                        rs.krs.Add(kr);
-                        rs.answersKr.Add(kr.idKR, new List<string>(4));
+            foreach(var o in listO){
+                var rs = DbCheckIn.GetCheckInLasted(o.idOKRs);
+                if(rs == null){
+                    rs = new CheckInOKRs();
+                    rs.okr = o;
+                    foreach(var kr in listKR ){
+                        if(kr.idOKRs == o.idOKRs){
+                            rs.krs.Add(kr);
+                            rs.answersKr.Add(kr.idKR, new List<string>(4));
 
-                        rs.answersKr[kr.idKR].Add("");
-                        rs.answersKr[kr.idKR].Add("");
-                        rs.answersKr[kr.idKR].Add("");
-                        rs.answersKr[kr.idKR].Add("");
+                            rs.answersKr[kr.idKR].Add("");
+                            rs.answersKr[kr.idKR].Add("");
+                            rs.answersKr[kr.idKR].Add("");
+                            rs.answersKr[kr.idKR].Add("");
+                        }
                     }
                 }
+                checkInOKRsList.Add(rs);
+                isShowKR.Add(rs.okr.idOKRs, false);
             }
-            checkInOKRsList.Add(rs);
-            isShowKR.Add(rs.okr.idOKRs, false);
+            Console.WriteLine("OnInitialized - CheckIn");
         }
-        Console.WriteLine("OnInitialized - CheckIn");
+        
     }
 
     //OnParameterSet

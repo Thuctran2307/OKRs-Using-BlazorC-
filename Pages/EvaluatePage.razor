@@ -2,6 +2,9 @@
 @page "/review/{idOKRs}"
 @page "/review/{idOKRs}/{action}"
 
+
+@inject NavigationManager NavigationManager
+
 @if (!String.IsNullOrEmpty(idOKRs))
 {
     if(action == "add"){
@@ -341,7 +344,6 @@
         </section>
     }
     else if(action == "evaluate"){
-        Console.WriteLine("andjsdnjds");
 
         <section id="content" class="column has_sidebar">
             <section class="main_content" b-82z1cy6rii="">
@@ -349,7 +351,7 @@
                     <ul class="columns is-vcentered is-variable is-2 mb-2" b-82z1cy6rii="">
                         
                         <li class="column is-narrow" b-82z1cy6rii="">
-                            <a href="/okr/review" class="icon-text" b-82z1cy6rii="">
+                            <a href="/review" class="icon-text" b-82z1cy6rii="">
                                 <span class="icon" b-82z1cy6rii="">
                                     <span class="material-icons-outlined" b-82z1cy6rii="">
                                         keyboard_backspace
@@ -383,12 +385,12 @@
                                 <div class="control is-expanded" b-82z1cy6rii="">
                                     <div class="select is-fullwidth" b-82z1cy6rii="">
                                         <select b-82z1cy6rii="">
-                                            <option value="241B885119" b-82z1cy6rii="">Đạt Doanh Thu và Lợi Nhuận Tăng Trưởng</option>
+                                            @* <option value="241B885119" b-82z1cy6rii="">Đạt Doanh Thu và Lợi Nhuận Tăng Trưởng</option>
                                             <option value="241G1DE933" b-82z1cy6rii="">sâdadasd</option>
                                             <option value="241J38B6EA" b-82z1cy6rii="">ádasda</option>
                                             <option value="241PFEBADD" b-82z1cy6rii="">aaaaaaaaaaaaaaaa</option>
                                             <option value="241S65E14D" b-82z1cy6rii="">123</option>
-                                            <option value="2421486717" selected="" b-82z1cy6rii="">hay</option>
+                                            <option value="2421486717" selected="" b-82z1cy6rii="">hay</option> *@
                                         </select>
                                     </div>
                                 </div>
@@ -472,10 +474,15 @@
                                     </td>
                                     
                                     <td align="center" b-82z1cy6rii="">
-                                        
                                         <label class="td-label" b-82z1cy6rii="">QL đánh giá</label>
                                         <div class="td-value" b-82z1cy6rii="">
-                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreByManager[idOKRs] %</div>
+                                            @if(isReviewing){
+                                                <input @bind="@evaluateSample.dict_scoreByManager[idOKRs]" placeholder="Nhập số điểm" class="input has-text-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                            }
+                                            else{
+                                                <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreByManager[idOKRs] %</div>
+                                            }
+                                            
                                         </div>
                                     </td>
                                 </tr>
@@ -551,7 +558,13 @@
                                             
                                             <label class="td-label" b-82z1cy6rii="">QL đánh giá</label>
                                             <div class="td-value" b-82z1cy6rii="">
-                                                <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreByManager[kr.idKR]%</div>
+                                                @if(isReviewing){
+                                                    <input @bind="@evaluateSample.dict_scoreByManager[kr.idKR]" placeholder="Nhập số điểm" class="input has-text-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">
+                                                }
+                                                else{
+                                                    <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreByManager[kr.idKR]%</div>
+                                                }
+                                                
                                             </div>
                                         </td>
                                     </tr>
@@ -684,8 +697,7 @@
                             <div class="user_item" b-82z1cy6rii="">
                             <img class="image is-36x36 mr-2" src="https://storage.googleapis.com/fastdo-storage.appspot.com/avatar/638397902369608569_bb896db4d8fd04a35dec.jpg" alt="IMG" b-82z1cy6rii="">
                             <div b-82z1cy6rii="">
-                                <p class="has-text-weight-semibold has-text-info is-size-6" b-82z1cy6rii="">Trần Duy Thục</p>
-                                
+                                <p class="has-text-weight-semibold has-text-info is-size-6" b-82z1cy6rii="">@mainLayout.user.userId</p>
                                 <p class="text_1_line has-text-grey is-size-7" style="max-width: 200px;" b-82z1cy6rii="">FASTDO ĐÀ NẴNG / PHÒNG SẢN XUẤT</p>
                             </div>
                             </div>
@@ -1040,9 +1052,9 @@
                                     </div>
                                     <div class="control is-expanded" b-82z1cy6rii="">
                                         <div class="select is-fullwidth" b-82z1cy6rii="">
-                                            <select b-82z1cy6rii="">
+                                            <select b-82z1cy6rii="" @onchange="LinkToOKRsChosen" >
                                                 @foreach(var o in mainLayout.listOKRs){
-                                                    <option value="@o.idOKRs" b-82z1cy6rii="">@o.idOKRs</option>
+                                                    <option value="@o.idOKRs" b-82z1cy6rii="">@o._object</option>
                                                 }
                                             </select>
                                         </div>
@@ -1117,15 +1129,15 @@
                                         foreach(var kr in evaluateSample.krs){
                                             if(listShowKR[kr.idKR]){
                                                 <tr b-82z1cy6rii="">
-                                                    <td class="pl-6" b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">aaaa</span></td>
+                                                    <td class="pl-6" b-82z1cy6rii=""><span class="has-text-weight-semibold has-text-link" b-82z1cy6rii="">@kr._keyResult</span></td>
                                                     
                                                     <td b-82z1cy6rii="">
                                                         
                                                         <label class="td-label" b-82z1cy6rii="">Tiến độ</label>
                                                         <div class="td-value" b-82z1cy6rii="">
-                                                            <span class="has-text-success" b-82z1cy6rii="">0/100</span>
+                                                            <span class="has-text-success" b-82z1cy6rii="">@kr.processCurrent / @kr.target</span>
                                                             
-                                                            <span class="is-pulled-right" b-82z1cy6rii="">$</span>
+                                                            <span class="is-pulled-right" b-82z1cy6rii="">@kr.unit</span>
                                                         </div>
                                                     </td>
                                                     
@@ -1133,7 +1145,7 @@
                                                         
                                                         <label class="td-label" b-82z1cy6rii="">Điểm hệ thống</label>
                                                         <div class="td-value" b-82z1cy6rii="">
-                                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">0%</div>
+                                                            <div class="input is-centered has-text-weight-semibold is_bg" b-82z1cy6rii="">@evaluateSample.dict_scoreSystem[kr.idKR] %</div>
                                                         </div>
                                                     </td>
                                                     
@@ -1483,7 +1495,7 @@ else{
                                                 <td align="center">
                                                     <label class="td-label">QL đánh giá</label>
                                                     <div class="td-value">
-                                                        <div class="input is-centered has-text-weight-semibold is_bg">@e.dict_scoreBySelf[kr.idKR] %</div>
+                                                        <div class="input is-centered has-text-weight-semibold is_bg">@e.dict_scoreByManager[kr.idKR] %</div>
                                                     </div>
                                                 </td>
                                                 
@@ -1527,6 +1539,11 @@ else{
     // onInitial
 
     protected override async Task OnInitializedAsync() {
+
+        if(NavigationManager.Uri != "http://localhost:5107/review" ){
+            NavigationManager.NavigateTo("http://localhost:5107/detail");
+        }
+
         listShowKR.Clear();
         Console.WriteLine("OnInitializedAsync -- Review");
         evaluates = await DbEvaluate.GetAll();
@@ -1635,5 +1652,10 @@ else{
             await DbEvaluate.UpdateEvaluate(evaluateSample);
         }
         
+    }
+
+    private void LinkToOKRsChosen(ChangeEventArgs e){
+        var id = e.Value.ToString();
+        NavigationManager.NavigateTo("review/" + id);
     }
 }

@@ -1,5 +1,5 @@
 @page "/suggest"
-
+@inject IJSRuntime JSRuntime
 
 <section class="main_content ">
     <div class="card flex_column is_fullheight">
@@ -10,7 +10,7 @@
                 </h1>
             </li>
             <li class="column is-one-fifth is-full-mobile">
-                <div class="select is-fullwidth"><select @onchange="ChangeReason">
+                <div class="select is-fullwidth"><select>
                         <option value="">Chọn lý do</option>
                         <option value="241AEF604C">Chuyển đổi số và áp dụng công nghệ nhiều hơn</option>
                         <option value="241A7B1A7D">Gia tăng giá trị sản phẩm</option>
@@ -24,7 +24,7 @@
                     </select></div>
             </li>
             <li class="column is-one-fifth is-full-mobile">
-                <div class="select is-fullwidth"><select class="is-family-code" @onchange="ChangePhongBan">
+                <div class="select is-fullwidth"><select class="is-family-code">
                         <option value="">GÓP Ý CỦA TÔI</option>
                         <option value="241A2D9F3B">FASTDO ĐÀ NẴNG (3)</option>
                         <option value="241AF38879">└─ PHÒNG KT - TC (1)</option>
@@ -35,7 +35,7 @@
                     </select></div>
             </li>
             <li class="column is-narrow">
-                <a class="button is-link" @onclick="() => isSlider = !isSlider">
+                <a class="button is-link" @onclick="CreateSuggest">
                     <span class="icon">
                         <i class="material-icons-outlined is-size-6">add</i>
                     </span>
@@ -95,58 +95,60 @@
     </div>
     <div class="slider-body">
         <div class="scrolly is-mobile is-flex is-flex-direction-column">
-            <div class="field">
-                <div class="columns is-variable is-multiline is-2">
-                    <div class="column is-full">
-                        <div class="field"><label class="label">Gửi đến *</label>
-                            <div class="control">
-                                <div class="select is-fullwidth is_bg"><select class="is-family-code"
-                                        @onchange="ChangePhongBan">
-                                        <option value="">Chọn phòng ban</option>
-                                        <option value="241A2D9F3B">FASTDO ĐÀ NẴNG</option>
-                                        <option value="241AF38879">└─ PHÒNG KT - TC</option>
-                                        <option value="241A0E45FC">└─ PHÒNG MARKETING</option>
-                                        <option value="241AAACC71">└─ PHÒNG NHÂN SỰ</option>
-                                        <option value="241A651B1A">└─ PHÒNG SALES - CS</option>
-                                        <option value="241AA0BDEA">└─ PHÒNG SẢN XUẤT</option>
-                                    </select></div>
+            @foreach(var suggest in suggestionsDraft){
+                <div class="field">
+                    <div class="columns is-variable is-multiline is-2">
+                        <div class="column is-full">
+                            <div class="field"><label class="label">Gửi đến *</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth is_bg"><select class="is-family-code"
+                                            @onchange="(e) => {suggest.idUserRecive = e.Value.ToString();}">
+                                            <option value="">Chọn phòng ban</option>
+                                            <option value="241A2D9F3B">FASTDO ĐÀ NẴNG</option>
+                                            <option value="241AF38879">└─ PHÒNG KT - TC</option>
+                                            <option value="241A0E45FC">└─ PHÒNG MARKETING</option>
+                                            <option value="241AAACC71">└─ PHÒNG NHÂN SỰ</option>
+                                            <option value="241A651B1A">└─ PHÒNG SALES - CS</option>
+                                            <option value="241AA0BDEA">└─ PHÒNG SẢN XUẤT</option>
+                                        </select></div>
+                                </div>
+                            </div>
+                            <div class="field"><label class="label">Lý do bạn muốn góp ý *</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth is_bg"><select @onchange="(e) => {suggest.reason = e.Value.ToString();}">
+                                            <option value="">Chọn lý do</option>
+                                            <option value="241AEF604C">Chuyển đổi số và áp dụng công nghệ nhiều hơn</option>
+                                            <option value="241A7B1A7D">Gia tăng giá trị sản phẩm</option>
+                                            <option value="241A662F7B">Gia tăng khách hàng (số lượng, trải nghiệm, giá trị
+                                                đơn hàng...)</option>
+                                            <option value="241AEAF915">Hệ thống quản trị tốt hơn</option>
+                                            <option value="241A1B75FD">Hệ thống vận hành (quy trình, quy định, biểu mẫu..)
+                                                tốt hơn</option>
+                                            <option value="241A298580">Nhân sự tốt hơn</option>
+                                            <option value="241ADDE7B6">Phát triển văn hóa doanh nghiệp tốt hơn</option>
+                                        </select></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="field"><label class="label">Lý do bạn muốn góp ý *</label>
-                            <div class="control">
-                                <div class="select is-fullwidth is_bg"><select @onchange="ChangeReason">
-                                        <option value="">Chọn lý do</option>
-                                        <option value="241AEF604C">Chuyển đổi số và áp dụng công nghệ nhiều hơn</option>
-                                        <option value="241A7B1A7D">Gia tăng giá trị sản phẩm</option>
-                                        <option value="241A662F7B">Gia tăng khách hàng (số lượng, trải nghiệm, giá trị
-                                            đơn hàng...)</option>
-                                        <option value="241AEAF915">Hệ thống quản trị tốt hơn</option>
-                                        <option value="241A1B75FD">Hệ thống vận hành (quy trình, quy định, biểu mẫu..)
-                                            tốt hơn</option>
-                                        <option value="241A298580">Nhân sự tốt hơn</option>
-                                        <option value="241ADDE7B6">Phát triển văn hóa doanh nghiệp tốt hơn</option>
-                                    </select></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="column is-full">
-                        <div class="field"><label class="label"><span>Nội dung mục góp ý *</span>
-                                <a class="icon is-pulled-right has-text-info"><i
-                                        class="material-icons-outlined">close</i></a></label>
-                            <div class="control"><textarea class="textarea is_bg" @bind="suggest.content"
-                                    placeholder="Bạn muốn công ty dành nguồn lực tập trung vào mục tiêu / điều gì trong quý tới... "></textarea>
+                        <div class="column is-full">
+                            <div class="field"><label class="label"><span>Nội dung mục góp ý *</span>
+                                    <a class="icon is-pulled-right has-text-info" @onclick="() => suggestionsDraft.Remove(suggest)"><i
+                                            class="material-icons-outlined">close</i></a></label>
+                                <div class="control"><textarea class="textarea is_bg" @bind="suggest.content"
+                                        placeholder="Bạn muốn công ty dành nguồn lực tập trung vào mục tiêu / điều gì trong quý tới... "></textarea>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     </div>
     <div class="slider-footer">
         <div class="field is-grouped is-grouped-right">
-            <div class="control"><button class="button is-link    is-inverted"><span class="icon"><span
+            <div class="control"><button class="button is-link is-inverted" @onclick="AddNewSuggetToDraft" ><span class="icon"><span
                             class="material-icons-outlined">add</span></span><span>Thêm</span></button></div>
-            <div class="control"><button class="button is-info"><span class="icon"><span
+            <div class="control"><button class="button is-info" @onclick="SaveDraft" ><span class="icon"><span
                             class="material-icons-outlined">save</span></span><span>Lưu nháp</span></button></div>
 
             <div class="control"><button class="button is-link" @onclick="SendSuggest"><span class="icon"><span
@@ -158,6 +160,7 @@
 
 
 @code {
+    private bool isSaveDraft;
     public static Dictionary<string, string> listPhongBan = new Dictionary<string, string>()
         {
             { "241A2D9F3B", "FASTDO ĐÀ NẴNG" },
@@ -179,7 +182,7 @@
         };
     private bool isSlider = false;
 
-    private Suggest suggest = new Suggest();
+    private List<Suggest> suggestionsDraft = new List<Suggest>();
 
     private List<Suggest> list = new List<Suggest>();
 
@@ -190,29 +193,45 @@
         list = await DbSuggest.GetListSuggest();
     }
 
-    public void ChangeReason(ChangeEventArgs e)
-    {
-        suggest.reason = e.Value.ToString();
-        Console.WriteLine(suggest.reason);
-    }
-
-    public void ChangePhongBan(ChangeEventArgs e)
-    {
-        suggest.idUserRecive = e.Value.ToString();
-        Console.WriteLine(suggest.reason);
-    }
-
     public async Task SendSuggest()
     {
-        suggest.isSend = true;
-        suggest.idUserSend = mainLayout.user.userId;
-        suggest.dateSend = DateTime.Today.Ticks;
-        await DbSuggest.AddSuggest(suggest);
-        suggest = new Suggest();
-        isSlider = false;
-        list = await DbSuggest.GetListSuggest();
+        if(suggestionsDraft.Count < 1){
+            await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng tạo ít nhất một đơn đề nghị");
+            return;
+        }
+        foreach(var suggest in suggestionsDraft){
+            if(String.IsNullOrEmpty(suggest.content) || String.IsNullOrEmpty(suggest.idUserRecive) || String.IsNullOrEmpty(suggest.reason)){
+                await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng không để trống các mục: Gửi đến, Lý do bạn muốn góp ý, Nội dung mục góp ý.");
+                return;
+            }
+        }
+
+        foreach(var suggest in suggestionsDraft){
+            suggest.isSend = true;
+            suggest.idUserSend = mainLayout.user.userId;
+            suggest.dateSend = DateTime.Today.Ticks;
+            await DbSuggest.AddSuggest(suggest);
+            isSlider = false;
+            list = await DbSuggest.GetListSuggest();
+        }
     }
 
-    
+    private void SaveDraft(){
+        isSaveDraft = true;
+        isSlider = false;
+    }
 
+    private void AddNewSuggetToDraft(){
+        suggestionsDraft.Add(new Suggest());
+        StateHasChanged();
+    }
+
+    private void CreateSuggest(){
+        isSlider = !isSlider;
+        if(!isSaveDraft){
+            suggestionsDraft.Clear();
+            suggestionsDraft.Add(new Suggest());
+        }
+        
+    }
 }

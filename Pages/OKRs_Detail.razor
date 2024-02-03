@@ -36,15 +36,11 @@
                             <tr>
                                 <td>
                                     <div class="is-flex"><a class="has-text-weight-semibold" title="Chỉnh sửa OKRs"
-                                    @onclick="() => EditOKR(okr.idOKRs)"> @okr._object</a></div>
-                                </td>
-                                @if(okr.isDone){
-                                <td>
-                                        
+                                    @onclick="() => { isUpdate = true;  EditOKR(okr.idOKRs);}"> @okr._object</a></div>
+                                    @if(okr.isDone){
                                         <span class="ml-1 icon" title="OKRs đã hoàn thành"><i class="material-icons-outlined is-size-6 has-text-success">check_circle</i></span>
-                                        
+                                    }
                                 </td>
-                                }
 
                                 <td><label class="td-label">Kết quả</label>
                                     <div class="td-value" @onclick="() => ShowKR(okr.idOKRs)">
@@ -149,7 +145,7 @@
             <div class="column">
                 <div class="has-text-weight-bold is-size-5">TẠO OKRs MỚI</div>
             </div>
-            <div class="column is-narrow" @onclick="() => isSlider = false"><button class="button"><span
+            <div class="column is-narrow" @onclick="() => { isUpdate = false; isSlider = false;}"><button class="button"><span
                         class="icon"><span class="material-icons-outlined">close</span></span><span>Hủy
                         tạo</span></button></div>
         </div>
@@ -160,30 +156,29 @@
                 <li class="column is-one-fifth-tablet is-full-mobile">
                     <label class="label has-text-weight-bold">Mục tiêu của bạn:</label>
                 </li>
-                <li class="column is-four-fifths-tablet is-full-mobile"><input type="text" @bind="okrs._object"
-                        class="input has-text-weight-semibold is_bg" placeholder="Bắt buộc nhập..."></li>
+                <li class="column is-four-fifths-tablet is-full-mobile">
+                    <input required type="text" @bind="okrs._object" class="input has-text-weight-semibold is_bg" placeholder="Bắt buộc nhập..."></li>
 
                 <li class="column is-one-fifth-tablet is-one-third-mobile"><label
                         class="label has-text-weight-bold">OKRs cấp trên</label></li>
+                
                 <li class="column is-two-fifths-tablet is-two-thirds-mobile">
-                    <div class="select is-fullwidth is_bg"><select @bind="okrs.idOKR_Superior">
-                            <option>- Chọn OKRs cấp trên -</option>
-                            <optgroup label="Nguyễn Hữu Học">
-                                <option value="241G7FBF11">Xây dựng thủy thủ đoàn</option>
-                                <option value="241G1615CE">Thách thức mới - Cơ hội mới</option>
-                                <option value="241G8A9912">Lead giỏi thì team mới giỏi</option>
-                            </optgroup>
-                            <optgroup label="Hoàng Thị Phương Thảo"></optgroup>
-                            <optgroup label="Đoàn Thanh"></optgroup>
-                        </select></div>
+                    <div class="select is-fullwidth is_bg">
+                        <select @onchange="(e) => okrs.idOKR_Superior = e.Value.ToString()">
+                            @foreach(var o in allOKRs){
+                                <option value="@(o.idOKRs)">@o._object</option>
+                            }
+                        </select>
+                    </div>
                 </li>
-                <li class="column is-one-fifth-tablet is-full-mobile">
+                <li class="column is-two-fifth-tablet is-full-mobile">
                     <div class="field is-grouped">
                         <div class="control"><label class="label has-text-weight-bold">Loại:</label></div>
                         <div class="control is-expanded">
-                            <div class="select is-fullwidth is_bg"><select @bind="okrs.type">
-                                    <option value="2">OKRs cam kết</option>
-                                    <option value="1">OKRs mở rộng</option>
+                            <div class="select is-fullwidth is_bg">
+                                <select @onchange="(e) => { okrs.type = Convert.ToInt32(e.Value); }">
+                                    <option value="1">OKRs cam kết</option>
+                                    <option value="2">OKRs mở rộng</option>
                                 </select></div>
                         </div>
                     </div>
@@ -210,10 +205,12 @@
                             class="material-icons-outlined is-size-6">add</i></span>
                     <span>Thêm</span>
                     <span class="is-hidden-mobile ml-1">kết quả</span></a></div>
+
             <div class="control" @onclick="AddOKRs"><a class="button is-link"><span class="icon"><i
                             class="material-icons-outlined is-size-6">done</i></span>
-                    <span>Tạo</span>
+                    <span>@(isUpdate ? "Cập nhập" : "Tạo")</span>
                     <span class="is-hidden-mobile ml-1">OKRs</span></a></div>
+            
             <div class="control">
                 <a class="button is-danger" @onclick="() => DeleteOKR(okrs.idOKRs)">
                     <span class="icon"><i class="material-icons-outlined is-size-6">delete</i></span>
@@ -227,12 +224,14 @@
 @code {
     [CascadingParameter] MainLayout mainLayout { get; set; }
     public OKRs okrs = new OKRs();
-    
+    private List<OKRs> allOKRs = new List<OKRs>();
     private bool isSlider = false;
 
     private string idCycle = "";
 
     private bool isDropDown = false;
+
+    private bool isUpdate = false;
 
     private List<KR> list_KR_Sample = new List<KR>();
     private List<OKRs> list_OKRs = new List<OKRs>();
@@ -247,6 +246,7 @@
 
     protected override async Task OnInitializedAsync()
     {
+        allOKRs = await DbOKRs.GetAllOKRs();
         Console.WriteLine("Initial");
         init();
         listProcess = await DbProcess.GetAllProcess(okrs.idOKRs);
@@ -354,8 +354,8 @@
         if( okrs._object != null ){
             foreach (KR kr in list_KR_Sample)
             {
-                if( String.IsNullOrEmpty(kr._keyResult ) ||  kr.target == 0 || String.IsNullOrEmpty(kr.unit)){
-                    await JSRuntime.InvokeVoidAsync("tagline", false, "Vui lòng nhập đủ thông tin");
+                if( String.IsNullOrEmpty(kr._keyResult ) ||  kr.target <= 0 || String.IsNullOrEmpty(kr.unit)){
+                    await JSRuntime.InvokeVoidAsync("tagline", false, "Thông tin không hợp lệ! Vui lòng nhập đủ thông tin!");
                     return;
                 }
             }
@@ -382,6 +382,7 @@
                     await DbKR.AddKRs(kr);
                 }
                 await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được cập nhập thành công");
+                isUpdate = false;
             }
             init();
         }
@@ -452,7 +453,6 @@
             await JSRuntime.InvokeVoidAsync("notify.success", " OKRs đã được xoá thành công");
             isSlider = false;
             init();
-            StateHasChanged();
         }
     }
 }
