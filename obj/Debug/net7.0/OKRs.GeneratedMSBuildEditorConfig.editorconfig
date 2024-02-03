@@ -24,8 +24,16 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = TWFpbkxheW91dC5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
+[D:/Code/c\#/OKRs/Pages/CheckInPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ2hlY2tJblBhZ2UucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [D:/Code/c\#/OKRs/Pages/CyclePage.razor]
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcQ3ljbGVQYWdlLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[D:/Code/c\#/OKRs/Pages/DetailPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcRGV0YWlsUGFnZS5yYXpvcg==
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Code/c\#/OKRs/Pages/EvaluatePage.razor]
@@ -36,16 +44,8 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = UGFnZXNcTG9naW5QYWdlLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
-[D:/Code/c\#/OKRs/Pages/OKRs_CheckIn.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT0tSc19DaGVja0luLnJhem9y
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Code/c\#/OKRs/Pages/OKRs_Detail.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT0tSc19EZXRhaWwucmF6b3I=
-build_metadata.AdditionalFiles.CssScope = 
-
-[D:/Code/c\#/OKRs/Pages/OKRs_Suggest.razor]
-build_metadata.AdditionalFiles.TargetPath = UGFnZXNcT0tSc19TdWdnZXN0LnJhem9y
+[D:/Code/c\#/OKRs/Pages/SuggestPage.razor]
+build_metadata.AdditionalFiles.TargetPath = UGFnZXNcU3VnZ2VzdFBhZ2UucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
 [D:/Code/c\#/OKRs/Pages/_KR.razor]
